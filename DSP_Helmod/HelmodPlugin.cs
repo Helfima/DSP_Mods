@@ -8,18 +8,21 @@ using System.Threading.Tasks;
 using UnityEngine;
 using DSPHelmod.UI;
 using DSPHelmod.UI.Core;
+using System.IO;
+using System.Reflection;
 
 namespace DSPHelmod
 {
     [BepInPlugin("helfima.helmod.plugin", "DSP Helmod Plug-In", "1.0.0.0")]
-    public class ExamplePlugin : BaseUnityPlugin
+    public class HelmodPlugin : BaseUnityPlugin
     {
+        public static string PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private UI.UIController uiController = new UI.UIController();
 
         // Awake is called once when both the game and the plug-in are loaded
         internal void Awake()
         {
-            //UnityEngine.Debug.Log("Helmod!");
+            UnityEngine.Debug.Log(HelmodPlugin.PluginPath);
             var harmony = new Harmony("helfima.helmod.plugin");
             harmony.PatchAll();
         }

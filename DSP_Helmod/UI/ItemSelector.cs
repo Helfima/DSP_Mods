@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DSP_Helmod.UI.Gui;
 using DSPHelmod.Classes;
 using DSPHelmod.UI.Core;
 using UnityEngine;
@@ -50,7 +51,7 @@ namespace DSPHelmod.UI
         private void DrawContent()
         {
             Dictionary<EItemType, List<ItemProto>> itemList = GetItems();
-            GUILayout.BeginHorizontal(boxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
             foreach (EItemType entry in itemList.Keys)
             {
                 if (GUILayout.Button(entry.ToString()))
@@ -97,15 +98,11 @@ namespace DSPHelmod.UI
             if (selection != -1)
             {
                 ItemProto item = items[selection];
-                OnEventReached(new HMEvent(HMEventType.AddItem, item));
+                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddItem, item));
                 selection = -1;
             }
             GUILayout.EndScrollView();
         }
 
-        public override void OnEvent(object sender, HMEvent e)
-        {
-            
-        }
     }
 }

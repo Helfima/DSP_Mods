@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -52,14 +53,34 @@
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\HMEvent.cs" />
+    <Compile Include="Classes\LoadAssembly.cs" />
     <Compile Include="ExampleClass.cs" />
     <Compile Include="Helpers\RecipeProtoHelper.cs" />
     <Compile Include="HelmodPlugin.cs" />
+    <Compile Include="Model\Factory.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\Node.cs" />
+    <Compile Include="Model\Recipe.cs" />
+    <Compile Include="Model\Sheet.cs" />
+    <Compile Include="Model\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Core\HMForm.cs" />
+    <Compile Include="UI\Gui\Callback.cs" />
+    <Compile Include="UI\Gui\HMButton.cs" />
+    <Compile Include="UI\Gui\HMCell.cs" />
+    <Compile Include="UI\Gui\HMStyle.cs" />
     <Compile Include="UI\MainPanel.cs" />
     <Compile Include="UI\RecipeSelector.cs" />
     <Compile Include="UI\ItemSelector.cs" />
@@ -70,11 +91,20 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="UI\Gui\" />
+    <None Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Resources\info.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)\Build\CopyDll.bat $(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)..\packages\Mono.pdb2mdb.0.1.0.20130128\toolspdb2mdb.exe $(TargetPath)
+$(ProjectDir)\Build\CopyDll.bat $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
 </Project>

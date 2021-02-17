@@ -18,11 +18,11 @@ namespace DSPHelmod.UI
             MainPanel mainPanel = new MainPanel(this);
             AddForm(mainPanel);
             ItemSelector itemSelector = new ItemSelector(this);
-            itemSelector.HMEventHandler += mainPanel.OnEvent;
             AddForm(itemSelector);
             RecipeSelector recipeSelector = new RecipeSelector(this);
-            recipeSelector.HMEventHandler += mainPanel.OnEvent;
             AddForm(recipeSelector);
+
+            HMEvent.Handler += mainPanel.OnEvent;
         }
 
         public List<HMForm> Forms
@@ -49,6 +49,13 @@ namespace DSPHelmod.UI
         public void Update()
         {
             if (DSPGame.Game == null || !DSPGame.Game.running) return;
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                MainPanel main = (MainPanel)forms.Where(form => form is MainPanel).First();
+                main.Show = !main.Show;
+            }
+
+
             foreach (HMForm form in forms)
             {
                 if (form.Show) form.OnUpdate();

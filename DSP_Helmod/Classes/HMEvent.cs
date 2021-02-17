@@ -8,6 +8,16 @@ namespace DSPHelmod.Classes
 {
     public class HMEvent : EventArgs
     {
+        public static event EventHandler<HMEvent> Handler;
+
+        public static void SendEvent(object sender, HMEvent e)
+        {
+            if (Handler != null)
+            {
+                Handler(sender, e);
+            }
+        }
+
         private HMEventType type;
         private object item;
         public HMEvent(HMEventType type, object item)
@@ -30,12 +40,16 @@ namespace DSPHelmod.Classes
         {
             return (T) item;
         }
+
+        
     }
 
     public enum HMEventType
     {
         Update,
         AddRecipe,
+        AddRecipeByProduct,
+        AddRecipeByIngredient,
         AddItem
     }
 }

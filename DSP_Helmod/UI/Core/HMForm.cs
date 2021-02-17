@@ -7,16 +7,14 @@ namespace DSPHelmod.UI.Core
 {
     abstract public class HMForm : MonoBehaviour
     {
-        public event EventHandler<HMEvent> HMEventHandler;
+        //public event EventHandler<HMEvent> HMEventHandler;
 
         protected UIController parent;
         protected Rect windowRect0 = new Rect(20, 20, 600, 300);
         public int id = 66600001;
         protected string name = "Test";
 
-        protected GUIStyle boxStyle;
         protected GUIStyle textAlignStyle;
-        protected GUILayoutOption[] IconLayoutOptions;
         protected bool IsInit = false;
         protected Vector2 scrollPosition;
 
@@ -39,13 +37,6 @@ namespace DSPHelmod.UI.Core
             Debug.Log($"Form.Init()");
             textAlignStyle = new GUIStyle(GUI.skin.label);
             textAlignStyle.alignment = TextAnchor.MiddleLeft;
-
-            boxStyle = new GUIStyle(GUI.skin.box)
-            {
-                margin = new RectOffset(5, 0, 0, 0)
-            };
-            
-            IconLayoutOptions = new GUILayoutOption[] { GUILayout.Height(45), GUILayout.Width(45) };
             OnInit();
             IsInit = true;
         }
@@ -74,15 +65,5 @@ namespace DSPHelmod.UI.Core
 
         abstract public void OnDoWindow();
 
-        abstract public void OnEvent(object sender, HMEvent e);
-
-        protected virtual void OnEventReached(HMEvent e)
-        {
-            EventHandler<HMEvent> handler = HMEventHandler;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
     }
 }

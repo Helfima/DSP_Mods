@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DSP_Helmod.UI.Gui;
 using DSPHelmod.Classes;
 using DSPHelmod.Helpers;
 using DSPHelmod.UI.Core;
@@ -52,7 +53,7 @@ namespace DSPHelmod.UI
         private void DrawContent()
         {
             Dictionary<ERecipeType, List<RecipeProto>> recipeList = GetRecipes();
-            GUILayout.BeginHorizontal(boxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
             foreach (ERecipeType entry in recipeList.Keys)
             {
                 if (GUILayout.Button(entry.ToString()))
@@ -99,15 +100,12 @@ namespace DSPHelmod.UI
             if (selection != -1)
             {
                 RecipeProto recipe = recipes[selection];
-                OnEventReached(new HMEvent(HMEventType.AddRecipe, recipe));
+                Debug.Log($"Recipe:{recipe.name}");
+                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
                 selection = -1;
             }
             GUILayout.EndScrollView();
         }
 
-        public override void OnEvent(object sender, HMEvent e)
-        {
-            
-        }
     }
 }

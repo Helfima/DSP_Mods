@@ -1,8 +1,10 @@
-﻿using System;
+﻿using DSP_Helmod.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DSPHelmod.Helpers
 {
@@ -29,6 +31,31 @@ namespace DSPHelmod.Helpers
                 stringBuilder.AppendLine($"{count}x{item.name}");
             }
             return stringBuilder.ToString();
+        }
+
+        public static List<Item> GetProductItems(RecipeProto recipe)
+        {
+            return GetItems(recipe.Results, recipe.ResultCounts);
+        }
+
+        public static List<Item> GetIngredientItems(RecipeProto recipe)
+        {
+            return GetItems(recipe.Items, recipe.ItemCounts);
+        }
+
+        internal static List<Item> GetItems(int[] itemIds, int[] counts)
+        {
+            List<Item> items = new List<Item>();
+            Debug.Log($"itemIds: {itemIds.Length}");
+            Debug.Log($"counts: {counts.Length}");
+            for (int i = 0; i < counts.Length; i++)
+            {
+                double count = counts[i];
+                int id = itemIds[i];
+                ItemProto proto = LDB.items.Select(id);
+                items.Add(new Item(proto, count));
+            }
+            return items;
         }
     }
 }
