@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSP_Helmod.UI.Gui;
-using DSPHelmod.Classes;
-using DSPHelmod.Helpers;
-using DSPHelmod.UI.Core;
+using DSP_Helmod.Classes;
+using DSP_Helmod.Helpers;
+using DSP_Helmod.UI.Core;
 using UnityEngine;
 
-namespace DSPHelmod.UI
+namespace DSP_Helmod.UI
 {
     public class RecipeSelector : HMForm
     {

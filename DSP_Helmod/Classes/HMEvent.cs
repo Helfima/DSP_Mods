@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DSPHelmod.Classes
+namespace DSP_Helmod.Classes
 {
     public class HMEvent : EventArgs
     {
@@ -50,6 +50,7 @@ namespace DSPHelmod.Classes
         AddRecipe,
         AddRecipeByProduct,
         AddRecipeByIngredient,
-        AddItem
+        AddItem,
+        RemoveNode
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace DSPHelmod.Helpers
+namespace DSP_Helmod.Helpers
 {
     public static class RecipeProtoHelper
     {
@@ -14,6 +14,8 @@ namespace DSPHelmod.Helpers
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(recipe.name);
+            stringBuilder.AppendLine(recipe.Type.ToString());
+            stringBuilder.AppendLine($"Made in: {recipe.madeFromString}");
             stringBuilder.AppendLine("Products:");
             for(int index = 0; index < recipe.ResultCounts.Length; index++)
             {
@@ -46,8 +48,6 @@ namespace DSPHelmod.Helpers
         internal static List<Item> GetItems(int[] itemIds, int[] counts)
         {
             List<Item> items = new List<Item>();
-            Debug.Log($"itemIds: {itemIds.Length}");
-            Debug.Log($"counts: {counts.Length}");
             for (int i = 0; i < counts.Length; i++)
             {
                 double count = counts[i];

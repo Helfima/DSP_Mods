@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
-using DSPHelmod.Classes;
+using DSP_Helmod.Classes;
 using System;
 
-namespace DSPHelmod.UI.Core
+namespace DSP_Helmod.UI.Core
 {
     abstract public class HMForm : MonoBehaviour
     {
         //public event EventHandler<HMEvent> HMEventHandler;
 
         protected UIController parent;
-        protected Rect windowRect0 = new Rect(20, 20, 600, 300);
+        protected Rect windowRect0 = new Rect(200, 20, 600, 300);
         public int id = 66600001;
         protected string name = "Test";
 
-        protected GUIStyle textAlignStyle;
         protected bool IsInit = false;
         protected Vector2 scrollPosition;
 
@@ -34,9 +33,6 @@ namespace DSPHelmod.UI.Core
 
         protected void Init()
         {
-            Debug.Log($"Form.Init()");
-            textAlignStyle = new GUIStyle(GUI.skin.label);
-            textAlignStyle.alignment = TextAnchor.MiddleLeft;
             OnInit();
             IsInit = true;
         }

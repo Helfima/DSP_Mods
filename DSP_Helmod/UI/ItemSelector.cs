@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DSP_Helmod.UI.Gui;
-using DSPHelmod.Classes;
-using DSPHelmod.UI.Core;
+using DSP_Helmod.Classes;
+using DSP_Helmod.UI.Core;
 using UnityEngine;
+using DSP_Helmod.Helpers;
 
-namespace DSPHelmod.UI
+namespace DSP_Helmod.UI
 {
     public class ItemSelector : HMForm
     {
@@ -23,7 +24,7 @@ namespace DSPHelmod.UI
         }
         public override void OnInit()
         {
-            
+            this.windowRect0 = new Rect(200, 20, 600, 600);
         }
 
         public override void OnUpdate()
@@ -88,7 +89,7 @@ namespace DSPHelmod.UI
                 Texture2D texture = item.iconSprite.texture;
                 string tooltip = item.name;
                 images[index] = texture;
-                GUIContent content = new GUIContent(texture, item.description);
+                GUIContent content = new GUIContent(texture, ItemProtoHelper.GetTootip(item));
                 contents[index] = content;
                 index++;
             }

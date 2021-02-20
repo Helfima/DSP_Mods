@@ -13,25 +13,49 @@ namespace DSP_Helmod.Classes
 {
     public class LoadAssembly
     {
-        public static void LoadXml(string resourceName)
+        private static byte[] ReadStream(Stream stream)
         {
-            Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            using (StreamReader reader = new StreamReader(assembly.GetManifestResourceStream(resourceName)))
+            int num3;
+            if (stream.CanSeek)
             {
-                var xml = reader.ReadToEnd();
-                LoadXml(xml);
+                int num = (int)stream.Length;
+                byte[] array = new byte[num];
+                int num2 = 0;
+                while ((num3 = stream.Read(array, num2, num - num2)) > 0)
+                {
+                    num2 += num3;
+                }
+                return array;
             }
+            byte[] array2 = new byte[1024*8];
+            MemoryStream memoryStream = new MemoryStream();
+            while ((num3 = stream.Read(array2, 0, array2.Length)) > 0)
+            {
+                memoryStream.Write(array2, 0, num3);
+            }
+            return memoryStream.ToArray();
+        }
+        public static byte[] ReadEmbeddedRessourceBytes(string name)
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            //Debug.Log($"Assembly:{assembly.Location}");
+            //Debug.Log($"Try load");
+            var resourceName = assembly.GetManifestResourceNames().FirstOrDefault(x => x.ToLower().Contains(name.ToLower()));
+            byte[] data = null;
+            using (StreamReader stream = new StreamReader(assembly.GetManifestResourceStream(resourceName)))
+            {
+                if (stream != null) {
+                    data = ReadStream(stream.BaseStream);
+                }
+            }
+            return data;
         }
 
+        
         public static string ReadEmbeddedRessourceString(string name)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            Debug.Log($"Assembly:{assembly.Location}");
-            Debug.Log($"Try load");
-            foreach (string resource in assembly.GetManifestResourceNames())
-            {
-                Debug.Log($"Resource:{resource}");
-            }
+            
             var resourceName = assembly.GetManifestResourceNames().FirstOrDefault(x => x.Contains(name));
             using (StreamReader stream = new StreamReader(assembly.GetManifestResourceStream(resourceName)))
             {
@@ -40,18 +64,17 @@ namespace DSP_Helmod.Classes
             return null;
         }
 
- 
-        public static Texture2D ReadTexture2D(string name, int width = 64, int height = 64)
+
+        public static Texture2D LoadTexture2D(string name, int width = 64, int height = 64)
         {
-            Debug.Log($"Try load");
-            string image = ReadEmbeddedRessourceString(name);
-            Debug.Log($"Loaded");
+            //Debug.Log($"Try load image");
+            byte[] image = ReadEmbeddedRessourceBytes(name);
+            //Debug.Log($"Loaded: {image.Length}");
             if (image != null)
             {
-                IntPtr sptr = Marshal.StringToHGlobalAnsi(image);
-                Texture2D texture = new Texture2D(width, height);
-                texture.LoadRawTextureData(sptr, image.Length);
-                Marshal.FreeHGlobal(sptr);
+                Texture2D texture = new Texture2D(width, height, TextureFormat.ARGB32, false);
+                texture.LoadImage(image);
+                texture.Apply();
                 return texture;
             }
             return null;

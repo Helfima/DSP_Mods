@@ -9,7 +9,7 @@ namespace DSP_Helmod.UI.Gui
 {
     public class Callback
     {
-        public delegate void ForSheet(Sheet sheet);
+        public delegate void ForSheet(Nodes sheet);
         public delegate void ForNode(Node node);
         public delegate void ForItem(Item item);
     }

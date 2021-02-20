@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DSP_Helmod.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,30 @@ namespace DSP_Helmod.Model
         public string Name;
         private ItemProto proto;
         public double Count;
+        public ItemState State = ItemState.Normal;
 
-        public Item(ItemProto proto, double count)
+        /// <summary>
+        /// Use only for test
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="count"></param>
+        public Item(string name, double count)
+        {
+            this.Name = name;
+            this.Count = count;
+        }
+        public Item(string name, double count, ItemState state = ItemState.Normal)
+        {
+            this.Name = name;
+            this.Count = count;
+            this.State = state;
+        }
+        public Item(ItemProto proto, double count, ItemState state = ItemState.Normal)
         {
             this.proto = proto;
+            this.Name = proto.name;
             this.Count = count;
+            this.State = state;
         }
         public ItemProto Proto
         {
@@ -28,13 +48,23 @@ namespace DSP_Helmod.Model
             }
         }
 
-        public new Texture2D Icon
+        public Texture2D Icon
         {
             get
             {
                 if (Proto != null) return proto.iconSprite.texture;
                 return null;
             }
+        }
+        public bool Match(Item other)
+        {
+            if (other == null || Name == null) return false;
+            return Name.Equals(other.Name);
+        }
+
+        public Item Clone(double factor = 1)
+        {
+            return new Item(proto, Count * factor, State);
         }
     }
 }

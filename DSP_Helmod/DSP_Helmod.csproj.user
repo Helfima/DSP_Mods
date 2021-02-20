@@ -2,5 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ReferencePath>C:\Steam\steamapps\common\Dyson Sphere Program\BepInEx\core\;C:\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\</ReferencePath>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
 </Project>

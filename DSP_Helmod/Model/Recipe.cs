@@ -1,4 +1,4 @@
-﻿using DSPHelmod.Helpers;
+﻿using DSP_Helmod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,20 @@ namespace DSP_Helmod.Model
 
         public Factory Factory
         {
-            get { return factory; }
+            get
+            { 
+                if(factory == null)
+                {
+                    List<ItemProto> items = LDB.items.dataArray.Where(item => item.typeString.Equals(proto.madeFromString)).ToList();
+                    items.Sort(delegate (ItemProto item1, ItemProto item2)
+                    {
+                        return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
+                    });
+                    
+                    factory = new Factory(items.Last(), 1);
+                }
+                return factory; 
+            }
         }
 
         private void UpdateItems()
@@ -42,6 +55,8 @@ namespace DSP_Helmod.Model
             this.Ingredients = RecipeProtoHelper.GetIngredientItems(proto);
             this.Icon = proto.iconSprite.texture;
             this.Id = proto.ID;
+            this.Name = proto.name;
+            this.Type = GetType().Name;
         }
 
     }

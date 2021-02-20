@@ -1,18 +1,20 @@
-﻿using DSPHelmod.Classes;
-using DSPHelmod.UI.Core;
+﻿using DSP_Helmod.Classes;
+using DSP_Helmod.UI.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace DSPHelmod.UI
+namespace DSP_Helmod.UI
 {
-    public class UIController
+    public class UIController : MonoBehaviour
     {
         private List<HMForm> forms = new List<HMForm>();
         private int formId = 6660000;
+
         public UIController()
         {
             MainPanel mainPanel = new MainPanel(this);
@@ -23,6 +25,7 @@ namespace DSPHelmod.UI
             AddForm(recipeSelector);
 
             HMEvent.Handler += mainPanel.OnEvent;
+
         }
 
         public List<HMForm> Forms
@@ -49,6 +52,10 @@ namespace DSPHelmod.UI
         public void Update()
         {
             if (DSPGame.Game == null || !DSPGame.Game.running) return;
+            
+            
+            HMEventQueue.DeQueue();
+            
             if (Input.GetKeyDown(KeyCode.I))
             {
                 MainPanel main = (MainPanel)forms.Where(form => form is MainPanel).First();
@@ -60,6 +67,8 @@ namespace DSPHelmod.UI
             {
                 if (form.Show) form.OnUpdate();
             }
+
+            
         }
 
     }

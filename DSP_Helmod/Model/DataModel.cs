@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace DSP_Helmod.Model
 {
-    public class Model
+    public class DataModel
     {
         private int version = 1;
-        private List<Sheet> sheets = new List<Sheet>();
+        private List<Nodes> sheets = new List<Nodes>();
 
         public int Version
         {
             get { return version; }
         }
-        public List<Sheet> Sheets
+        public List<Nodes> Sheets
         {
             get { return sheets; }
         }
