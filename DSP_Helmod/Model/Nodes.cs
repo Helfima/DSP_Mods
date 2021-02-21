@@ -12,6 +12,47 @@ namespace DSP_Helmod.Model
     {
         private List<Node> children = new List<Node>();
         MatrixValue[] objectives;
+        private int time = 1;
+        public int Time
+        {
+            get { return time; }
+        }
+        public int TimeSelected
+        {
+            get
+            {
+                switch (Time)
+                {
+                    case 1:
+                        return 0;
+                    case 60:
+                        return 1;
+                    case 3600:
+                        return 2;
+                    default:
+                        return 0;
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case 0:
+                        time = 1;
+                        break;
+                    case 1:
+                        time = 60;
+                        break;
+                    case 2:
+                        time = 3600;
+                        break;
+                    default:
+                        time = 1;
+                        break;
+                }
+            }
+        }
+        
         public List<Node> Children
         {
             get { return children; }
@@ -30,6 +71,31 @@ namespace DSP_Helmod.Model
             UpdateItems();
         }
 
+        public void SetObjective(Item item, double value)
+        {
+            if (objectives == null)
+            {
+                objectives = new MatrixValue[1];
+                objectives[0] = new MatrixValue(item.GetType().Name, item.Name, value);
+            }
+            else
+            {
+                bool exist = false;
+                foreach (MatrixValue matrixValue in objectives)
+                {
+                    if (matrixValue.Name.Equals(item.Name))
+                    {
+                        matrixValue.Value = value;
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    Array.Resize(ref objectives, objectives.Length + 1);
+                    objectives[objectives.Length] = new MatrixValue(item.GetType().Name, item.Name, value);
+                }
+            }
+        }
         public void Remove(Node node)
         {
             children.Remove(node);
@@ -37,22 +103,32 @@ namespace DSP_Helmod.Model
         }
         private void UpdateItems()
         {
-            Icon = children.First().Icon;
-            List<Item> products = new List<Item>();
-            List<Item> ingredients = new List<Item>();
-            foreach (Node node in children)
+            if(children.Count > 0)
             {
-                foreach (Item item in node.Products)
+                Icon = children.First().Icon;
+                List<Item> products = new List<Item>();
+                List<Item> ingredients = new List<Item>();
+                foreach (Node node in children)
                 {
-                    products.Add(item);
+                    foreach (Item item in node.Products)
+                    {
+                        products.Add(item);
+                    }
+                    foreach (Item item in node.Ingredients)
+                    {
+                        ingredients.Add(item);
+                    }
                 }
-                foreach (Item item in node.Ingredients)
-                {
-                    ingredients.Add(item);
-                }
+                Products = products.Distinct().ToList();
+                Ingredients = ingredients.Distinct().ToList();
             }
-            Products = products.Distinct().ToList();
-            Ingredients = ingredients.Distinct().ToList();
+            else
+            {
+                Icon = null;
+                Products.Clear();
+                Ingredients.Clear();
+            }
+            
         }
 
     }

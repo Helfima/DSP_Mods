@@ -10,6 +10,7 @@ using DSP_Helmod.Helpers;
 using DSP_Helmod.UI.Core;
 using UnityEngine;
 using DSP_Helmod.Math;
+using UnityEngine.UI;
 
 namespace DSP_Helmod.UI
 {
@@ -28,6 +29,9 @@ namespace DSP_Helmod.UI
 
         protected Vector2 ScrollOutputPosition;
         protected Vector2 ScrollInputPosition;
+
+        protected int timeSelected = 0;
+        protected string[] timesString = new string[] {"1s", "1mn", "1h" };
         public MainPanel(UIController parent) : base(parent) {
             this.name = "Helmod v0.1";
             this.Show = true;
@@ -41,7 +45,14 @@ namespace DSP_Helmod.UI
 
         public override void OnUpdate()
         {
-            
+            if (currentSheet != null)
+            {
+                if (currentSheet.TimeSelected != timeSelected)
+                {
+                    currentSheet.TimeSelected = timeSelected;
+                    Compute();
+                }
+            }
         }
 
         public override void OnDoWindow()
@@ -102,6 +113,18 @@ namespace DSP_Helmod.UI
         {
             this.currentSheet = sheet;
             this.currentNode = sheet;
+            switch (sheet.Time)
+            {
+                case 60:
+                    this.timeSelected = 1;
+                    break;
+                case 3600:
+                    this.timeSelected = 2;
+                    break;
+                default:
+                    this.timeSelected = 0;
+                    break;
+            }
         }
 
         private void DrawMenu()
@@ -121,7 +144,14 @@ namespace DSP_Helmod.UI
 
                 GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20));
                 toolbarInt = GUILayout.Toolbar(toolbarInt, toolbarString.ToArray());
+                
                 GUILayout.FlexibleSpace();
+                
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Base time:");
+                timeSelected = GUILayout.Toolbar(timeSelected, timesString.ToArray());
+                GUILayout.EndHorizontal();
+
                 GUILayout.EndHorizontal();
 
                 if (toolbarForms != null && toolbarInt > -1)
@@ -247,7 +277,10 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     // power
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
-                    GUILayout.Label("");
+                    if (node.Power > 1e9) GUILayout.Label($"{node.Power / 1e9:N1}GW");
+                    else if (node.Power > 1e6) GUILayout.Label($"{node.Power / 1e6:N1}MW");
+                    else if (node.Power > 1e3) GUILayout.Label($"{node.Power / 1e3:N1}kW");
+                    else GUILayout.Label($"{node.Power:N1}W");
                     GUILayout.EndHorizontal();
                     //machine
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
@@ -266,7 +299,14 @@ namespace DSP_Helmod.UI
                     foreach (Item item in node.Products)
                     {
                         HMCell.ItemProduct(item, node.Count, delegate(Item element) {
-                            HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByProduct, element)); 
+                            if(element.State == ItemState.Main)
+                            {
+                                HMEventQueue.EnQueue(currentNode, new HMEvent(HMEventType.EditionProduct, element));
+                            }
+                            else
+                            {
+                                HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByProduct, element));
+                            }
                         });
                     }
                     GUILayout.FlexibleSpace();
@@ -309,6 +349,9 @@ namespace DSP_Helmod.UI
                     parentNode.Remove(node);
                     Compute();
                     break;
+                case HMEventType.UpdateSheet:
+                    Compute();
+                    break;
             }
         }
 
@@ -340,6 +383,11 @@ namespace DSP_Helmod.UI
         {
             string jsonModel = UnityEngine.JsonUtility.ToJson(model);
             System.IO.File.WriteAllText("C:/Temp/DataModel.json", jsonModel);
+        }
+
+        public override void OnClose()
+        {
+
         }
     }
 }

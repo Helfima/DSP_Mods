@@ -31,6 +31,11 @@ namespace DSP_Helmod.Model
             }
         }
 
+        public int Energy
+        {
+            get { return this.proto.TimeSpend/60; }
+        }
+
         public Factory Factory
         {
             get
@@ -43,7 +48,7 @@ namespace DSP_Helmod.Model
                         return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
                     });
                     
-                    factory = new Factory(items.Last(), 1);
+                    factory = new Factory(items.First(), 1);
                 }
                 return factory; 
             }

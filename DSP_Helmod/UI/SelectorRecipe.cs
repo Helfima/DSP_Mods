@@ -5,27 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using DSP_Helmod.UI.Gui;
 using DSP_Helmod.Classes;
+using DSP_Helmod.Helpers;
 using DSP_Helmod.UI.Core;
 using UnityEngine;
-using DSP_Helmod.Helpers;
 
 namespace DSP_Helmod.UI
 {
-    public class ItemSelector : HMForm
+    public class SelectorRecipe : HMForm
     {
-        protected EItemType groupSelected = 0;
+        protected ERecipeType groupSelected = 0;
         protected string recipeSelected;
         protected int selection;
 
-        public ItemSelector(UIController parent) : base(parent) {
-            this.name = "Item Selector";
-            this.Caption = "Add Item";
+        public SelectorRecipe(UIController parent) : base(parent) {
+            this.name = "Recipe Selector";
+            this.Caption = "Add Recipe";
             this.IsTool = true;
         }
         public override void OnInit()
         {
-            this.windowRect0 = new Rect(200, 20, 600, 600);
+            
         }
+        
 
         public override void OnUpdate()
         {
@@ -37,23 +38,23 @@ namespace DSP_Helmod.UI
             DrawContent();
         }
 
-        private Dictionary<EItemType, List<ItemProto>> GetItems()
+        private Dictionary<ERecipeType, List<RecipeProto>> GetRecipes()
         {
-            Dictionary<EItemType, List<ItemProto>> items = new Dictionary<EItemType, List<ItemProto>>();
-            foreach (ItemProto itemProto in LDB.items.dataArray)
+            Dictionary<ERecipeType, List<RecipeProto>> recipes = new Dictionary<ERecipeType, List<RecipeProto>>();
+            foreach (RecipeProto recipeProto in LDB.recipes.dataArray)
             {
-                EItemType key = itemProto.Type;
-                if (!items.ContainsKey(key)) items.Add(key, new List<ItemProto>());
-                items[key].Add(itemProto);
+                ERecipeType key = recipeProto.Type;
+                if (!recipes.ContainsKey(key)) recipes.Add(key, new List<RecipeProto>());
+                recipes[key].Add(recipeProto);
             }
-            return items;
+            return recipes;
         }
 
         private void DrawContent()
         {
-            Dictionary<EItemType, List<ItemProto>> itemList = GetItems();
+            Dictionary<ERecipeType, List<RecipeProto>> recipeList = GetRecipes();
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
-            foreach (EItemType entry in itemList.Keys)
+            foreach (ERecipeType entry in recipeList.Keys)
             {
                 if (GUILayout.Button(entry.ToString()))
                 {
@@ -63,8 +64,8 @@ namespace DSP_Helmod.UI
             }
             GUILayout.EndHorizontal();
 
-            List<ItemProto> items = itemList[groupSelected];
-            DrawElements(items);
+            List<RecipeProto> recipes = recipeList[groupSelected];
+            DrawElements(recipes);
             //GUILayout.EndHorizontal();
             if (Event.current.type == EventType.Repaint)
             {
@@ -78,18 +79,18 @@ namespace DSP_Helmod.UI
 
         }
 
-        private void DrawElements(List<ItemProto> items)
+        private void DrawElements(List<RecipeProto> recipes)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
-            GUIContent[] contents = new GUIContent[items.Count];
-            Texture2D[] images = new Texture2D[items.Count];
+            GUIContent[] contents = new GUIContent[recipes.Count];
+            Texture2D[] images = new Texture2D[recipes.Count];
             int index = 0;
-            foreach (ItemProto item in items)
+            foreach (RecipeProto recipe in recipes)
             {
-                Texture2D texture = item.iconSprite.texture;
-                string tooltip = item.name;
+                Texture2D texture = recipe.iconSprite.texture;
+                string tooltip = recipe.name;
                 images[index] = texture;
-                GUIContent content = new GUIContent(texture, ItemProtoHelper.GetTootip(item));
+                GUIContent content = new GUIContent(texture, RecipeProtoHelper.GetTootip(recipe));
                 contents[index] = content;
                 index++;
             }
@@ -98,11 +99,17 @@ namespace DSP_Helmod.UI
             selection = GUILayout.SelectionGrid(-1, contents, 10, GridLayoutOptions);
             if (selection != -1)
             {
-                ItemProto item = items[selection];
-                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddItem, item));
+                RecipeProto recipe = recipes[selection];
+                Debug.Log($"Recipe:{recipe.name}");
+                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
                 selection = -1;
             }
             GUILayout.EndScrollView();
+        }
+
+        public override void OnClose()
+        {
+
         }
 
     }

@@ -15,6 +15,7 @@ namespace DSP_Helmod.Helpers
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(recipe.name);
             stringBuilder.AppendLine(recipe.Type.ToString());
+            stringBuilder.AppendLine($"Energy: {recipe.TimeSpend}");
             stringBuilder.AppendLine($"Made in: {recipe.madeFromString}");
             stringBuilder.AppendLine("Products:");
             for(int index = 0; index < recipe.ResultCounts.Length; index++)

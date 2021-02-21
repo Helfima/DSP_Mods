@@ -22,6 +22,12 @@ namespace DSP_Helmod.Helpers
             stringBuilder.AppendLine($"CanBuild: {item.CanBuild}");
             stringBuilder.AppendLine($"miningFrom: {item.miningFrom}");
             stringBuilder.AppendLine($"ProduceFrom: {item.ProduceFrom}");
+            if (item.prefabDesc.isAssembler) stringBuilder.AppendLine($"assemblerSpeed: {item.prefabDesc.assemblerSpeed}");
+            if (item.prefabDesc.isLab)
+            {
+                stringBuilder.AppendLine($"labAssembleSpeed: {item.prefabDesc.labAssembleSpeed}");
+                stringBuilder.AppendLine($"labResearchSpeed: {item.prefabDesc.labResearchSpeed}");
+            }
 #endif
 
             return stringBuilder.ToString();

@@ -12,6 +12,7 @@ namespace DSP_Helmod.Math
     {
         public static double EPSILON = 0.01;
         private Solver solver;
+        private int Time = 1;
 
         public Compute()
         {
@@ -20,6 +21,7 @@ namespace DSP_Helmod.Math
         public void Update(Nodes nodes)
         {
             //Debug.Log($"Compute.Update({nodes.GetType()})");
+            Time = nodes.Time;
             ComputeNode(nodes);
         }
 
@@ -57,9 +59,24 @@ namespace DSP_Helmod.Math
                     }
                 }
             }
-
+            ComputeFactory(nodes);
             ComputeInputOutput(nodes);
             //Debug.Log(solver.ToString());
+        }
+
+        private void ComputeFactory(Nodes nodes)
+        {
+            foreach (Node node in nodes.Children)
+            {
+                if(node is Recipe)
+                {
+                    Recipe recipe = (Recipe)node;
+                    recipe.Factory.Count = recipe.Energy * recipe.Count / (recipe.Factory.Speed * Time);
+                    //Debug.Log($"Factory.count (recipe.Name): recipe.Energy*recipe.Count/(recipe.Factory.Speed*Time)=recipe.Factory.Count");
+                    //Debug.Log($"Factory.count ({recipe.Name}): {recipe.Energy}*{recipe.Count}/({recipe.Factory.Speed}*{Time}=={recipe.Factory.Count}");
+                    node.Power = recipe.Factory.Count * recipe.Factory.Power;
+                }
+            }
         }
 
         private void ComputeInputOutput(Nodes nodes)

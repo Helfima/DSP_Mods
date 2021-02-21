@@ -12,7 +12,7 @@ namespace DSP_Helmod.Model
     {
         public int Id;
         public string Name;
-        private ItemProto proto;
+        protected ItemProto proto;
         public double Count;
         public ItemState State = ItemState.Normal;
 

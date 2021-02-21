@@ -51,6 +51,8 @@ namespace DSP_Helmod.Classes
         AddRecipeByProduct,
         AddRecipeByIngredient,
         AddItem,
-        RemoveNode
+        RemoveNode,
+        EditionProduct,
+        UpdateSheet
     }
 }

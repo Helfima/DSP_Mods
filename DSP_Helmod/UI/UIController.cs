@@ -18,13 +18,18 @@ namespace DSP_Helmod.UI
         public UIController()
         {
             MainPanel mainPanel = new MainPanel(this);
+            HMEvent.Handler += mainPanel.OnEvent;
             AddForm(mainPanel);
-            ItemSelector itemSelector = new ItemSelector(this);
+
+            SelectorItem itemSelector = new SelectorItem(this);
             AddForm(itemSelector);
-            RecipeSelector recipeSelector = new RecipeSelector(this);
+
+            SelectorRecipe recipeSelector = new SelectorRecipe(this);
             AddForm(recipeSelector);
 
-            HMEvent.Handler += mainPanel.OnEvent;
+            EditionProduct editionProduct = new EditionProduct(this);
+            HMEvent.Handler += editionProduct.OnEvent;
+            AddForm(editionProduct);
 
         }
 

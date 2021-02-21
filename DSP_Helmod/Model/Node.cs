@@ -15,6 +15,7 @@ namespace DSP_Helmod.Model
         public string Name;
         public string Type;
         public double Count;
+        public double Power;
         public List<Item> Products = new List<Item>();
         public List<Item> Ingredients = new List<Item>();
         public Texture2D Icon;

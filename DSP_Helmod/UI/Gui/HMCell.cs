@@ -11,12 +11,14 @@ namespace DSP_Helmod.UI.Gui
 {
     public class HMCell
     {
+        private static double limit = 10;
         public static void Node(Node node, Callback.ForNode callback = null)
         {
             GUILayout.BeginVertical();
             HMButton.Node(node, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
-            GUILayout.Label($"{node.Count}", HMStyle.TextButtonIcon);
+            if (node.Count < limit) GUILayout.Label($"{node.Count:N2}", HMStyle.TextButtonIcon);
+            else GUILayout.Label($"{node.Count:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
@@ -38,7 +40,8 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.BeginVertical();
             HMButton.ItemColored(item, color, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
-            GUILayout.Label($"{item.Count * factor}", HMStyle.TextButtonIcon);
+            if (item.Count < limit) GUILayout.Label($"{item.Count * factor:N2}", HMStyle.TextButtonIcon);
+            else GUILayout.Label($"{item.Count * factor:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
