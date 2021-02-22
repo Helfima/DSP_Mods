@@ -53,6 +53,10 @@ namespace DSP_Helmod.Classes
         AddItem,
         RemoveNode,
         EditionProduct,
-        UpdateSheet
+        UpdateSheet,
+        UpNode,
+        DownNode,
+        UpLevelNode,
+        DownLevelNode
     }
 }

@@ -21,6 +21,7 @@ namespace DSP_Helmod.UI
             this.name = "Recipe Selector";
             this.Caption = "Add Recipe";
             this.IsTool = true;
+            this.windowRect0 = new Rect(400, 200, 600, 400);
         }
         public override void OnInit()
         {
@@ -100,7 +101,7 @@ namespace DSP_Helmod.UI
             if (selection != -1)
             {
                 RecipeProto recipe = recipes[selection];
-                Debug.Log($"Recipe:{recipe.name}");
+                Classes.HMLogger.Debug($"Recipe:{recipe.name}");
                 HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
                 selection = -1;
             }

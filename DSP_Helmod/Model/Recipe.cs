@@ -13,6 +13,13 @@ namespace DSP_Helmod.Model
         private RecipeProto proto;
         private Factory factory;
 
+        public Recipe(int id)
+        {
+            this.Id = id;
+            this.proto = LDB.recipes.Select(Id);
+            UpdateItems();
+        }
+
         public Recipe(RecipeProto proto)
         {
             this.proto = proto;

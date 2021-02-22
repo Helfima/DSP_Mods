@@ -40,6 +40,11 @@ namespace DSP_Helmod.UI.Gui
         public static GUIStyle ButtonIconRed = ChangeTexture(GUI.skin.button, HMTexture.icon_red);
         public static GUIStyle ButtonIconYellow = ChangeTexture(GUI.skin.button, HMTexture.icon_yellow);
 
+        public static GUIStyle BoxNavigate = new GUIStyle()
+        {
+            padding = new RectOffset(10, 0, 0, 0),
+        };
+
         public static GUIStyle TextAlignLowerRight = new GUIStyle(GUI.skin.label)
         {
             alignment = TextAnchor.LowerRight

@@ -45,7 +45,7 @@ namespace DSP_Helmod.UI
             {
                 double result;
                 double.TryParse(value, out result);
-                nodes.SetObjective(item, result);
+                nodes.SetInput(item, result);
                 HMEvent.SendEvent(this, new HMEvent(HMEventType.UpdateSheet, nodes));
             }
         }

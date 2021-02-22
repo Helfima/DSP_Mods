@@ -12,7 +12,18 @@ namespace DSP_Helmod.Model
     {
         private List<Node> children = new List<Node>();
         MatrixValue[] objectives;
-        private int time = 1;
+        MatrixValue[] inputs;
+        private int time;
+
+        public Nodes()
+        {
+            this.time = 1;
+        }
+
+        public Nodes(int time)
+        {
+            this.time = time;
+        }
         public int Time
         {
             get { return time; }
@@ -64,48 +75,103 @@ namespace DSP_Helmod.Model
             set { objectives = value; }
         }
 
-        public void Add(Node node)
+        public MatrixValue[] Inputs
         {
-            if (node is Recipe && children.Count == 0) node.Count = 1;
-            children.Add(node);
-            UpdateItems();
+            get { return inputs; }
+            set { inputs = value; }
         }
 
-        public void SetObjective(Item item, double value)
+        public void Add(Node node)
         {
-            if (objectives == null)
-            {
-                objectives = new MatrixValue[1];
-                objectives[0] = new MatrixValue(item.GetType().Name, item.Name, value);
-            }
-            else
-            {
-                bool exist = false;
-                foreach (MatrixValue matrixValue in objectives)
-                {
-                    if (matrixValue.Name.Equals(item.Name))
-                    {
-                        matrixValue.Value = value;
-                        exist = true;
-                    }
-                }
-                if (!exist)
-                {
-                    Array.Resize(ref objectives, objectives.Length + 1);
-                    objectives[objectives.Length] = new MatrixValue(item.GetType().Name, item.Name, value);
-                }
-            }
+            if (node == null) return; // TODO exception
+            if (node is Recipe && children.Count == 0) node.Count = 1;
+            children.Add(node);
+            node.Parent = this;
+            UpdateItems();
         }
         public void Remove(Node node)
         {
             children.Remove(node);
             UpdateItems();
         }
+
+        public void UpLevelNode(Node node)
+        {
+            int index = children.IndexOf(node);
+            children.RemoveAt(index);
+            Nodes newNodes = new Nodes();
+            newNodes.Add(node);
+            children.Insert(index, newNodes);
+        }
+        public void AddObjective(Item item, double value)
+        {
+            objectives = AddMatrixValue(objectives, item, value, true);
+        }
+        public void SetInput(Item item, double value)
+        {
+            inputs = AddMatrixValue(inputs, item, value, false);
+        }
+
+        public void SetInput(MatrixValue matrixValue)
+        {
+            inputs = AddMatrixValue(inputs, matrixValue, false);
+        }
+        /// <summary>
+        /// Copy Input after Reset objectives
+        /// </summary>
+        public void CopyInputsToObjectives()
+        {
+            Classes.HMLogger.Debug($"CopyInputsToObjectives:{inputs != null}");
+            objectives = null;
+            if (inputs != null)
+            {
+                foreach (MatrixValue input in inputs)
+                {
+                    Classes.HMLogger.Debug($"Copy input:{input}");
+                    objectives = AddMatrixValue(objectives, input, true);
+                }
+            }
+        }
+
+        internal MatrixValue[] AddMatrixValue(MatrixValue[] matrixValues, Item item, double value, bool append = false)
+        {
+            MatrixValue matrixValue = new MatrixValue(item.GetType().Name, item.Name, value);
+            return AddMatrixValue(matrixValues, matrixValue, append);
+        }
+        internal MatrixValue[] AddMatrixValue(MatrixValue[] matrixValues, MatrixValue newMatrixValue, bool append = false)
+        {
+            if (matrixValues == null)
+            {
+                matrixValues = new MatrixValue[1];
+                matrixValues[0] = newMatrixValue;
+            }
+            else
+            {
+                bool exist = false;
+                foreach (MatrixValue matrixValue in matrixValues)
+                {
+                    if (matrixValue.Name.Equals(newMatrixValue.Name))
+                    {
+                        if (append) matrixValue.Value += newMatrixValue.Value;
+                        else matrixValue.Value = newMatrixValue.Value;
+                        exist = true;
+                    }
+                }
+                if (!exist)
+                {
+                    Array.Resize(ref matrixValues, matrixValues.Length + 1);
+                    matrixValues[matrixValues.Length] = newMatrixValue;
+                }
+            }
+            return matrixValues;
+        }
         private void UpdateItems()
         {
             if(children.Count > 0)
             {
                 Icon = children.First().Icon;
+                Name = children.First().Name;
+                Type = children.First().Type;
                 List<Item> products = new List<Item>();
                 List<Item> ingredients = new List<Item>();
                 foreach (Node node in children)

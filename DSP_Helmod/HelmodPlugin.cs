@@ -23,7 +23,10 @@ namespace DSP_Helmod
         // Awake is called once when both the game and the plug-in are loaded
         internal void Awake()
         {
-            UnityEngine.Debug.Log(HelmodPlugin.PluginPath);
+#if DEBUG
+            Classes.HMLogger.Level = Classes.LoggerLevel.Debug;
+#endif
+            Classes.HMLogger.Debug(HelmodPlugin.PluginPath);
             var harmony = new Harmony("helfima.helmod.plugin");
             harmony.PatchAll();
         }

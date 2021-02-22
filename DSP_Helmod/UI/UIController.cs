@@ -64,7 +64,7 @@ namespace DSP_Helmod.UI
             if (Input.GetKeyDown(KeyCode.I))
             {
                 MainPanel main = (MainPanel)forms.Where(form => form is MainPanel).First();
-                main.Show = !main.Show;
+                main.SwitchShow();
             }
 
 

@@ -1,4 +1,5 @@
-﻿using DSP_Helmod.Model;
+﻿using DSP_Helmod.Classes;
+using DSP_Helmod.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,22 +21,32 @@ namespace DSP_Helmod.Math
         }
         public void Update(Nodes nodes)
         {
-            //Debug.Log($"Compute.Update({nodes.GetType()})");
+            if (nodes == null) return;
+            HMLogger.Debug($"Compute.Update({nodes.GetType()})");
             Time = nodes.Time;
+            nodes.Count = 1;
             ComputeNode(nodes);
         }
 
         private void ComputeNode(Nodes nodes)
         {
-            if (nodes == null || nodes.Children.Count == 0) return;
-            //Debug.Log($"Children:{nodes.Children.Count}");
+            
+            if (nodes == null || nodes.Children == null || nodes.Children.Count == 0) return;
+            HMLogger.Debug($"Children:{nodes.Children.Count}");
+            nodes.CopyInputsToObjectives();
             foreach (Node node in nodes.Children)
             {
-                ComputeNode(node);
+                if (node is Nodes)
+                {
+                    Nodes childNodes = (Nodes)node;
+                    //childNodes.Count = 1;
+                    //childNodes.Inputs = nodes.Inputs;
+                    ComputeNode(childNodes);
+                }
             }
             Matrix matrix = GetMatrix(nodes);
             // prepare des objectifs manquants
-            if(nodes.Objectives == null)
+            if (nodes.Objectives == null)
             {
                 List<Item> items = nodes.Children.First().Products;
                 nodes.Objectives = new MatrixValue[items.Count];
@@ -45,8 +56,8 @@ namespace DSP_Helmod.Math
                     nodes.Objectives[i] = new MatrixValue(item.GetType().Name, item.Name, item.Count);
                 }
             }
-                        
-            //Debug.Log(matrix.ToString());
+
+            HMLogger.Debug(matrix.ToString());
             MatrixValue[] result = solver.Solve(matrix, nodes.Objectives);
             foreach (Node node in nodes.Children)
             {
@@ -61,7 +72,7 @@ namespace DSP_Helmod.Math
             }
             ComputeFactory(nodes);
             ComputeInputOutput(nodes);
-            //Debug.Log(solver.ToString());
+            HMLogger.Debug(solver.ToString());
         }
 
         private void ComputeFactory(Nodes nodes)
@@ -72,8 +83,8 @@ namespace DSP_Helmod.Math
                 {
                     Recipe recipe = (Recipe)node;
                     recipe.Factory.Count = recipe.Energy * recipe.Count / (recipe.Factory.Speed * Time);
-                    //Debug.Log($"Factory.count (recipe.Name): recipe.Energy*recipe.Count/(recipe.Factory.Speed*Time)=recipe.Factory.Count");
-                    //Debug.Log($"Factory.count ({recipe.Name}): {recipe.Energy}*{recipe.Count}/({recipe.Factory.Speed}*{Time}=={recipe.Factory.Count}");
+                    HMLogger.Trace($"Factory.count (recipe.Name): recipe.Energy*recipe.Count/(recipe.Factory.Speed*Time)=recipe.Factory.Count");
+                    HMLogger.Trace($"Factory.count ({recipe.Name}): {recipe.Energy}*{recipe.Count}/({recipe.Factory.Speed}*{Time}=={recipe.Factory.Count}");
                     node.Power = recipe.Factory.Count * recipe.Factory.Power;
                 }
             }
@@ -124,11 +135,6 @@ namespace DSP_Helmod.Math
             nodes.Ingredients = ingredients.Select(entry => entry.Value).ToList();
         }
 
-        private void ComputeNode(Node node)
-        {
-
-        }
-
         private Matrix GetMatrix(Nodes nodes)
         {
             List<MatrixHeader> rowHeaders = new List<MatrixHeader>();
@@ -138,17 +144,17 @@ namespace DSP_Helmod.Math
             List<string> ingredients = new List<string>();
             foreach (Node node in nodes.Children)
             {
-                rowHeaders.Add(new MatrixHeader(node.GetType().Name, node.Name));
-                MatrixRow rowData = new MatrixRow(node.GetType().Name, node.Name);
+                rowHeaders.Add(new MatrixHeader(node.Type, node.Name));
+                MatrixRow rowData = new MatrixRow(node.Type, node.Name);
                 foreach(Item item in node.Products)
                 {
                     products.Add(item.Name);
-                    rowData.AddValue(new MatrixValue(item.GetType().Name, item.Name, item.Count));
+                    rowData.AddValue(new MatrixValue(item.Type, item.Name, item.Count));
                 }
                 foreach (Item item in node.Ingredients)
                 {
                     ingredients.Add(item.Name);
-                    rowData.AddValue(new MatrixValue(item.GetType().Name, item.Name, -item.Count));
+                    rowData.AddValue(new MatrixValue(item.Type, item.Name, -item.Count));
                 }
                 rowDatas.Add(rowData);
             }
@@ -159,22 +165,22 @@ namespace DSP_Helmod.Math
                 {
                     if (ingredients.Contains(item.Name))
                     {
-                        item.State = Classes.ItemState.Residual;
+                        item.State = ItemState.Residual;
                     }
                     else
                     {
-                        item.State = Classes.ItemState.Main;
+                        item.State = ItemState.Main;
                     }
                 }
                 foreach (Item item in node.Ingredients)
                 {
                     if (products.Contains(item.Name))
                     {
-                        item.State = Classes.ItemState.Residual;
+                        item.State = ItemState.Residual;
                     }
                     else
                     {
-                        item.State = Classes.ItemState.Main;
+                        item.State = ItemState.Main;
                     }
                 }
             }

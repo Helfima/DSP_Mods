@@ -21,14 +21,14 @@ namespace DSP_Helmod.UI.Gui
             {
                 if (GUILayout.Button(infoTexture, HMStyle.Icon45LayoutOptions))
                 {
-                    callback(sheet);
+                    if (callback != null) callback(sheet);
                 }
             }
             else
             {
                 if (GUILayout.Button(sheet.Icon, HMStyle.Icon45LayoutOptions))
                 {
-                    callback(sheet);
+                    if (callback != null) callback(sheet);
                 }
             }
         }
@@ -39,14 +39,14 @@ namespace DSP_Helmod.UI.Gui
             {
                 if (GUILayout.Button("?", HMStyle.Icon45LayoutOptions))
                 {
-                    callback(node);
+                    if(callback != null) callback(node);
                 }
             }
             else
             {
                 if (GUILayout.Button(node.Icon, HMStyle.Icon45LayoutOptions))
                 {
-                    callback(node);
+                    if (callback != null) callback(node);
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace DSP_Helmod.UI.Gui
             {
                 if (GUILayout.Button(action, HMStyle.ActionButtonLayoutOptions))
                 {
-                    callback(node);
+                    if (callback != null) callback(node);
                 }
             }
         }

@@ -11,6 +11,7 @@ using DSP_Helmod.UI.Core;
 using UnityEngine;
 using DSP_Helmod.Math;
 using UnityEngine.UI;
+using DSP_Helmod.Converter;
 
 namespace DSP_Helmod.UI
 {
@@ -23,7 +24,7 @@ namespace DSP_Helmod.UI
         protected List<HMForm> toolbarForms;
         protected List<RecipeProto> recipes = new List<RecipeProto>();
 
-        protected DataModel model = new DataModel();
+        protected DataModel model;
         protected Nodes currentSheet;
         protected Nodes currentNode;
 
@@ -35,13 +36,23 @@ namespace DSP_Helmod.UI
         public MainPanel(UIController parent) : base(parent) {
             this.name = "Helmod v0.1";
             this.Show = true;
-            this.windowRect0 = new Rect(200, 20, 1200, 650);
+            this.windowRect0 = new Rect(500, 200, 1200, 650);
         }
         public override void OnInit()
         {
-            
+            HMLogger.Debug("MainPanel.OnInit");
+            if (model == null)
+            {
+                model = DataModelConverter.ReadXml(System.IO.Path.Combine(HelmodPlugin.PluginPath, "model.xml"));
+                if (model != null && model.Sheets != null && model.Sheets.Count > 0)
+                {
+                    SetCurrentSheet(model.Sheets.First());
+                    Compute();
+                }
+            }
+            if (model == null) model = new DataModel();
         }
-        
+
 
         public override void OnUpdate()
         {
@@ -103,29 +114,7 @@ namespace DSP_Helmod.UI
             GUILayout.EndHorizontal();
         }
 
-        private void CreateNewSheet()
-        {
-            Nodes sheet = new Nodes();
-            model.Sheets.Add(sheet);
-            SetCurrentSheet(sheet);
-        }
-        private void SetCurrentSheet(Nodes sheet)
-        {
-            this.currentSheet = sheet;
-            this.currentNode = sheet;
-            switch (sheet.Time)
-            {
-                case 60:
-                    this.timeSelected = 1;
-                    break;
-                case 3600:
-                    this.timeSelected = 2;
-                    break;
-                default:
-                    this.timeSelected = 0;
-                    break;
-            }
-        }
+        
 
         private void DrawMenu()
         {
@@ -156,7 +145,7 @@ namespace DSP_Helmod.UI
 
                 if (toolbarForms != null && toolbarInt > -1)
                 {
-                    toolbarForms[toolbarInt].Show = !toolbarForms[toolbarInt].Show;
+                    toolbarForms[toolbarInt].SwitchShow();
                     toolbarInt = -1;
                 }
             }
@@ -174,8 +163,48 @@ namespace DSP_Helmod.UI
 
         private void DrawNavigate()
         {
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(GUILayout.Width(100));
+            if (currentSheet != null)
+            {
+                if (this.currentNode == currentSheet)
+                {
+                    GUI.color = Color.yellow;
+                }
+                HMCell.Node(currentSheet, delegate (Node element) {
+                    SetCurrentNodes((Nodes)element);
+                });
+                GUI.color = Color.white;
+                DrawNavigate(currentSheet);
+            }
+            else
+            {
+                GUILayout.Label("");
+            }
             GUILayout.EndVertical();
+        }
+        private void DrawNavigate(Nodes nodes)
+        {
+            if (nodes != null && nodes.Children != null && nodes.Children.Count > 0)
+            {
+                GUILayout.BeginVertical(HMStyle.BoxNavigate);
+                foreach (Node node in nodes.Children)
+                {
+                    if (node is Nodes)
+                    {
+                        Nodes childNodes = (Nodes)node;
+                        if (this.currentNode == childNodes)
+                        {
+                            GUI.color = Color.yellow;
+                        }
+                        HMCell.Node(node, delegate(Node element) {
+                            SetCurrentNodes((Nodes)element);
+                        });
+                        GUI.color = Color.white;
+                        DrawNavigate(childNodes);
+                    }
+                }
+                GUILayout.EndVertical();
+            }
         }
 
         private void DrawDetail()
@@ -295,19 +324,24 @@ namespace DSP_Helmod.UI
                     }
                     
                     GUILayout.EndHorizontal();
+                    // Products
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
                     foreach (Item item in node.Products)
                     {
-                        HMCell.ItemProduct(item, node.Count, delegate(Item element) {
-                            if(element.State == ItemState.Main)
+                        if (item.State == ItemState.Main || item.Count > 0.01)
+                        {
+                            HMCell.ItemProduct(item, node.Count, delegate (Item element)
                             {
-                                HMEventQueue.EnQueue(currentNode, new HMEvent(HMEventType.EditionProduct, element));
-                            }
-                            else
-                            {
-                                HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByProduct, element));
-                            }
-                        });
+                                if (element.State == ItemState.Main)
+                                {
+                                    HMEventQueue.EnQueue(currentNode, new HMEvent(HMEventType.EditionProduct, element));
+                                }
+                                else
+                                {
+                                    HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByProduct, element));
+                                }
+                            });
+                        }
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
@@ -315,9 +349,13 @@ namespace DSP_Helmod.UI
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
                     foreach (Item item in node.Ingredients)
                     {
-                        HMCell.ItemIngredient(item, node.Count, delegate (Item element) {
-                            HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
-                        });
+                        if (item.State == ItemState.Main || item.Count > 0.01)
+                        {
+                            HMCell.ItemIngredient(item, node.Count, delegate (Item element)
+                            {
+                                HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
+                            });
+                        }
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
@@ -329,27 +367,81 @@ namespace DSP_Helmod.UI
             }
             GUILayout.EndVertical();
         }
+
+        private void CreateNewSheet()
+        {
+            Nodes sheet = new Nodes();
+            model.Sheets.Add(sheet);
+            SetCurrentSheet(sheet);
+        }
+        private void SetCurrentNodes(Nodes nodes)
+        {
+            HMLogger.Debug($"Old Current Nodes: {currentNode.Type}.{currentNode.Name}");
+            HMLogger.Debug($"SetCurrentNodes: {nodes.Type}.{nodes.Name}");
+            this.currentNode = nodes;
+        }
+        private void SetCurrentSheet(Nodes sheet)
+        {
+            this.currentSheet = sheet;
+            this.currentNode = sheet;
+            switch (sheet.Time)
+            {
+                case 60:
+                    this.timeSelected = 1;
+                    break;
+                case 3600:
+                    this.timeSelected = 2;
+                    break;
+                default:
+                    this.timeSelected = 0;
+                    break;
+            }
+        }
         public void OnEvent(object sender, HMEvent e)
         {
-            Debug.Log("OnEvent()");
+            Classes.HMLogger.Debug("OnEvent()");
+            Nodes parentNode;
+            Node node;
+            RecipeProto recipeProto;
+            Item item;
             switch (e.Type)
             {
                 case HMEventType.AddRecipe:
                     if (currentNode == null) CreateNewSheet();
-                    RecipeProto recipeProto = e.GetItem<RecipeProto>();
+                    recipeProto = e.GetItem<RecipeProto>();
                     AddRecipe(recipeProto);
                     break;
                 case HMEventType.AddRecipeByIngredient:
-                    Item item = e.GetItem<Item>();
+                    item = e.GetItem<Item>();
                     AddRecipe(item);
                     break;
                 case HMEventType.RemoveNode:
-                    Nodes parentNode = (Nodes)sender;
-                    Node node = e.GetItem<Node>();
+                    parentNode = (Nodes)sender;
+                    node = e.GetItem<Node>();
                     parentNode.Remove(node);
                     Compute();
                     break;
                 case HMEventType.UpdateSheet:
+                    Compute();
+                    break;
+                case HMEventType.UpNode:
+                    parentNode = (Nodes)sender;
+                    node = e.GetItem<Node>();
+                    ListExtensions.MoveStep(parentNode.Children, node, -1);
+                    Compute();
+                    break;
+                case HMEventType.DownNode:
+                    parentNode = (Nodes)sender;
+                    node = e.GetItem<Node>();
+                    ListExtensions.MoveStep(parentNode.Children, node, 1);
+                    Compute();
+                    break;
+                case HMEventType.UpLevelNode:
+                    node = e.GetItem<Node>();
+                    node.Parent.UpLevelNode(node);
+                    Compute();
+                    break;
+                case HMEventType.DownLevelNode:
                     Compute();
                     break;
             }
@@ -357,7 +449,7 @@ namespace DSP_Helmod.UI
 
         private void AddRecipe(RecipeProto recipe)
         {
-            Debug.Log(recipe.madeFromString);
+            Classes.HMLogger.Debug(recipe.madeFromString);
             currentNode.Add(new Recipe(recipe));
             Compute();
         }
@@ -379,15 +471,10 @@ namespace DSP_Helmod.UI
             compute.Update(currentSheet);
         }
 
-        private void Save()
-        {
-            string jsonModel = UnityEngine.JsonUtility.ToJson(model);
-            System.IO.File.WriteAllText("C:/Temp/DataModel.json", jsonModel);
-        }
-
         public override void OnClose()
         {
-
+            DataModelConverter.WriteXml(System.IO.Path.Combine(HelmodPlugin.PluginPath, "model.xml"), model);
+            //Test.ConvertItems.Export();
         }
     }
 }

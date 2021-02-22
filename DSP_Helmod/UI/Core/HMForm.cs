@@ -52,12 +52,17 @@ namespace DSP_Helmod.UI.Core
         {
             if (GUI.Button(new Rect(windowRect0.width - 30, 0, 30, 20), "X"))
             {
-                Show = !Show;
-                if (!Show) OnClose();
+                SwitchShow();
             }
             OnDoWindow();
             // Make the windows be draggable.
             GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+        }
+
+        public void SwitchShow()
+        {
+            Show = !Show;
+            if (!Show) OnClose();
         }
 
         abstract public void OnDoWindow();

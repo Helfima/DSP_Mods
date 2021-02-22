@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DSP_Helmod.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,16 +71,16 @@ namespace DSP_Helmod.Math
         public void AddColumn(MatrixHeader column)
         {
             string key = GetColumnKey(column);
-            //Debug.Log("Matrix.AddColumn:" + key);
+            HMLogger.Trace("Matrix.AddColumn:" + key);
             if (!columnIndex.ContainsKey(key))
             {
                 // add column
                 int icol = columns.Length;
                 Array.Resize(ref columns, icol + 1);
-                //Debug.Log("Matrix.columns.Length:" + columns.Length);
+                HMLogger.Trace("Matrix.columns.Length:" + columns.Length);
                 columns[icol] = column;
                 columnIndex.Add(key, icol);
-                //Debug.Log("Matrix.columns added");
+                HMLogger.Trace("Matrix.columns added");
                 rows = ResizeArray<double>(rows, headers.Length, columns.Length);
             }
         }
@@ -199,16 +200,16 @@ namespace DSP_Helmod.Math
         public void AddColumn(MatrixValue value)
         {
             string key = GetColumnKey(value);
-            //Debug.Log("MatrixRow.AddColumn:" + key);
+            HMLogger.Trace("MatrixRow.AddColumn:" + key);
             if (!columnIndex.ContainsKey(key))
             {
                 MatrixHeader column = new MatrixHeader(value.Type, value.Name);
                 int icol = columns.Length;
                 Array.Resize(ref columns, icol + 1);
-                //Debug.Log("MatrixRow.columns.Length:" + columns.Length);
+                HMLogger.Trace("MatrixRow.columns.Length:" + columns.Length);
                 columns[icol] = column;
                 columnIndex.Add(key, icol);
-                //Debug.Log("MatrixRow.columns added");
+                HMLogger.Trace("MatrixRow.columns added");
             }
         }
         public void AddValue(MatrixValue value)
@@ -270,6 +271,15 @@ namespace DSP_Helmod.Math
             return Type.GetHashCode() ^ Name.GetHashCode() ^ Value.GetHashCode();
         }
 
+        public MatrixValue Clone()
+        {
+            return new MatrixValue(Type, Name, Value);
+        }
+
+        public override string ToString()
+        {
+            return $"MatrixValue => {Type}.{Name}={Value}";
+        }
     }
 
     abstract public class MatrixElement

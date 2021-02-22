@@ -19,12 +19,14 @@ namespace DSP_Helmod.Model
         public List<Item> Products = new List<Item>();
         public List<Item> Ingredients = new List<Item>();
         public Texture2D Icon;
+        public Nodes Parent;
 
         public bool Match(MatrixValue other)
         {
+            Classes.HMLogger.Debug($"Test Node match {this.GetType()}: {Type}=={other.Type} && {Name}=={other.Name}");
             if (other == null || Type == null || Name == null) return false;
             return Type.Equals(other.Type) && Name.Equals(other.Name);
         }
-
+        
     }
 }

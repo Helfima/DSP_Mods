@@ -25,9 +25,38 @@ namespace DSP_Helmod.UI.Gui
         public static void NodeActions(Nodes parent, Node node)
         {
             GUILayout.BeginVertical();
-            HMButton.Node(node, "X", delegate (Node element) {
-                HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.RemoveNode, element));
-            });
+            {
+                GUILayout.BeginHorizontal();
+                HMButton.Node(node, "U", delegate (Node element)
+                {
+                    HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpNode, element));
+                });
+                HMButton.Node(node, "X", delegate (Node element)
+                {
+                    HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.RemoveNode, element));
+                });
+                GUILayout.EndHorizontal();
+            }
+            {
+                GUILayout.BeginHorizontal();
+                HMButton.Node(node, "D", delegate (Node element)
+                {
+                    HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownNode, element));
+                });
+                GUILayout.EndHorizontal();
+            }
+            {
+                GUILayout.BeginHorizontal();
+                HMButton.Node(node, "<", delegate (Node element)
+                {
+                    HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownLevelNode, element));
+                });
+                HMButton.Node(node, ">", delegate (Node element)
+                {
+                    HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpLevelNode, element));
+                });
+                GUILayout.EndHorizontal();
+            }
             GUILayout.EndVertical();
         }
         public static void Item(Item item, double factor = 1, Callback.ForItem callback = null)
@@ -81,8 +110,11 @@ namespace DSP_Helmod.UI.Gui
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                 }
-                Item(item, 1, callback);
-                index++;
+                if (item.State == ItemState.Main || item.Count > 0.01)
+                {
+                    Item(item, 1, callback);
+                    index++;
+                }
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -100,8 +132,11 @@ namespace DSP_Helmod.UI.Gui
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                 }
-                ItemProduct(item, 1, callback);
-                index++;
+                if (item.State == ItemState.Main || item.Count > 0.01)
+                {
+                    ItemProduct(item, 1, callback);
+                    index++;
+                }
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -119,8 +154,11 @@ namespace DSP_Helmod.UI.Gui
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                 }
-                ItemIngredient(item, 1, callback);
-                index++;
+                if (item.State == ItemState.Main || item.Count > 0.01)
+                {
+                    ItemIngredient(item, 1, callback);
+                    index++;
+                }
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

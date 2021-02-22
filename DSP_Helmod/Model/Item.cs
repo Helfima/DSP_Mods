@@ -56,6 +56,11 @@ namespace DSP_Helmod.Model
                 return null;
             }
         }
+
+        public string Type
+        {
+            get { return this.GetType().Name; }
+        }
         public bool Match(Item other)
         {
             if (other == null || Name == null) return false;
