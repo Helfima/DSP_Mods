@@ -38,7 +38,8 @@ namespace DSP_Helmod.Classes
 
         public T GetItem<T>() where T : class
         {
-            return (T) item;
+            if(item is T) return (T) item;
+            return default(T);
         }
 
         

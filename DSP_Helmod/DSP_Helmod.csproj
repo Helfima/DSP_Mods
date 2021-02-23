@@ -114,8 +114,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Build\CopyDll.bat" />
-    <None Include="Build\manifest.json" />
-    <None Include="Build\README.md" />
+    <None Include="manifest.json" />
+    <None Include="README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -134,11 +134,12 @@
     <EmbeddedResource Include="Assets\Resources\eclair_x64.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Build\icon.png" />
+    <Content Include="changelog.txt" />
+    <Content Include="icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>$(ProjectDir)..\packages\Mono.pdb2mdb.0.1.0.20130128\toolspdb2mdb.exe $(TargetPath)
-$(ProjectDir)\Build\CopyDll.bat $(TargetPath)</PostBuildEvent>
+$(ProjectDir)\Build\CopyDll.bat $(TargetPath) $(ProjectDir)</PostBuildEvent>
   </PropertyGroup>
 </Project>

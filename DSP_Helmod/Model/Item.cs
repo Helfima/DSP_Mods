@@ -16,6 +16,15 @@ namespace DSP_Helmod.Model
         public double Count;
         public ItemState State = ItemState.Normal;
 
+        public Item(int id)
+        {
+            this.Id = id;
+            this.proto = LDB.items.Select(Id);
+            if(this.proto != null)
+            {
+                this.Name = proto.name;
+            }
+        }
         /// <summary>
         /// Use only for test
         /// </summary>
@@ -34,6 +43,7 @@ namespace DSP_Helmod.Model
         }
         public Item(ItemProto proto, double count, ItemState state = ItemState.Normal)
         {
+            this.Id = proto.ID;
             this.proto = proto;
             this.Name = proto.name;
             this.Count = count;

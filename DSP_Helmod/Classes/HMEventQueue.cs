@@ -28,11 +28,17 @@ namespace DSP_Helmod.Classes
         {
             if (queues.Count > 0)
             {
-                foreach (HMEventQueue queue in queues)
+                try
                 {
-                    HMEvent.SendEvent(queue.sender, queue.e);
+                    foreach (HMEventQueue queue in queues)
+                    {
+                        HMEvent.SendEvent(queue.sender, queue.e);
+                    }
                 }
-                queues.Clear();
+                finally
+                {
+                    queues.Clear();
+                }
             }
         }
     }

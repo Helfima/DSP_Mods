@@ -22,7 +22,7 @@ namespace DSP_Helmod.UI
             this.Show = true;
             this.windowRect0 = new Rect(20, 20, 120, 50);
             this.WindowButtons = false;
-            this.Color = Color.black;
+            this.BackgroundColor = Color.black;
         }
         public override void OnInit()
         {

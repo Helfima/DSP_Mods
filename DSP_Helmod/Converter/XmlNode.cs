@@ -1,4 +1,5 @@
-﻿using DSP_Helmod.Math;
+﻿using DSP_Helmod.Classes;
+using DSP_Helmod.Math;
 using DSP_Helmod.Model;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,9 @@ namespace DSP_Helmod.Converter
         [XmlAttribute("Name", typeof(string))]
         public string Name;
 
+        [XmlAttribute("Factory", typeof(int))]
+        public int Factory;
+
         [XmlAttribute("IsNodes", typeof(bool))]
         public bool IsNodes;
 
@@ -36,6 +40,12 @@ namespace DSP_Helmod.Converter
             xmlNode.Id = node.Id;
             xmlNode.Name = node.Name;
             xmlNode.Type = node.Type;
+            if(node is Recipe)
+            {
+                Recipe recipe = (Recipe)node;
+                xmlNode.Factory = recipe.Factory.Id;
+                HMLogger.Debug($"xmlNode.Factory={recipe.Factory.Id}");
+            }
             xmlNode.IsNodes = node is Nodes;
             if (node is Nodes)
             {
@@ -84,6 +94,10 @@ namespace DSP_Helmod.Converter
                 {
                     case "Recipe":
                         Recipe recipe = new Recipe(Id);
+                        if(Factory > 0)
+                        {
+                            recipe.Factory = new Factory(Factory);
+                        }
                         return recipe;
                 }
             }

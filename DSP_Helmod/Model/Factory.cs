@@ -8,6 +8,10 @@ namespace DSP_Helmod.Model
 {
     public class Factory : Item
     {
+        public Factory(int id) : base(id)
+        {
+
+        }
         public Factory(string name, double count): base(name, count)
         {
 

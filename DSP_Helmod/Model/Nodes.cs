@@ -101,7 +101,26 @@ namespace DSP_Helmod.Model
             children.RemoveAt(index);
             Nodes newNodes = new Nodes();
             newNodes.Add(node);
-            children.Insert(index, newNodes);
+            newNodes.Parent = this;
+            if (children.Count == 0)
+            {
+                children.Add(newNodes);
+            }
+            else
+            {
+                children.Insert(index, newNodes);
+            }
+        }
+        public void DownLevelNode(Node node)
+        {
+            if (Parent != null)
+            {
+                int index = children.IndexOf(node);
+                children.RemoveAt(index);
+                int afterIndex = Parent.children.IndexOf(this);
+                Parent.children.Insert(afterIndex+1, node);
+                node.Parent = Parent;
+            }
         }
         public void AddObjective(Item item, double value)
         {

@@ -14,7 +14,7 @@ namespace DSP_Helmod.UI.Core
         protected Rect windowRect0 = new Rect(200, 20, 600, 300);
         public int id = 66600001;
         protected string name = "DSP Helmod";
-        protected Color Color = Color.white;
+        protected Color BackgroundColor = Color.white;
 
         protected bool IsInit = false;
         protected Vector2 scrollPosition;
@@ -44,8 +44,12 @@ namespace DSP_Helmod.UI.Core
         public void OnGUI()
         {
             if (!IsInit) Init();
-            //GUI.color = Color.gray;
+            //Color test = new Color(1, 1, 1);
+            //test.a = 0.6f + 0.4f * Mathf.Sin(Time.time);
+            //GUI.backgroundColor = test;
+
             windowRect0 = GUI.Window(id, windowRect0, DoWindow, name);
+            
         }
         abstract public void OnUpdate();
         // Make the contents of the window.
@@ -60,8 +64,9 @@ namespace DSP_Helmod.UI.Core
                     SwitchShow();
                 }
             }
-
             OnDoWindow();
+
+            GUI.color = Color.white;
             if (Event.current.type == EventType.Repaint)
             {
                 if (lastTooltip != "")
@@ -71,14 +76,15 @@ namespace DSP_Helmod.UI.Core
 
                 lastTooltip = GUI.tooltip;
             }
-            GUI.color = Color;
             // Make the windows be draggable.
             GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+
         }
 
         private void DrawTooltip(string tooltip)
         {
             //Debug.Log("Draw tooltip" + GUI.tooltip);
+            GUI.backgroundColor = Color.red;
             if (tooltip.StartsWith("Action:"))
             {
                 string label = tooltip.Substring(tooltip.IndexOf(':')+1);

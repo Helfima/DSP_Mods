@@ -36,8 +36,10 @@ namespace DSP_Helmod.UI
         protected string[] timesString = new string[] {"1s", "1mn", "1h" };
         protected string SavePath;
         public MainPanel(UIController parent) : base(parent) {
-            this.name = "DSP Helmod V1.0";
-            this.Show = false;
+            this.name = "DSP Helmod V1.1.0";
+#if DEBUG
+            this.Show = true;
+#endif
             this.windowRect0 = new Rect(500, 200, 1400, 650);
         }
         public override void OnInit()
@@ -507,11 +509,19 @@ namespace DSP_Helmod.UI
                     break;
                 case HMEventType.UpLevelNode:
                     node = e.GetItem<Node>();
-                    node.Parent.UpLevelNode(node);
-                    Compute();
+                    if (node.Parent != null)
+                    {
+                        node.Parent.UpLevelNode(node);
+                        Compute();
+                    }
                     break;
                 case HMEventType.DownLevelNode:
-                    Compute();
+                    node = e.GetItem<Node>();
+                    if (node.Parent != null)
+                    {
+                        node.Parent.DownLevelNode(node);
+                        Compute();
+                    }
                     break;
             }
         }

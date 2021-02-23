@@ -15,6 +15,7 @@ namespace DSP_Helmod.UI.Gui
             newStyle.normal.background = image;
             return newStyle;
         }
+        public static GUIStyle Form = ChangeTexture(new GUIStyle(GUI.skin.window), HMTexture.icon_blue);
 
         public static GUILayoutOption[] BoxIconLayoutOptions = new GUILayoutOption[] { GUILayout.Height(70) };
 
