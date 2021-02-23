@@ -20,11 +20,13 @@ namespace DSP_Helmod.Model
             UpdateItems();
         }
 
-        public Recipe(RecipeProto proto)
+        public Recipe(RecipeProto proto, double count = 0)
         {
             this.proto = proto;
+            this.Count = 0;
             UpdateItems();
         }
+
         public RecipeProto Proto
         {
             get
@@ -59,6 +61,23 @@ namespace DSP_Helmod.Model
                 }
                 return factory; 
             }
+            set
+            {
+                factory = value;
+            }
+        }
+
+        public List<Factory> Factories
+        {
+            get
+            {
+                List<ItemProto> items = LDB.items.dataArray.Where(item => item.typeString.Equals(proto.madeFromString)).ToList();
+                items.Sort(delegate (ItemProto item1, ItemProto item2)
+                {
+                    return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
+                });
+                return items.Select(item => new Factory(item, 1)).ToList();
+            }
         }
 
         private void UpdateItems()
@@ -69,6 +88,16 @@ namespace DSP_Helmod.Model
             this.Id = proto.ID;
             this.Name = proto.name;
             this.Type = GetType().Name;
+        }
+
+        public  Recipe Clone()
+        {
+            return new Recipe(proto, Count);
+        }
+
+        public Recipe Clone(double value)
+        {
+            return new Recipe(proto, value);
         }
 
     }

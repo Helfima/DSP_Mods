@@ -68,15 +68,7 @@ namespace DSP_Helmod.UI
             List<RecipeProto> recipes = recipeList[groupSelected];
             DrawElements(recipes);
             //GUILayout.EndHorizontal();
-            if (Event.current.type == EventType.Repaint)
-            {
-                if (lastTooltip != "")
-                {
-                    GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), GUI.tooltip);
-                }
-
-                lastTooltip = GUI.tooltip;
-            }
+            
 
         }
 
@@ -101,7 +93,7 @@ namespace DSP_Helmod.UI
             if (selection != -1)
             {
                 RecipeProto recipe = recipes[selection];
-                Classes.HMLogger.Debug($"Recipe:{recipe.name}");
+                //HMLogger.Debug($"Recipe:{recipe.name}");
                 HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
                 selection = -1;
             }

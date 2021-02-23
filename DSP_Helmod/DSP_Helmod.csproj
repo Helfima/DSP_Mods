@@ -97,13 +97,16 @@
     <Compile Include="Test\ConvertItems.cs" />
     <Compile Include="Test\Item.cs" />
     <Compile Include="Test\Items.cs" />
+    <Compile Include="UI\ChooseRecipe.cs" />
     <Compile Include="UI\Core\HMForm.cs" />
     <Compile Include="UI\EditionProduct.cs" />
+    <Compile Include="UI\EditionRecipe.cs" />
     <Compile Include="UI\Gui\Callback.cs" />
     <Compile Include="UI\Gui\HMButton.cs" />
     <Compile Include="UI\Gui\HMCell.cs" />
     <Compile Include="UI\Gui\HMStyle.cs" />
     <Compile Include="UI\Gui\HMTexture.cs" />
+    <Compile Include="UI\TopMenu.cs" />
     <Compile Include="UI\MainPanel.cs" />
     <Compile Include="UI\SelectorRecipe.cs" />
     <Compile Include="UI\SelectorItem.cs" />
@@ -111,6 +114,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Build\CopyDll.bat" />
+    <None Include="Build\manifest.json" />
+    <None Include="Build\README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +129,12 @@
     <EmbeddedResource Include="Assets\Resources\Icon_orange_x64.png" />
     <EmbeddedResource Include="Assets\Resources\Icon_red_x64.png" />
     <EmbeddedResource Include="Assets\Resources\Icon_yellow_x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\Resources\eclair_x64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Build\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

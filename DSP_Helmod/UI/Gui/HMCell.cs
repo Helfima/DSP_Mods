@@ -14,7 +14,7 @@ namespace DSP_Helmod.UI.Gui
         private static double limit = 10;
         public static void Node(Node node, Callback.ForNode callback = null)
         {
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             HMButton.Node(node, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
             if (node.Count < limit) GUILayout.Label($"{node.Count:N2}", HMStyle.TextButtonIcon);
@@ -22,16 +22,32 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
+
+        public static void NodePower(Node node, Callback.ForVoid callback = null)
+        {
+            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            HMButton.Texture(HMTexture.eclaireTexture, callback);
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+            if (node.Power > 1e9) GUILayout.Label($"{node.Power / 1e9:N1}GW", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            else if (node.Power > 1e6) GUILayout.Label($"{node.Power / 1e6:N1}MW", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            else if (node.Power > 1e3) GUILayout.Label($"{node.Power / 1e3:N1}kW", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            else GUILayout.Label($"{node.Power:N1}W", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
         public static void NodeActions(Nodes parent, Node node)
         {
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             {
                 GUILayout.BeginHorizontal();
-                HMButton.Node(node, "U", delegate (Node element)
+                GUIContent actionUp = new GUIContent("U", "Action:Up");
+                HMButton.Node(node, actionUp, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpNode, element));
                 });
-                HMButton.Node(node, "X", delegate (Node element)
+                GUILayout.FlexibleSpace();
+                GUIContent actionDelete = new GUIContent("X", "Action:Delete");
+                HMButton.Node(node, actionDelete, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.RemoveNode, element));
                 });
@@ -39,19 +55,18 @@ namespace DSP_Helmod.UI.Gui
             }
             {
                 GUILayout.BeginHorizontal();
-                HMButton.Node(node, "D", delegate (Node element)
+                GUIContent actionDown = new GUIContent("D", "Action:Down");
+                HMButton.Node(node, actionDown, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownNode, element));
                 });
-                GUILayout.EndHorizontal();
-            }
-            {
-                GUILayout.BeginHorizontal();
-                HMButton.Node(node, "<", delegate (Node element)
+                GUIContent actionDownLevel = new GUIContent("<", "Action:DownLevel");
+                HMButton.Node(node, actionDownLevel, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownLevelNode, element));
                 });
-                HMButton.Node(node, ">", delegate (Node element)
+                GUIContent actionUpLevel = new GUIContent(">", "Action:UpLevel");
+                HMButton.Node(node, actionUpLevel, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpLevelNode, element));
                 });
@@ -66,14 +81,15 @@ namespace DSP_Helmod.UI.Gui
 
         public static void ItemColored(Item item, ItemColor color, double factor = 1, Callback.ForItem callback = null)
         {
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             HMButton.ItemColored(item, color, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
-            if (item.Count < limit) GUILayout.Label($"{item.Count * factor:N2}", HMStyle.TextButtonIcon);
+            if (item.Count * factor < limit) GUILayout.Label($"{item.Count * factor:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{item.Count * factor:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
+
         public static void ItemProduct(Item item, double factor = 1, Callback.ForItem callback = null)
         {
             ItemColor itemColor = ItemColor.Normal;

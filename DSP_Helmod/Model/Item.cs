@@ -57,6 +57,14 @@ namespace DSP_Helmod.Model
             }
         }
 
+        public List<Recipe> Recipes
+        {
+            get
+            {
+                return proto.recipes.Select(recipe => new Recipe(recipe, 1)).ToList();
+            }
+        }
+
         public string Type
         {
             get { return this.GetType().Name; }

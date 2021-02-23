@@ -2,6 +2,7 @@
 using System.Collections;
 using DSP_Helmod.Classes;
 using System;
+using DSP_Helmod.UI.Gui;
 
 namespace DSP_Helmod.UI.Core
 {
@@ -12,12 +13,14 @@ namespace DSP_Helmod.UI.Core
         protected UIController parent;
         protected Rect windowRect0 = new Rect(200, 20, 600, 300);
         public int id = 66600001;
-        protected string name = "Test";
+        protected string name = "DSP Helmod";
+        protected Color Color = Color.white;
 
         protected bool IsInit = false;
         protected Vector2 scrollPosition;
 
         public bool Show = false;
+        protected bool WindowButtons = true;
         public bool IsTool = false;
         public string Caption = "";
         public string lastTooltip = "";
@@ -50,13 +53,41 @@ namespace DSP_Helmod.UI.Core
         // was created in the code above.
         void DoWindow(int windowID)
         {
-            if (GUI.Button(new Rect(windowRect0.width - 30, 0, 30, 20), "X"))
+            if (WindowButtons)
             {
-                SwitchShow();
+                if (GUI.Button(new Rect(windowRect0.width - 30, 0, 30, 20), "X"))
+                {
+                    SwitchShow();
+                }
             }
+
             OnDoWindow();
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (lastTooltip != "")
+                {
+                    DrawTooltip(GUI.tooltip);
+                }
+
+                lastTooltip = GUI.tooltip;
+            }
+            GUI.color = Color;
             // Make the windows be draggable.
             GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+        }
+
+        private void DrawTooltip(string tooltip)
+        {
+            //Debug.Log("Draw tooltip" + GUI.tooltip);
+            if (tooltip.StartsWith("Action:"))
+            {
+                string label = tooltip.Substring(tooltip.IndexOf(':')+1);
+                GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), label, HMStyle.TextTooltip);
+            }
+            else
+            {
+                GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), tooltip, HMStyle.TextTooltip);
+            }
         }
 
         public void SwitchShow()

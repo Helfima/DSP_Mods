@@ -71,8 +71,19 @@ namespace DSP_Helmod.Math
                 }
             }
             ComputeFactory(nodes);
+            ComputePower(nodes);
             ComputeInputOutput(nodes);
             HMLogger.Debug(solver.ToString());
+        }
+
+        private void ComputePower(Nodes nodes)
+        {
+            nodes.Power = 0;
+            foreach (Node node in nodes.Children)
+            {
+                
+                nodes.Power += node.Power;
+            }
         }
 
         private void ComputeFactory(Nodes nodes)

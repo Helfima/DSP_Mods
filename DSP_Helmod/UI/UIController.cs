@@ -17,6 +17,10 @@ namespace DSP_Helmod.UI
 
         public UIController()
         {
+            TopMenu topMenu = new TopMenu(this);
+            HMEvent.Handler += topMenu.OnEvent;
+            AddForm(topMenu);
+
             MainPanel mainPanel = new MainPanel(this);
             HMEvent.Handler += mainPanel.OnEvent;
             AddForm(mainPanel);
@@ -30,6 +34,14 @@ namespace DSP_Helmod.UI
             EditionProduct editionProduct = new EditionProduct(this);
             HMEvent.Handler += editionProduct.OnEvent;
             AddForm(editionProduct);
+
+            EditionRecipe editionRecipe = new EditionRecipe(this);
+            HMEvent.Handler += editionRecipe.OnEvent;
+            AddForm(editionRecipe);
+
+            ChooseRecipe chooseRecipe = new ChooseRecipe(this);
+            HMEvent.Handler += chooseRecipe.OnEvent;
+            AddForm(chooseRecipe);
 
         }
 

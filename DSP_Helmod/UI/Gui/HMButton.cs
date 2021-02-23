@@ -14,7 +14,17 @@ namespace DSP_Helmod.UI.Gui
     public class HMButton
     {
         private static Texture2D infoTexture = LoadAssembly.LoadTexture2D("info", 64, 64);
-        
+
+        public static void Texture(Texture2D texture, Callback.ForVoid callback)
+        {
+            if (texture != null)
+            {
+                if (GUILayout.Button(texture, HMStyle.Icon45LayoutOptions))
+                {
+                    if (callback != null) callback();
+                }
+            }
+        }
         public static void Sheet(Nodes sheet, Callback.ForSheet callback)
         {
             if (sheet.Icon == null)
@@ -58,6 +68,28 @@ namespace DSP_Helmod.UI.Gui
                 if (GUILayout.Button(action, HMStyle.ActionButtonLayoutOptions))
                 {
                     if (callback != null) callback(node);
+                }
+            }
+        }
+
+        public static void Node(Node node, GUIContent action, Callback.ForNode callback)
+        {
+            if (action != null)
+            {
+                if (GUILayout.Button(action, HMStyle.ActionButtonLayoutOptions))
+                {
+                    if (callback != null) callback(node);
+                }
+            }
+        }
+
+        public static void Action(string action, Callback.ForVoid callback)
+        {
+            if (action != null)
+            {
+                if (GUILayout.Button(action))
+                {
+                    if (callback != null) callback();
                 }
             }
         }

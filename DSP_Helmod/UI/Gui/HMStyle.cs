@@ -15,7 +15,9 @@ namespace DSP_Helmod.UI.Gui
             newStyle.normal.background = image;
             return newStyle;
         }
-        
+
+        public static GUILayoutOption[] BoxIconLayoutOptions = new GUILayoutOption[] { GUILayout.Height(70) };
+
         public static GUILayoutOption[] Icon45LayoutOptions = new GUILayoutOption[] { GUILayout.Height(45), GUILayout.Width(45) };
         public static GUILayoutOption[] IconText45LayoutOptions = new GUILayoutOption[] { GUILayout.Height(15), GUILayout.Width(45) };
         public static GUILayoutOption[] Icon30LayoutOptions = new GUILayoutOption[] { GUILayout.Height(30), GUILayout.Width(30) };
@@ -23,10 +25,11 @@ namespace DSP_Helmod.UI.Gui
 
         public static GUILayoutOption[] ActionButtonLayoutOptions = new GUILayoutOption[] { GUILayout.Height(25), GUILayout.Width(25) };
 
-        public static GUILayoutOption[] ScrollListDetailLayoutOptions = new GUILayoutOption[] { GUILayout.Height(235) };
+        public static GUILayoutOption[] ScrollListDetailLayoutOptions = new GUILayoutOption[] { GUILayout.Height(200) };
 
+        public static GUILayoutOption[] ScrollNavLayoutOptions = new GUILayoutOption[] { GUILayout.Height(500), GUILayout.Width(150) };
         public static GUILayoutOption[] ScrollDataLayoutOptions = new GUILayoutOption[] { GUILayout.Height(500) };
-        public static GUILayoutOption[] ColumnActionLayoutOptions = new GUILayoutOption[] { GUILayout.Width(60) };
+        public static GUILayoutOption[] ColumnActionLayoutOptions = new GUILayoutOption[] { GUILayout.Width(100) };
         public static GUILayoutOption[] ColumnProductionLayoutOptions = new GUILayoutOption[] { GUILayout.Width(40) };
         public static GUILayoutOption[] ColumnRecipeLayoutOptions = new GUILayoutOption[] { GUILayout.Width(80) };
         public static GUILayoutOption[] ColumnPowerLayoutOptions = new GUILayoutOption[] { GUILayout.Width(80) };
@@ -43,6 +46,19 @@ namespace DSP_Helmod.UI.Gui
         public static GUIStyle BoxNavigate = new GUIStyle()
         {
             padding = new RectOffset(10, 0, 0, 0),
+            margin = new RectOffset(0,0,0,0)
+        };
+        public static GUIStyle TreeBarNavigateStretch = ChangeTexture(new GUIStyle()
+        {
+            padding = new RectOffset(0, 0, 0, 0),
+            margin = new RectOffset(0, 0, 0, 0),
+            stretchHeight = true
+        }, HMTexture.icon_orange);
+
+        public static GUIStyle TreeBarNavigate = new GUIStyle(GUI.skin.box)
+        {
+            padding = new RectOffset(0, 0, 0, 0),
+            margin = new RectOffset(0, 0, 0, 0)
         };
 
         public static GUIStyle TextAlignLowerRight = new GUIStyle(GUI.skin.label)
@@ -54,6 +70,16 @@ namespace DSP_Helmod.UI.Gui
         {
             alignment = TextAnchor.MiddleCenter
         };
+
+        internal static GUIStyle ChangeTooltip(GUIStyle style)
+        {
+            GUIStyle newStyle = new GUIStyle(style);
+            newStyle.normal.background = Texture2D.blackTexture;
+            newStyle.stretchWidth = true;
+            newStyle.stretchHeight = true;
+            return newStyle;
+        }
+        public static GUIStyle TextTooltip = ChangeTooltip(GUI.skin.label);
 
         public static GUIStyle TextButtonIcon = new GUIStyle(GUI.skin.label)
         {

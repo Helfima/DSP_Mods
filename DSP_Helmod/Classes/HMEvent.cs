@@ -46,13 +46,16 @@ namespace DSP_Helmod.Classes
 
     public enum HMEventType
     {
+        OpenClose,
         Update,
         AddRecipe,
         AddRecipeByProduct,
         AddRecipeByIngredient,
         AddItem,
         RemoveNode,
+        ChooseRecipe,
         EditionProduct,
+        EditionRecipe,
         UpdateSheet,
         UpNode,
         DownNode,

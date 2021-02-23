@@ -55,7 +55,7 @@ namespace DSP_Helmod.UI
             switch (e.Type)
             {
                 case HMEventType.EditionProduct:
-                    Show = !Show;
+                    SwitchShow();
                     nodes = (Nodes)sender;
                     item = e.GetItem<Item>();
                     value = item.Count.ToString();

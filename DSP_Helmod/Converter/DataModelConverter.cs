@@ -16,9 +16,17 @@ namespace DSP_Helmod.Converter
     {
         public static void WriteXml(string path, DataModel dataModel)
         {
-            SerializeItem(path, dataModel);
+            string directory = Path.GetDirectoryName(path);
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            if (Directory.Exists(directory))
+            {
+                SerializeItem(path, dataModel);
+            }
+            else
+            {
+                Debug.LogError($"Unable to write file: {path}");
+            }
         }
-
         public static DataModel ReadXml(string path)
         {
             return DeserializeItem(path);

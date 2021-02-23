@@ -14,7 +14,7 @@ using UnityEngine.EventSystems;
 
 namespace DSP_Helmod
 {
-    [BepInPlugin("helfima.helmod.plugin", "DSP Helmod Plug-In", "1.0.0.0")]
+    [BepInPlugin("helmod.dsp.plugin", "DSP Helmod Plug-In", "1.0")]
     public class HelmodPlugin : BaseUnityPlugin
     {
         public static string PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -27,7 +27,7 @@ namespace DSP_Helmod
             Classes.HMLogger.Level = Classes.LoggerLevel.Debug;
 #endif
             Classes.HMLogger.Debug(HelmodPlugin.PluginPath);
-            var harmony = new Harmony("helfima.helmod.plugin");
+            var harmony = new Harmony("helmod.dsp.plugin");
             harmony.PatchAll();
         }
 

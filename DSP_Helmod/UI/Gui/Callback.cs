@@ -12,5 +12,6 @@ namespace DSP_Helmod.UI.Gui
         public delegate void ForSheet(Nodes sheet);
         public delegate void ForNode(Node node);
         public delegate void ForItem(Item item);
+        public delegate void ForVoid();
     }
 }

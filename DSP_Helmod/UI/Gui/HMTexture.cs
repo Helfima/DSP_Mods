@@ -11,6 +11,7 @@ namespace DSP_Helmod.UI.Gui
     public class HMTexture
     {
         public static Texture2D infoTexture = LoadAssembly.LoadTexture2D("info", 64, 64);
+        public static Texture2D eclaireTexture = LoadAssembly.LoadTexture2D("eclair_x64", 64, 64);
 
         public static Texture2D icon_blue = LoadAssembly.LoadTexture2D("icon_blue_x64", 64, 64);
         public static Texture2D icon_green = LoadAssembly.LoadTexture2D("icon_green_x64", 64, 64);
