@@ -22,6 +22,7 @@ namespace DSP_Helmod.UI.Core
         public bool Show = false;
         protected bool WindowButtons = true;
         public bool IsTool = false;
+        public bool IsPersistant = false;
         public string Caption = "";
         public string lastTooltip = "";
         public HMForm(UIController parent)
@@ -32,6 +33,11 @@ namespace DSP_Helmod.UI.Core
         public string Name
         {
             get { return name; }
+        }
+
+        public Rect Position
+        {
+            set { windowRect0 = value; }
         }
 
         protected void Init()
@@ -49,7 +55,7 @@ namespace DSP_Helmod.UI.Core
             //GUI.backgroundColor = test;
 
             windowRect0 = GUI.Window(id, windowRect0, DoWindow, name);
-            
+            CheckInputInRect(windowRect0);
         }
         abstract public void OnUpdate();
         // Make the contents of the window.
@@ -71,6 +77,7 @@ namespace DSP_Helmod.UI.Core
             {
                 if (lastTooltip != "")
                 {
+                    //parent.Tooltip = GUI.tooltip;
                     DrawTooltip(GUI.tooltip);
                 }
 
@@ -78,7 +85,6 @@ namespace DSP_Helmod.UI.Core
             }
             // Make the windows be draggable.
             GUI.DragWindow(new Rect(0, 0, 10000, 10000));
-
         }
 
         private void DrawTooltip(string tooltip)
@@ -93,7 +99,30 @@ namespace DSP_Helmod.UI.Core
             else
             {
                 GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), tooltip, HMStyle.TextTooltip);
+                //GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 50), tooltip);
             }
+        }
+        private void DrawTooltip2(string tooltip)
+        {
+            if (tooltip == null || tooltip == "") return;
+            //Debug.Log("Draw tooltip" + GUI.tooltip);
+            GUI.backgroundColor = Color.red;
+            GUILayout.BeginArea(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 50, 200, 200));
+            if (tooltip.StartsWith("Action:"))
+            {
+                string label = tooltip.Substring(tooltip.IndexOf(':') + 1);
+                GUILayout.Label(label, HMStyle.TextTooltip);
+            }
+            else
+            {
+                GUILayout.Label(tooltip, HMStyle.TextTooltip);
+            }
+            GUILayout.EndArea();
+        }
+
+        public void MoveMousePosition()
+        {
+            this.windowRect0 = new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, windowRect0.width, windowRect0.height);
         }
 
         public void SwitchShow()
@@ -102,8 +131,31 @@ namespace DSP_Helmod.UI.Core
             if (!Show) OnClose();
         }
 
+        public void Close()
+        {
+            Show = false;
+            OnClose();
+        }
+
         abstract public void OnDoWindow();
         abstract public void OnClose();
 
+        private void CheckInputInRect(Rect area)
+        {
+            if (area.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
+            {
+                var isMouseInput = Input.GetMouseButton(0) || Input.GetMouseButtonDown(0) || Input.mouseScrollDelta.y != 0;
+
+                if (!isMouseInput)
+                {
+                    return;
+                }
+                else
+                {
+                    Input.ResetInputAxes();
+                }
+
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace DSP_Helmod.Model
         public Recipe(RecipeProto proto, double count = 0)
         {
             this.proto = proto;
-            this.Count = 0;
+            this.Count = count;
             UpdateItems();
         }
 
@@ -40,9 +40,9 @@ namespace DSP_Helmod.Model
             }
         }
 
-        public int Energy
+        public double Energy
         {
-            get { return this.proto.TimeSpend/60; }
+            get { return this.proto.TimeSpend/60.0; }
         }
 
         public Factory Factory

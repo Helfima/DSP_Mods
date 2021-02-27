@@ -55,7 +55,7 @@ namespace DSP_Helmod.UI
                 if (model != null && model.Sheets != null && model.Sheets.Count > 0)
                 {
                     SetCurrentSheet(model.Sheets.First());
-                    Compute();
+                    ComputeAll();
                 }
             }
             if (model == null) model = new DataModel();
@@ -153,6 +153,33 @@ namespace DSP_Helmod.UI
                     });
                 }
                 GUILayout.FlexibleSpace();
+                { 
+                    if(Settings.Instance.DisplayTotal) GUI.color = Color.yellow;
+                    HMButton.Action("Total", delegate ()
+                    {
+                        Settings.Instance.DisplayTotal = !Settings.Instance.DisplayTotal;
+                    });
+                    GUI.color = Color.white;
+                    HMButton.Action("Logistic", delegate ()
+                    {
+                        Settings.Instance.DisplayLogistic = !Settings.Instance.DisplayLogistic;
+                    });
+                    if (Settings.Instance.DisplayLogistic)
+                    {
+                        foreach (Item logistic in Database.LogisticItems)
+                        {
+                            if(logistic.Id == Settings.Instance.ItemIdLogistic)
+                            {
+                                GUI.color = Color.yellow;
+                            }
+                            HMButton.IconLogistic(logistic, delegate(Item element) {
+                                HMEventQueue.EnQueue(this, new HMEvent(HMEventType.ChangeLogisticItem, element));
+                            });
+                            GUI.color = Color.white;
+                        }
+                    }
+                }
+                GUILayout.FlexibleSpace();
 
                 {
                     GUILayout.BeginHorizontal();
@@ -191,7 +218,7 @@ namespace DSP_Helmod.UI
                 {
                     GUI.color = Color.yellow;
                 }
-                HMCell.Node(currentSheet, delegate (Node element) {
+                HMCell.Node(currentSheet, Classes.Language.Get("open.sheet"), delegate (Node element) {
                     SetCurrentNodes((Nodes)element);
                 });
                 GUI.color = Color.white;
@@ -238,7 +265,7 @@ namespace DSP_Helmod.UI
                             {
                                 GUI.color = Color.yellow;
                             }
-                            HMCell.Node(node, delegate (Node element)
+                            HMCell.Node(node, Classes.Language.Get("open.node"), delegate (Node element)
                             {
                                 SetCurrentNodes((Nodes)element);
                             });
@@ -263,7 +290,7 @@ namespace DSP_Helmod.UI
             GUILayout.BeginHorizontal();
             if (currentNode != null)
             {
-                HMCell.NodePower(currentNode);
+                HMCell.NodePower(currentNode, currentNode.GetDeepCount(Settings.Instance.DisplayTotal) / currentNode.Count);
             }
             GUILayout.EndHorizontal();
 
@@ -274,7 +301,7 @@ namespace DSP_Helmod.UI
             ScrollOutputPosition = GUILayout.BeginScrollView(ScrollOutputPosition, HMStyle.ScrollListDetail, HMStyle.ScrollListDetailLayoutOptions);
             if (currentNode != null && currentNode.Products != null)
             {
-                HMCell.ItemProductList(currentNode.Products);
+                HMCell.ItemProductList(currentNode, currentSheet.Time);
             }
 
             GUILayout.EndScrollView();
@@ -286,7 +313,7 @@ namespace DSP_Helmod.UI
             ScrollInputPosition = GUILayout.BeginScrollView(ScrollInputPosition, HMStyle.ScrollListDetail, HMStyle.ScrollListDetailLayoutOptions);
             if (currentNode != null && currentNode.Ingredients != null)
             {
-                HMCell.ItemIngredientList(currentNode.Ingredients, delegate(Item element){
+                HMCell.ItemIngredientList(currentNode, currentSheet.Time, delegate(Item element){
                         HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
                 });
             }
@@ -358,7 +385,7 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     // recipe
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
-                    HMCell.Node(node, delegate (Node element)
+                    HMCell.Node(node, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), Classes.Language.Get("edition.recipe"), delegate (Node element)
                     {
                         if (element is Recipe)
                         {
@@ -368,7 +395,7 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     // power
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
-                    HMCell.NodePower(node, delegate ()
+                    HMCell.NodePower(node, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), delegate ()
                     {
                         if (node is Recipe)
                         {
@@ -381,7 +408,7 @@ namespace DSP_Helmod.UI
                     if(node is Recipe)
                     {
                         Recipe recipe = (Recipe)node;
-                        HMCell.Item(recipe.Factory, 1, delegate(Item item)
+                        HMCell.Item(recipe.Factory, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), delegate(Item item)
                         {
                             HMEventQueue.EnQueue(currentNode, new HMEvent(HMEventType.EditionRecipe, node));
                         });
@@ -398,7 +425,8 @@ namespace DSP_Helmod.UI
                     {
                         if (item.State == ItemState.Main || item.Count > 0.01)
                         {
-                            HMCell.ItemProduct(item, node.Count, delegate (Item element)
+                            item.Flow = item.Count / currentSheet.Time;
+                            HMCell.ItemProduct(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (Item element)
                             {
                                 if (element.State == ItemState.Main)
                                 {
@@ -419,7 +447,8 @@ namespace DSP_Helmod.UI
                     {
                         if (item.State == ItemState.Main || item.Count > 0.01)
                         {
-                            HMCell.ItemIngredient(item, node.Count, delegate (Item element)
+                            item.Flow = item.Count / currentSheet.Time;
+                            HMCell.ItemIngredient(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (Item element)
                             {
                                 HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
                             });
@@ -507,6 +536,10 @@ namespace DSP_Helmod.UI
                     ListExtensions.MoveStep(parentNode.Children, node, 1);
                     Compute();
                     break;
+                case HMEventType.ChangeLogisticItem:
+                    item = e.GetItem<Item>();
+                    Settings.Instance.ItemIdLogistic = item.Id;
+                    break;
                 case HMEventType.UpLevelNode:
                     node = e.GetItem<Node>();
                     if (node.Parent != null)
@@ -557,6 +590,15 @@ namespace DSP_Helmod.UI
             compute.Update(currentSheet);
         }
 
+        private void ComputeAll()
+        {
+            Compute compute = new Compute();
+            foreach(Nodes sheet in model.Sheets)
+            {
+                compute.Update(sheet);
+            }
+        }
+
         private void DeleteSheet()
         {
             model.Sheets.Remove(currentSheet);
@@ -573,7 +615,6 @@ namespace DSP_Helmod.UI
         public override void OnClose()
         {
             DataModelConverter.WriteXml(SavePath, model);
-            //Test.ConvertItems.Export();
         }
     }
 }

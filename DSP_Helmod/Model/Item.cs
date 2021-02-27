@@ -1,4 +1,5 @@
 ﻿using DSP_Helmod.Classes;
+using DSP_Helmod.Math;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace DSP_Helmod.Model
         protected ItemProto proto;
         public double Count;
         public ItemState State = ItemState.Normal;
+        public double Flow;
 
         public Item(int id)
         {
@@ -72,6 +74,19 @@ namespace DSP_Helmod.Model
             get
             {
                 return proto.recipes.Select(recipe => new Recipe(recipe, 1)).ToList();
+            }
+        }
+
+        public double LogisticFlow
+        {
+            get
+            {
+                PrefabDesc prefabDesc = proto.prefabDesc;
+                if (prefabDesc.isBelt)
+                {
+                    return prefabDesc.beltSpeed*6;
+                }
+                return 1;
             }
         }
 

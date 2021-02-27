@@ -1,4 +1,5 @@
 ﻿using DSP_Helmod.Classes;
+using DSP_Helmod.Math;
 using DSP_Helmod.Model;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,10 @@ namespace DSP_Helmod.UI.Gui
     public class HMCell
     {
         private static double limit = 10;
-        public static void Node(Node node, Callback.ForNode callback = null)
+        public static void Node(Node node, string tooltip = null, Callback.ForNode callback = null)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
-            HMButton.Node(node, callback);
+            HMButton.Node(node, tooltip, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
             if (node.Count < limit) GUILayout.Label($"{node.Count:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{node.Count:N1}", HMStyle.TextButtonIcon);
@@ -23,31 +24,46 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndVertical();
         }
 
-        public static void NodePower(Node node, Callback.ForVoid callback = null)
+        public static void Node(Node node, double factor, string tooltip = null, Callback.ForNode callback = null)
         {
+            double count = node.Count * factor;
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
-            HMButton.Texture(HMTexture.eclaireTexture, callback);
+            HMButton.Node(node, tooltip, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
-            if (node.Power > 1e9) GUILayout.Label($"{node.Power / 1e9:N1}GW", HMStyle.TextButtonIcon, GUILayout.Width(60));
-            else if (node.Power > 1e6) GUILayout.Label($"{node.Power / 1e6:N1}MW", HMStyle.TextButtonIcon, GUILayout.Width(60));
-            else if (node.Power > 1e3) GUILayout.Label($"{node.Power / 1e3:N1}kW", HMStyle.TextButtonIcon, GUILayout.Width(60));
-            else GUILayout.Label($"{node.Power:N1}W", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            if (count < limit) GUILayout.Label($"{count:N2}", HMStyle.TextButtonIcon);
+            else GUILayout.Label($"{count:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
+
+        public static void NodePower(Node node, double factor, Callback.ForVoid callback = null)
+        {
+            double power = node.Power * factor;
+            if (!(node is Recipe)) power = power * node.Count;
+            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            HMButton.Texture(HMTexture.eclaireTexture, callback);
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+            if (power > 1e9) GUILayout.Label($"{power / 1e9:N1}GW", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            else if (power > 1e6) GUILayout.Label($"{power / 1e6:N1}MW", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            else if (power > 1e3) GUILayout.Label($"{power / 1e3:N1}kW", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            else GUILayout.Label($"{power:N1}W", HMStyle.TextButtonIcon, GUILayout.Width(60));
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
         public static void NodeActions(Nodes parent, Node node)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             {
                 GUILayout.BeginHorizontal();
                 GUIContent actionUp = new GUIContent("U", "Action:Up");
-                HMButton.Node(node, actionUp, delegate (Node element)
+                HMButton.ActionNode(node, actionUp, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpNode, element));
                 });
                 GUILayout.FlexibleSpace();
                 GUIContent actionDelete = new GUIContent("X", "Action:Delete");
-                HMButton.Node(node, actionDelete, delegate (Node element)
+                HMButton.ActionNode(node, actionDelete, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.RemoveNode, element));
                 });
@@ -56,17 +72,17 @@ namespace DSP_Helmod.UI.Gui
             {
                 GUILayout.BeginHorizontal();
                 GUIContent actionDown = new GUIContent("D", "Action:Down");
-                HMButton.Node(node, actionDown, delegate (Node element)
+                HMButton.ActionNode(node, actionDown, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownNode, element));
                 });
                 GUIContent actionDownLevel = new GUIContent("<", "Action:DownLevel");
-                HMButton.Node(node, actionDownLevel, delegate (Node element)
+                HMButton.ActionNode(node, actionDownLevel, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownLevelNode, element));
                 });
                 GUIContent actionUpLevel = new GUIContent(">", "Action:UpLevel");
-                HMButton.Node(node, actionUpLevel, delegate (Node element)
+                HMButton.ActionNode(node, actionUpLevel, delegate (Node element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpLevelNode, element));
                 });
@@ -74,12 +90,22 @@ namespace DSP_Helmod.UI.Gui
             }
             GUILayout.EndVertical();
         }
+        public static void RecipeTime(Recipe recipe, Callback.ForVoid callback = null)
+        {
+            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            HMButton.Texture(HMTexture.time, callback);
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+            if (recipe.Energy < limit) GUILayout.Label($"{recipe.Energy:N2}", HMStyle.TextButtonIcon);
+            else GUILayout.Label($"{recipe.Energy:N1}", HMStyle.TextButtonIcon);
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
         public static void Item(Item item, double factor = 1, Callback.ForItem callback = null)
         {
-            ItemColored(item, ItemColor.Normal, factor, callback);
+            ItemColored(item, ItemColor.Normal, factor, false, callback);
         }
 
-        public static void ItemColored(Item item, ItemColor color, double factor = 1, Callback.ForItem callback = null)
+        private static void ItemColored(Item item, ItemColor color, double factor = 1, bool withLogistic = false, Callback.ForItem callback = null)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             HMButton.ItemColored(item, color, callback);
@@ -87,6 +113,14 @@ namespace DSP_Helmod.UI.Gui
             if (item.Count * factor < limit) GUILayout.Label($"{item.Count * factor:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{item.Count * factor:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
+            if (withLogistic && Settings.Instance.DisplayLogistic)
+            {
+                GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+                Item logistic = Compute.GetLogisticItem(item);
+                GUILayout.Box(logistic.Icon, HMStyle.BoxIcon, HMStyle.Icon15LayoutOptions);
+                GUILayout.Label($"{logistic.Count * factor:N1}", HMStyle.TextButtonIcon);
+                GUILayout.EndHorizontal();
+            }
             GUILayout.EndVertical();
         }
 
@@ -105,13 +139,13 @@ namespace DSP_Helmod.UI.Gui
                     itemColor = ItemColor.Blue;
                     break;
             }
-            ItemColored(item, itemColor, factor, callback);
+            ItemColored(item, itemColor, factor, true, callback);
         }
 
         public static void ItemIngredient(Item item, double factor = 1, Callback.ForItem callback = null)
         {
             ItemColor itemColor = ItemColor.Yellow;
-            ItemColored(item, itemColor, factor, callback);
+            ItemColored(item, itemColor, factor, true, callback);
         }
 
         public static void ItemList(List<Item> items, Callback.ForItem callback = null)
@@ -136,11 +170,11 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
         }
 
-        public static void ItemProductList(List<Item> items, Callback.ForItem callback = null)
+        public static void ItemProductList(Node node, double time, Callback.ForItem callback = null)
         {
             GUILayout.BeginHorizontal();
             int index = 0;
-            foreach (Item item in items)
+            foreach (Item item in node.Products)
             {
                 if (index % 5 == 0)
                 {
@@ -150,7 +184,8 @@ namespace DSP_Helmod.UI.Gui
                 }
                 if (item.State == ItemState.Main || item.Count > 0.01)
                 {
-                    ItemProduct(item, 1, callback);
+                    item.Flow = item.Count / time;
+                    ItemProduct(item, node.GetDeepCount(Settings.Instance.DisplayTotal), callback);
                     index++;
                 }
             }
@@ -158,11 +193,11 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
         }
 
-        public static void ItemIngredientList(List<Item> items, Callback.ForItem callback = null)
+        public static void ItemIngredientList(Node node, double time, Callback.ForItem callback = null)
         {
             GUILayout.BeginHorizontal();
             int index = 0;
-            foreach (Item item in items)
+            foreach (Item item in node.Ingredients)
             {
                 if (index % 5 == 0)
                 {
@@ -172,7 +207,8 @@ namespace DSP_Helmod.UI.Gui
                 }
                 if (item.State == ItemState.Main || item.Count > 0.01)
                 {
-                    ItemIngredient(item, 1, callback);
+                    item.Flow = item.Count / time;
+                    ItemIngredient(item, node.GetDeepCount(Settings.Instance.DisplayTotal), callback);
                     index++;
                 }
             }

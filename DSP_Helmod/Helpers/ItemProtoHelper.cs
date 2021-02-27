@@ -28,6 +28,10 @@ namespace DSP_Helmod.Helpers
                 stringBuilder.AppendLine($"labAssembleSpeed: {item.prefabDesc.labAssembleSpeed}");
                 stringBuilder.AppendLine($"labResearchSpeed: {item.prefabDesc.labResearchSpeed}");
             }
+            if (item.prefabDesc.isBelt)
+            {
+                stringBuilder.AppendLine($"beltSpeed: {item.prefabDesc.beltSpeed}");
+            }
 #endif
 
             return stringBuilder.ToString();

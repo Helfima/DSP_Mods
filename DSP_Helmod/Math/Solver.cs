@@ -74,8 +74,11 @@ namespace DSP_Helmod.Math
                 foreach (MatrixValue objective in objectives)
                 {
                     int index = matrix.GetColumnIndex(objective);
-                    this.objective[index] = objective.Value;
-                    this.z[index] = -objective.Value;
+                    if (index != -1)
+                    {
+                        this.objective[index] = objective.Value;
+                        this.z[index] = -objective.Value;
+                    }
                 }
             }
         }

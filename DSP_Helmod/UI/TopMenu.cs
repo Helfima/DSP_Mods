@@ -26,7 +26,7 @@ namespace DSP_Helmod.UI
         }
         public override void OnInit()
         {
-            
+            this.IsPersistant = true;
         }
 
 

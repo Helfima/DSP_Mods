@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 2021-02-27
+  Features:
+    - Added logistic information
+    - Added total deep
+    - Added settings file
+  Changes:
+    - Modified column power recplaced by column energy in edition recipe
+  Bugfixes:
+    - Fixed computing factory with recipe energy (divide by int value not a double)
+---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 2021-02-23
   Features:

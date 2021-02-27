@@ -29,6 +29,14 @@ namespace DSP_Helmod
             Classes.HMLogger.Debug(HelmodPlugin.PluginPath);
             var harmony = new Harmony("helmod.dsp.plugin");
             harmony.PatchAll();
+
+            Classes.Settings.Instance.Init();
+            Classes.Language.Load();
+        }
+
+        void Start()
+        {
+            Model.Database.Load();
         }
 
         void Update()

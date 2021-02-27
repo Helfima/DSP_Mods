@@ -61,18 +61,27 @@ namespace DSP_Helmod.UI.Gui
             }
         }
 
-        public static void Node(Node node, string action, Callback.ForNode callback)
+        public static void Node(Node node, string tooltip, Callback.ForNode callback)
         {
-            if (action != null)
+            if (node.Icon == null)
             {
-                if (GUILayout.Button(action, HMStyle.ActionButtonLayoutOptions))
+                GUIContent action = new GUIContent("?", tooltip);
+                if (GUILayout.Button(action, HMStyle.Icon45LayoutOptions))
+                {
+                    if (callback != null) callback(node);
+                }
+            }
+            else
+            {
+                GUIContent action = new GUIContent(node.Icon, tooltip);
+                if (GUILayout.Button(action, HMStyle.Icon45LayoutOptions))
                 {
                     if (callback != null) callback(node);
                 }
             }
         }
 
-        public static void Node(Node node, GUIContent action, Callback.ForNode callback)
+        public static void ActionNode(Node node, GUIContent action, Callback.ForNode callback)
         {
             if (action != null)
             {
@@ -148,6 +157,15 @@ namespace DSP_Helmod.UI.Gui
                 if (callback != null) callback(item);
             }
             
+        }
+
+        public static void IconLogistic(Item item, Callback.ForItem callback = null)
+        {
+            if (GUILayout.Button(item.Icon, HMStyle.Icon30LayoutOptions))
+            {
+                if (callback != null) callback(item);
+            }
+
         }
     }
 }

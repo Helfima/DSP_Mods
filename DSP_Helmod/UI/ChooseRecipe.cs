@@ -73,7 +73,7 @@ namespace DSP_Helmod.UI
 
             // recipe
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
-            HMCell.Node(recipe, delegate(Node element) {
+            HMCell.Node(recipe, null, delegate(Node element) {
                 HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe.Proto));
             });
             GUILayout.EndHorizontal();

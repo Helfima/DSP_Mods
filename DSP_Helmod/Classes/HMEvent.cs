@@ -61,6 +61,7 @@ namespace DSP_Helmod.Classes
         UpNode,
         DownNode,
         UpLevelNode,
-        DownLevelNode
+        DownLevelNode,
+        ChangeLogisticItem
     }
 }

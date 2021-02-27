@@ -28,5 +28,29 @@ namespace DSP_Helmod.Model
             return Type.Equals(other.Type) && Name.Equals(other.Name);
         }
         
+        public double GetItemDeepCount(bool deep)
+        {
+            double count = Count;
+            if(deep && Parent != null)
+            {
+                double total = Parent.GetDeepCount(deep);
+                if (total == 0) total = 1;
+                count = count * total;
+            }
+            return count;
+        }
+
+        public double GetDeepCount(bool deep)
+        {
+            if (!deep) return 1;
+            double count = Count;
+            if (Parent != null)
+            {
+                double total = Parent.GetDeepCount(deep);
+                if (total == 0) total = 1;
+                count = count * total;
+            }
+            return count;
+        }
     }
 }

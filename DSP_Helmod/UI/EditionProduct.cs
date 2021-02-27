@@ -38,7 +38,7 @@ namespace DSP_Helmod.UI
 
         private void DrawContent()
         {
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductionLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle);
             value = GUILayout.TextField(value);
             GUILayout.EndHorizontal();
             if (GUILayout.Button("OK"))
@@ -47,6 +47,7 @@ namespace DSP_Helmod.UI
                 double.TryParse(value, out result);
                 nodes.SetInput(item, result);
                 HMEvent.SendEvent(this, new HMEvent(HMEventType.UpdateSheet, nodes));
+                Close();
             }
         }
 
@@ -58,7 +59,7 @@ namespace DSP_Helmod.UI
                     SwitchShow();
                     nodes = (Nodes)sender;
                     item = e.GetItem<Item>();
-                    value = item.Count.ToString();
+                    value = nodes.GetInputValue(item).ToString();
                     break;
             }
         }

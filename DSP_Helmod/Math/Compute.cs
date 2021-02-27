@@ -33,6 +33,7 @@ namespace DSP_Helmod.Math
             
             if (nodes == null || nodes.Children == null || nodes.Children.Count == 0) return;
             HMLogger.Debug($"Children:{nodes.Children.Count}");
+            nodes.Objectives = null;
             nodes.CopyInputsToObjectives();
             foreach (Node node in nodes.Children)
             {
@@ -82,7 +83,14 @@ namespace DSP_Helmod.Math
             foreach (Node node in nodes.Children)
             {
                 
-                nodes.Power += node.Power;
+                if(node is Recipe)
+                {
+                    nodes.Power += node.Power;
+                }
+                else
+                {
+                    nodes.Power += node.Count * node.Power;
+                }
             }
         }
 
@@ -197,6 +205,20 @@ namespace DSP_Helmod.Math
             }
             Matrix matrix = new Matrix(rowHeaders.ToArray(), rowDatas.ToArray());
             return matrix;
+        }
+
+        /// <summary>
+        /// Compute number of logistic item for product item
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static Item GetLogisticItem(Item item)
+        {
+            int id = Settings.Instance.ItemIdLogistic;
+            Item itemLogistic = Database.LogisticItems.FirstOrDefault(element => element.Id == id);
+            Item result = itemLogistic.Clone();
+            result.Count = item.Flow / itemLogistic.LogisticFlow;
+            return result;
         }
     }
 }

@@ -69,6 +69,8 @@
   <ItemGroup>
     <Compile Include="Classes\ListExtensions.cs" />
     <Compile Include="Classes\HMLogger.cs" />
+    <Compile Include="Classes\Language.cs" />
+    <Compile Include="Classes\Settings.cs" />
     <Compile Include="Converter\DataModelConverter.cs" />
     <Compile Include="Classes\HMEvent.cs" />
     <Compile Include="Classes\HMEventQueue.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Test\Items.cs" />
     <Compile Include="UI\ChooseRecipe.cs" />
     <Compile Include="UI\Core\HMForm.cs" />
+    <Compile Include="UI\Core\HMTooltip.cs" />
     <Compile Include="UI\EditionProduct.cs" />
     <Compile Include="UI\EditionRecipe.cs" />
     <Compile Include="UI\Gui\Callback.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="UI\Gui\HMCell.cs" />
     <Compile Include="UI\Gui\HMStyle.cs" />
     <Compile Include="UI\Gui\HMTexture.cs" />
+    <Compile Include="UI\MainTooltip.cs" />
     <Compile Include="UI\TopMenu.cs" />
     <Compile Include="UI\MainPanel.cs" />
     <Compile Include="UI\SelectorRecipe.cs" />
@@ -134,6 +138,8 @@
     <EmbeddedResource Include="Assets\Resources\eclair_x64.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Assets\Resources\black_x64.png" />
+    <EmbeddedResource Include="Assets\Resources\time_x64.png" />
     <Content Include="changelog.txt" />
     <Content Include="icon.png" />
   </ItemGroup>

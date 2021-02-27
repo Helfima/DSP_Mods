@@ -20,7 +20,7 @@ namespace DSP_Helmod.UI
         public SelectorItem(UIController parent) : base(parent) {
             this.name = "Item Selector";
             this.Caption = "Add Item";
-            //this.IsTool = true;
+            this.IsTool = true;
         }
         public override void OnInit()
         {

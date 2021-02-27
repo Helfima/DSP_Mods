@@ -92,6 +92,10 @@ namespace DSP_Helmod.Model
         public void Remove(Node node)
         {
             children.Remove(node);
+            foreach(Item product in node.Products)
+            {
+                RemoveInput(product);
+            }
             UpdateItems();
         }
 
@@ -130,6 +134,25 @@ namespace DSP_Helmod.Model
         {
             inputs = AddMatrixValue(inputs, item, value, false);
         }
+        public void RemoveInput(Item item)
+        {
+            if(inputs != null)
+            {
+                inputs = inputs.Where(element => element.Name != item.Name).ToArray();
+            }
+        }
+
+        public double GetInputValue(Item item)
+        {
+            if (inputs != null)
+            {
+                foreach (MatrixValue input in inputs)
+                {
+                    if (input.Name == item.Name) return input.Value;
+                }
+            }
+            return item.Count;
+        }
 
         public void SetInput(MatrixValue matrixValue)
         {
@@ -142,7 +165,7 @@ namespace DSP_Helmod.Model
         {
             Classes.HMLogger.Debug($"CopyInputsToObjectives:{inputs != null}");
             objectives = null;
-            if (inputs != null)
+            if (inputs != null && inputs.Length > 0)
             {
                 foreach (MatrixValue input in inputs)
                 {
@@ -179,7 +202,7 @@ namespace DSP_Helmod.Model
                 if (!exist)
                 {
                     Array.Resize(ref matrixValues, matrixValues.Length + 1);
-                    matrixValues[matrixValues.Length] = newMatrixValue;
+                    matrixValues[matrixValues.Length-1] = newMatrixValue;
                 }
             }
             return matrixValues;

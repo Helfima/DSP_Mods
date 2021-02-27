@@ -52,7 +52,11 @@ namespace DSP_Helmod.Math
         public int GetColumnIndex(MatrixElement column)
         {
             string key = GetColumnKey(column);
-            return columnIndex[key];
+            if (columnIndex.ContainsKey(key))
+            {
+                return columnIndex[key];
+            }
+            return -1;
         }
 
         public MatrixHeader[] Columns

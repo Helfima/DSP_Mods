@@ -68,7 +68,7 @@ namespace DSP_Helmod.UI
         private void UpdateFactory(Recipe recipe, Factory factory)
         {
             recipe.Factory = factory;
-            HMEventQueue.EnQueue(this, new HMEvent(HMEventType.Update, recipe));
+            HMEventQueue.EnQueue(this, new HMEvent(HMEventType.UpdateSheet, recipe));
         }
         private void DrawDetail()
         {
@@ -83,7 +83,7 @@ namespace DSP_Helmod.UI
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
-                GUILayout.Label("Power", HMStyle.TextAlignMiddleCenter);
+                GUILayout.Label("Energy", HMStyle.TextAlignMiddleCenter);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
@@ -104,6 +104,7 @@ namespace DSP_Helmod.UI
                 if (node is Recipe)
                 {
                     Recipe recipe = ((Recipe)node).Clone(1);
+                    //Debug.Log($"Recipe count:{recipe.Count}");
                     GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
 
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductionLayoutOptions);
@@ -113,9 +114,9 @@ namespace DSP_Helmod.UI
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
                     HMCell.Node(recipe);
                     GUILayout.EndHorizontal();
-                    // power
+                    // energy
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
-                    HMCell.NodePower(recipe);
+                    HMCell.RecipeTime(recipe);
                     GUILayout.EndHorizontal();
                     //machine
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
