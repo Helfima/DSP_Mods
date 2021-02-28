@@ -2,7 +2,7 @@
 
 This Mod is an assistant to anticipate building your base.
 
-[![Discord](https://img.shields.io/discord/727304496522461185?label=DSP_Helmod%20Discord&style=for-the-badge)](https://discord.gg/mKEeAKb)
+[![Discord](https://img.shields.io/discord/676795981437599765?label=Helmod%20Discord&style=for-the-badge)](https://discord.gg/mKEeAKb)
 
 [![GitHub](https://img.shields.io/github/license/Helfima/DSP_Mods?color=orange&style=for-the-badge)](https://github.com/Helfima/DSP_Mods/tree/main/DSP_Helmod)
 
