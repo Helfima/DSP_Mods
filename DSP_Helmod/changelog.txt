@@ -7,7 +7,7 @@ Date: 2021-02-27
     - Opened github repository
     - Moved save folder from MyDocument/DSP_Helmod to APPDATA/DSP_Helmod
   Bugfixes:
-    - Fixed error on save when escape is pushed
+    - Fixed error on save when push escape
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.1
 Date: 2021-02-27

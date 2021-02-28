@@ -628,9 +628,10 @@ namespace DSP_Helmod.UI
 
         public override void OnClose()
         {
-            
-
-            DataModelConverter.WriteXml(SavePath, model);
+            if (SavePath != null)
+            {
+                DataModelConverter.WriteXml(SavePath, model);
+            }
         }
     }
 }

@@ -142,13 +142,14 @@ namespace DSP_Helmod.UI.Core
 
         public void SwitchShow()
         {
+            // si show va fermer ensuite d'ou OnClose
+            if (Show) OnClose();
             Show = !Show;
-            if (!Show) OnClose();
         }
 
         public void Close()
         {
-            if (!Show)
+            if (Show)
             {
                 Show = false;
                 OnClose();
