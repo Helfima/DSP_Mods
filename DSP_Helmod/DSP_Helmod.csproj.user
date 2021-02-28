@@ -4,4 +4,7 @@
     <ReferencePath>C:\Steam\steamapps\common\Dyson Sphere Program\BepInEx\core\;C:\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\</ReferencePath>
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
 </Project>

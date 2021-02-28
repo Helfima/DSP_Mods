@@ -15,7 +15,18 @@ namespace DSP_Helmod.UI.Gui
             newStyle.normal.background = image;
             return newStyle;
         }
-        public static GUIStyle Form = ChangeTexture(new GUIStyle(GUI.skin.window), HMTexture.icon_blue);
+
+        internal static GUIStyle ChangeTexture(GUIStyle style, Texture2D background, Texture2D active)
+        {
+            GUIStyle newStyle = new GUIStyle(style);
+            newStyle.normal.background = background;
+            newStyle.onNormal.background = active;
+            newStyle.active.background = background;
+            newStyle.onActive.background = active;
+            return newStyle;
+        }
+
+        public static GUIStyle Form = ChangeTexture(new GUIStyle(GUI.skin.window), HMTexture.form_gray, HMTexture.form_gray_active);
 
         public static GUILayoutOption[] BoxIconLayoutOptions = new GUILayoutOption[] { GUILayout.Height(70) };
 
@@ -78,9 +89,10 @@ namespace DSP_Helmod.UI.Gui
         internal static GUIStyle ChangeTooltip(GUIStyle style)
         {
             GUIStyle newStyle = new GUIStyle(style);
-            //newStyle.normal.background = HMTexture.black;
+            newStyle.normal.background = HMTexture.black;
             newStyle.stretchWidth = true;
             newStyle.stretchHeight = true;
+            newStyle.alignment = TextAnchor.UpperLeft;
             return newStyle;
         }
         public static GUIStyle TextTooltip = ChangeTooltip(GUI.skin.label);

@@ -216,6 +216,7 @@ namespace DSP_Helmod.Math
         {
             int id = Settings.Instance.ItemIdLogistic;
             Item itemLogistic = Database.LogisticItems.FirstOrDefault(element => element.Id == id);
+            if (itemLogistic == null) itemLogistic = Database.LogisticItems.First();
             Item result = itemLogistic.Clone();
             result.Count = item.Flow / itemLogistic.LogisticFlow;
             return result;

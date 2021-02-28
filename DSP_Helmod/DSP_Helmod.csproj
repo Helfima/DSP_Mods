@@ -140,6 +140,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\Resources\black_x64.png" />
     <EmbeddedResource Include="Assets\Resources\time_x64.png" />
+    <EmbeddedResource Include="Assets\Resources\form_gray_x64.png" />
+    <EmbeddedResource Include="Assets\Resources\form_gray_active_x64.png" />
     <Content Include="changelog.txt" />
     <Content Include="icon.png" />
   </ItemGroup>

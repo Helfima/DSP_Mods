@@ -139,7 +139,8 @@ namespace DSP_Helmod.UI.Gui
             }
             else
             {
-                if (GUILayout.Button(item.Icon, style, HMStyle.Icon45LayoutOptions))
+                GUIContent content = new GUIContent(item.Icon, item.Name);
+                if (GUILayout.Button(content, style, HMStyle.Icon45LayoutOptions))
                 {
                     if (callback != null) callback(item);
                 }

@@ -21,6 +21,7 @@ namespace DSP_Helmod.UI.Core
 
         public bool Show = false;
         protected bool WindowButtons = true;
+        protected bool AlphaButtons = false;
         public bool IsTool = false;
         public bool IsPersistant = false;
         public string Caption = "";
@@ -50,11 +51,10 @@ namespace DSP_Helmod.UI.Core
         public void OnGUI()
         {
             if (!IsInit) Init();
-            //Color test = new Color(1, 1, 1);
-            //test.a = 0.6f + 0.4f * Mathf.Sin(Time.time);
-            //GUI.backgroundColor = test;
-
-            windowRect0 = GUI.Window(id, windowRect0, DoWindow, name);
+            // change alpha
+            GUI.backgroundColor = new Color(1, 1, 1, Settings.Instance.WindowAlpha);
+            // build window
+            windowRect0 = GUI.Window(id, windowRect0, DoWindow, name, HMStyle.Form);
             CheckInputInRect(windowRect0);
         }
         abstract public void OnUpdate();
@@ -63,6 +63,15 @@ namespace DSP_Helmod.UI.Core
         // was created in the code above.
         void DoWindow(int windowID)
         {
+            if (AlphaButtons)
+            {
+                float newAlpha = GUI.HorizontalSlider(new Rect(windowRect0.width - 100, 3, 60, 20), Settings.Instance.WindowAlpha, 0, 1);
+                if(newAlpha != Settings.Instance.WindowAlpha)
+                {
+                    Debug.Log($"New alpha:{newAlpha}");
+                    Settings.Instance.WindowAlpha = newAlpha;
+                }
+            }
             if (WindowButtons)
             {
                 if (GUI.Button(new Rect(windowRect0.width - 30, 0, 30, 20), "X"))
@@ -94,12 +103,18 @@ namespace DSP_Helmod.UI.Core
             if (tooltip.StartsWith("Action:"))
             {
                 string label = tooltip.Substring(tooltip.IndexOf(':')+1);
-                GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), label, HMStyle.TextTooltip);
+                GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 100, 25), label, HMStyle.TextTooltip);
             }
             else
             {
-                GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), tooltip, HMStyle.TextTooltip);
-                //GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 50), tooltip);
+                if (tooltip.Contains("\n"))
+                {
+                    GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), tooltip, HMStyle.TextTooltip);
+                }
+                else
+                {
+                    GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 150, 25), tooltip, HMStyle.TextTooltip);
+                }
             }
         }
         private void DrawTooltip2(string tooltip)
@@ -133,8 +148,11 @@ namespace DSP_Helmod.UI.Core
 
         public void Close()
         {
-            Show = false;
-            OnClose();
+            if (!Show)
+            {
+                Show = false;
+                OnClose();
+            }
         }
 
         abstract public void OnDoWindow();

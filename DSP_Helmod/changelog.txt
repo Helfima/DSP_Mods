@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 2021-02-27
+  Features:
+    - Added texture alpha for window
+  Changes:
+    - Opened github repository
+    - Moved save folder from MyDocument/DSP_Helmod to APPDATA/DSP_Helmod
+  Bugfixes:
+    - Fixed error on save when escape is pushed
+---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 2021-02-27
+  Bugfixes:
+    - Fixed error on first logistic activation
+---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 2021-02-27
   Features:

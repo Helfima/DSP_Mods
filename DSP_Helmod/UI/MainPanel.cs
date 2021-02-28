@@ -41,13 +41,27 @@ namespace DSP_Helmod.UI
             this.Show = true;
 #endif
             this.windowRect0 = new Rect(500, 200, 1400, 650);
+            this.AlphaButtons = true;
         }
         public override void OnInit()
         {
             HMLogger.Debug("MainPanel.OnInit");
-            if( SavePath == null)
+            if (SavePath == null)
             {
-                SavePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DSP_Helmod/datamodel.xml");
+                // placement dans AppData
+                SavePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DSP_Helmod/datamodel.xml");
+                try
+                {
+                    // ancien chemin
+                    string oldSave = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DSP_Helmod/datamodel.xml");
+                    if (System.IO.File.Exists(oldSave))
+                    {
+                            string oldFolder = System.IO.Path.GetDirectoryName(oldSave);
+                            string newFolder = System.IO.Path.GetDirectoryName(SavePath);
+                            System.IO.Directory.Move(oldFolder, newFolder);
+                    }
+                }
+                catch { }
             }
             if (model == null)
             {
@@ -614,6 +628,8 @@ namespace DSP_Helmod.UI
 
         public override void OnClose()
         {
+            
+
             DataModelConverter.WriteXml(SavePath, model);
         }
     }

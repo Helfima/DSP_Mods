@@ -18,6 +18,7 @@ namespace DSP_Helmod.Classes
         private ConfigEntry<bool> displayLogistic;
         private ConfigEntry<int> itemIdLogistic;
         private ConfigEntry<bool> displayTotal;
+        private ConfigEntry<float> windowAlpha;
 
         public KeyCode OpenCloseKeyCode
         {
@@ -39,6 +40,11 @@ namespace DSP_Helmod.Classes
             get { return displayTotal.Value; }
             set { displayTotal.Value = value; }
         }
+        public float WindowAlpha
+        {
+            get { return windowAlpha.Value; }
+            set { windowAlpha.Value = value; }
+        }
 
         private Settings()
         {
@@ -52,6 +58,7 @@ namespace DSP_Helmod.Classes
             displayLogistic = configFile.Bind<bool>("Settings", "DisplayLogistic", false, "Display with logistic in the main panel.");
             itemIdLogistic = configFile.Bind<int>("Settings", "ItemIdLogistic", -1, "Item id for logistic in the main panel.");
             displayTotal = configFile.Bind<bool>("Settings", "DisplayTotal", false, "Display total in the main panel.");
+            windowAlpha = configFile.Bind<float>("Settings", "WindowAlpha", 1, "Alpha background of windows.");
             configFile.Save();
         }
         
