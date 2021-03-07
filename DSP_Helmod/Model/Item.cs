@@ -9,22 +9,22 @@ using UnityEngine;
 
 namespace DSP_Helmod.Model
 {
-    public class Item
+    public class Item : BaseItem, IItem
     {
-        public int Id;
-        public string Name;
         protected ItemProto proto;
-        public double Count;
-        public ItemState State = ItemState.Normal;
-        public double Flow;
+
+        public Texture2D Icon
+        {
+            get { return proto.iconSprite.texture; }
+        }
 
         public Item(int id)
         {
-            this.Id = id;
-            this.proto = LDB.items.Select(Id);
+            this.id = id;
+            this.proto = LDB.items.Select(id);
             if(this.proto != null)
             {
-                this.Name = proto.name;
+                this.name = proto.name;
             }
         }
         /// <summary>
@@ -34,46 +34,37 @@ namespace DSP_Helmod.Model
         /// <param name="count"></param>
         public Item(string name, double count)
         {
-            this.Name = name;
-            this.Count = count;
+            this.name = name;
+            this.count = count;
         }
         public Item(string name, double count, ItemState state = ItemState.Normal)
         {
-            this.Name = name;
-            this.Count = count;
-            this.State = state;
+            this.name = name;
+            this.count = count;
+            this.state = state;
         }
         public Item(ItemProto proto, double count, ItemState state = ItemState.Normal)
         {
-            this.Id = proto.ID;
+            this.id = proto.ID;
             this.proto = proto;
-            this.Name = proto.name;
-            this.Count = count;
-            this.State = state;
+            this.name = proto.name;
+            this.count = count;
+            this.state = state;
         }
         public ItemProto Proto
         {
             get
             {
-                if (proto == null) proto = LDB.items.Select(Id);
+                if (proto == null) proto = LDB.items.Select(this.id);
                 return proto;
             }
         }
 
-        public Texture2D Icon
+        public List<IRecipe> Recipes
         {
             get
             {
-                if (Proto != null) return proto.iconSprite.texture;
-                return null;
-            }
-        }
-
-        public List<Recipe> Recipes
-        {
-            get
-            {
-                return proto.recipes.Select(recipe => new Recipe(recipe, 1)).ToList();
+                return proto.recipes.Select(recipe => new Recipe(recipe, 1)).ToList<IRecipe>();
             }
         }
 
@@ -90,19 +81,17 @@ namespace DSP_Helmod.Model
             }
         }
 
-        public string Type
+        
+        public bool Match(IItem other)
         {
-            get { return this.GetType().Name; }
-        }
-        public bool Match(Item other)
-        {
-            if (other == null || Name == null) return false;
-            return Name.Equals(other.Name);
+            if (other == null || this.name == null) return false;
+            return this.name.Equals(other.Name);
         }
 
-        public Item Clone(double factor = 1)
+        public IItem Clone(double factor = 1)
         {
-            return new Item(proto, Count * factor, State);
+            return new Item(proto, this.count * factor, this.state);
         }
+
     }
 }

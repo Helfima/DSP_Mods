@@ -35,7 +35,7 @@ namespace DSP_Helmod.Math
             HMLogger.Debug($"Children:{nodes.Children.Count}");
             nodes.Objectives = null;
             nodes.CopyInputsToObjectives();
-            foreach (Node node in nodes.Children)
+            foreach (INode node in nodes.Children)
             {
                 if (node is Nodes)
                 {
@@ -49,18 +49,18 @@ namespace DSP_Helmod.Math
             // prepare des objectifs manquants
             if (nodes.Objectives == null)
             {
-                List<Item> items = nodes.Children.First().Products;
+                List<IItem> items = nodes.Children.First().Products;
                 nodes.Objectives = new MatrixValue[items.Count];
                 for(int i = 0; i < items.Count; i++)
                 {
-                    Item item = items[i];
+                    IItem item = items[i];
                     nodes.Objectives[i] = new MatrixValue(item.GetType().Name, item.Name, item.Count);
                 }
             }
 
             HMLogger.Debug(matrix.ToString());
             MatrixValue[] result = solver.Solve(matrix, nodes.Objectives);
-            foreach (Node node in nodes.Children)
+            foreach (INode node in nodes.Children)
             {
                 foreach (MatrixValue value in result)
                 {
@@ -80,10 +80,10 @@ namespace DSP_Helmod.Math
         private void ComputePower(Nodes nodes)
         {
             nodes.Power = 0;
-            foreach (Node node in nodes.Children)
+            foreach (INode node in nodes.Children)
             {
                 
-                if(node is Recipe)
+                if(node is IRecipe)
                 {
                     nodes.Power += node.Power;
                 }
@@ -96,11 +96,11 @@ namespace DSP_Helmod.Math
 
         private void ComputeFactory(Nodes nodes)
         {
-            foreach (Node node in nodes.Children)
+            foreach (INode node in nodes.Children)
             {
-                if(node is Recipe)
+                if(node is IRecipe)
                 {
-                    Recipe recipe = (Recipe)node;
+                    IRecipe recipe = (IRecipe)node;
                     recipe.Factory.Count = recipe.Energy * recipe.Count / (recipe.Factory.Speed * Time);
                     HMLogger.Trace($"Factory.count (recipe.Name): recipe.Energy*recipe.Count/(recipe.Factory.Speed*Time)=recipe.Factory.Count");
                     HMLogger.Trace($"Factory.count ({recipe.Name}): {recipe.Energy}*{recipe.Count}/({recipe.Factory.Speed}*{Time}=={recipe.Factory.Count}");
@@ -111,11 +111,11 @@ namespace DSP_Helmod.Math
 
         private void ComputeInputOutput(Nodes nodes)
         {
-            Dictionary<string, Item> products = new Dictionary<string, Item>();
-            Dictionary<string, Item> ingredients = new Dictionary<string, Item>();
-            foreach (Node node in nodes.Children)
+            Dictionary<string, IItem> products = new Dictionary<string, IItem>();
+            Dictionary<string, IItem> ingredients = new Dictionary<string, IItem>();
+            foreach (INode node in nodes.Children)
             {
-                foreach (Item item in node.Products)
+                foreach (IItem item in node.Products)
                 {
                     if (products.ContainsKey(item.Name))
                     {
@@ -126,7 +126,7 @@ namespace DSP_Helmod.Math
                         products.Add(item.Name, item.Clone(node.Count));
                     }
                 }
-                foreach (Item item in node.Ingredients)
+                foreach (IItem item in node.Ingredients)
                 {
                     if (ingredients.ContainsKey(item.Name))
                     {
@@ -140,7 +140,7 @@ namespace DSP_Helmod.Math
             }
 
             //consomme les produits
-            foreach(KeyValuePair<string, Item> entry in ingredients)
+            foreach(KeyValuePair<string, IItem> entry in ingredients)
             {
                 if (products.ContainsKey(entry.Key))
                 {
@@ -161,16 +161,16 @@ namespace DSP_Helmod.Math
 
             List<string> products = new List<string>();
             List<string> ingredients = new List<string>();
-            foreach (Node node in nodes.Children)
+            foreach (INode node in nodes.Children)
             {
                 rowHeaders.Add(new MatrixHeader(node.Type, node.Name));
                 MatrixRow rowData = new MatrixRow(node.Type, node.Name);
-                foreach(Item item in node.Products)
+                foreach(IItem item in node.Products)
                 {
                     products.Add(item.Name);
                     rowData.AddValue(new MatrixValue(item.Type, item.Name, item.Count));
                 }
-                foreach (Item item in node.Ingredients)
+                foreach (IItem item in node.Ingredients)
                 {
                     ingredients.Add(item.Name);
                     rowData.AddValue(new MatrixValue(item.Type, item.Name, -item.Count));
@@ -178,9 +178,9 @@ namespace DSP_Helmod.Math
                 rowDatas.Add(rowData);
             }
             // update status
-            foreach (Node node in nodes.Children)
+            foreach (INode node in nodes.Children)
             {
-                foreach (Item item in node.Products)
+                foreach (IItem item in node.Products)
                 {
                     if (ingredients.Contains(item.Name))
                     {
@@ -191,7 +191,7 @@ namespace DSP_Helmod.Math
                         item.State = ItemState.Main;
                     }
                 }
-                foreach (Item item in node.Ingredients)
+                foreach (IItem item in node.Ingredients)
                 {
                     if (products.Contains(item.Name))
                     {
@@ -212,12 +212,12 @@ namespace DSP_Helmod.Math
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static Item GetLogisticItem(Item item)
+        public static IItem GetLogisticItem(IItem item)
         {
             int id = Settings.Instance.ItemIdLogistic;
             Item itemLogistic = Database.LogisticItems.FirstOrDefault(element => element.Id == id);
             if (itemLogistic == null) itemLogistic = Database.LogisticItems.First();
-            Item result = itemLogistic.Clone();
+            IItem result = itemLogistic.Clone();
             result.Count = item.Flow / itemLogistic.LogisticFlow;
             return result;
         }

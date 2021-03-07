@@ -55,6 +55,7 @@ namespace DSP_Helmod.Classes
         AddItem,
         RemoveNode,
         ChooseRecipe,
+        SwitchChooseRecipe,
         EditionProduct,
         EditionRecipe,
         UpdateSheet,
@@ -62,6 +63,8 @@ namespace DSP_Helmod.Classes
         DownNode,
         UpLevelNode,
         DownLevelNode,
-        ChangeLogisticItem
+        ChangeLogisticItem,
+        AddProperties,
+        RemoveProperties
     }
 }

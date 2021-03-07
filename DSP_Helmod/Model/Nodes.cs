@@ -10,7 +10,7 @@ namespace DSP_Helmod.Model
 {
     public class Nodes:Node
     {
-        private List<Node> children = new List<Node>();
+        private List<INode> children = new List<INode>();
         MatrixValue[] objectives;
         MatrixValue[] inputs;
         private int time;
@@ -64,7 +64,7 @@ namespace DSP_Helmod.Model
             }
         }
         
-        public List<Node> Children
+        public List<INode> Children
         {
             get { return children; }
         }
@@ -81,25 +81,25 @@ namespace DSP_Helmod.Model
             set { inputs = value; }
         }
 
-        public void Add(Node node)
+        public void Add(INode node)
         {
             if (node == null) return; // TODO exception
-            if (node is Recipe && children.Count == 0) node.Count = 1;
+            if (node is IRecipe && children.Count == 0) node.Count = 1;
             children.Add(node);
             node.Parent = this;
             UpdateItems();
         }
-        public void Remove(Node node)
+        public void Remove(INode node)
         {
             children.Remove(node);
-            foreach(Item product in node.Products)
+            foreach(IItem product in node.Products)
             {
                 RemoveInput(product);
             }
             UpdateItems();
         }
 
-        public void UpLevelNode(Node node)
+        public void UpLevelNode(INode node)
         {
             int index = children.IndexOf(node);
             children.RemoveAt(index);
@@ -115,7 +115,7 @@ namespace DSP_Helmod.Model
                 children.Insert(index, newNodes);
             }
         }
-        public void DownLevelNode(Node node)
+        public void DownLevelNode(INode node)
         {
             if (Parent != null)
             {
@@ -126,15 +126,15 @@ namespace DSP_Helmod.Model
                 node.Parent = Parent;
             }
         }
-        public void AddObjective(Item item, double value)
+        public void AddObjective(IItem item, double value)
         {
             objectives = AddMatrixValue(objectives, item, value, true);
         }
-        public void SetInput(Item item, double value)
+        public void SetInput(IItem item, double value)
         {
             inputs = AddMatrixValue(inputs, item, value, false);
         }
-        public void RemoveInput(Item item)
+        public void RemoveInput(IItem item)
         {
             if(inputs != null)
             {
@@ -142,7 +142,7 @@ namespace DSP_Helmod.Model
             }
         }
 
-        public double GetInputValue(Item item)
+        public double GetInputValue(IItem item)
         {
             if (inputs != null)
             {
@@ -163,19 +163,19 @@ namespace DSP_Helmod.Model
         /// </summary>
         public void CopyInputsToObjectives()
         {
-            Classes.HMLogger.Debug($"CopyInputsToObjectives:{inputs != null}");
+            Classes.HMLogger.Trace($"CopyInputsToObjectives:{inputs != null}");
             objectives = null;
             if (inputs != null && inputs.Length > 0)
             {
                 foreach (MatrixValue input in inputs)
                 {
-                    Classes.HMLogger.Debug($"Copy input:{input}");
+                    Classes.HMLogger.Trace($"Copy input:{input}");
                     objectives = AddMatrixValue(objectives, input, true);
                 }
             }
         }
 
-        internal MatrixValue[] AddMatrixValue(MatrixValue[] matrixValues, Item item, double value, bool append = false)
+        internal MatrixValue[] AddMatrixValue(MatrixValue[] matrixValues, IItem item, double value, bool append = false)
         {
             MatrixValue matrixValue = new MatrixValue(item.GetType().Name, item.Name, value);
             return AddMatrixValue(matrixValues, matrixValue, append);
@@ -214,15 +214,15 @@ namespace DSP_Helmod.Model
                 Icon = children.First().Icon;
                 Name = children.First().Name;
                 Type = children.First().Type;
-                List<Item> products = new List<Item>();
-                List<Item> ingredients = new List<Item>();
-                foreach (Node node in children)
+                List<IItem> products = new List<IItem>();
+                List<IItem> ingredients = new List<IItem>();
+                foreach (INode node in children)
                 {
-                    foreach (Item item in node.Products)
+                    foreach (IItem item in node.Products)
                     {
                         products.Add(item);
                     }
-                    foreach (Item item in node.Ingredients)
+                    foreach (IItem item in node.Ingredients)
                     {
                         ingredients.Add(item);
                     }

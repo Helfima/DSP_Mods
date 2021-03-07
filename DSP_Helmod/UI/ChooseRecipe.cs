@@ -59,7 +59,7 @@ namespace DSP_Helmod.UI
             GUILayout.EndHorizontal();
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, HMStyle.ScrollDataLayoutOptions);
-            foreach (Recipe recipe in item.Recipes)
+            foreach (IRecipe recipe in item.Recipes)
             {
                 DrawRecipe(recipe);
             }
@@ -67,19 +67,19 @@ namespace DSP_Helmod.UI
 
         }
 
-        public void DrawRecipe(Recipe recipe)
+        public void DrawRecipe(IRecipe recipe)
         {
             GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
 
             // recipe
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
-            HMCell.Node(recipe, null, delegate(Node element) {
-                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe.Proto));
+            HMCell.Node(recipe, null, delegate(INode element) {
+                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
             });
             GUILayout.EndHorizontal();
             // Machine
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
-            HMCell.Item(recipe.Factory);
+            HMCell.Product(recipe.Factory);
             GUILayout.EndHorizontal();
             // Products
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
@@ -105,7 +105,7 @@ namespace DSP_Helmod.UI
         {
             switch (e.Type)
             {
-                case HMEventType.ChooseRecipe:
+                case HMEventType.SwitchChooseRecipe:
                     SwitchShow();
                     nodes = (Nodes)sender;
                     item = e.GetItem<Item>();

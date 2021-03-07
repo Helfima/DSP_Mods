@@ -94,11 +94,18 @@ namespace DSP_Helmod.Converter
                 {
                     case "Recipe":
                         Recipe recipe = new Recipe(Id);
-                        if(Factory > 0)
+                        if (Factory > 0)
                         {
                             recipe.Factory = new Factory(Factory);
                         }
                         return recipe;
+                    case "RecipeVein":
+                        RecipeVein recipeVein = new RecipeVein(Id);
+                        if (Factory > 0)
+                        {
+                            recipeVein.Factory = new Factory(Factory);
+                        }
+                        return recipeVein;
                 }
             }
             return null;

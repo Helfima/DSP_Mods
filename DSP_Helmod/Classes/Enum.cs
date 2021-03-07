@@ -23,4 +23,10 @@ namespace DSP_Helmod.Classes
         Red,
         Yellow
     }
+
+    public enum SelectorMode
+    {
+        Normal,
+        Properties
+    }
 }

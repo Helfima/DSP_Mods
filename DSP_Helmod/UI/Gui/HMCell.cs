@@ -13,7 +13,7 @@ namespace DSP_Helmod.UI.Gui
     public class HMCell
     {
         private static double limit = 10;
-        public static void Node(Node node, string tooltip = null, Callback.ForNode callback = null)
+        public static void Node(INode node, string tooltip = null, Callback.ForNode callback = null)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             HMButton.Node(node, tooltip, callback);
@@ -24,7 +24,7 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndVertical();
         }
 
-        public static void Node(Node node, double factor, string tooltip = null, Callback.ForNode callback = null)
+        public static void Node(INode node, double factor, string tooltip = null, Callback.ForNode callback = null)
         {
             double count = node.Count * factor;
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
@@ -36,10 +36,10 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndVertical();
         }
 
-        public static void NodePower(Node node, double factor, Callback.ForVoid callback = null)
+        public static void NodePower(INode node, double factor, Callback.ForVoid callback = null)
         {
             double power = node.Power * factor;
-            if (!(node is Recipe)) power = power * node.Count;
+            if (!(node is IRecipe)) power = power * node.Count;
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             HMButton.Texture(HMTexture.eclaireTexture, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
@@ -51,19 +51,19 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndVertical();
         }
 
-        public static void NodeActions(Nodes parent, Node node)
+        public static void NodeActions(Nodes parent, INode node)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             {
                 GUILayout.BeginHorizontal();
                 GUIContent actionUp = new GUIContent("U", "Action:Up");
-                HMButton.ActionNode(node, actionUp, delegate (Node element)
+                HMButton.ActionNode(node, actionUp, delegate (INode element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpNode, element));
                 });
                 GUILayout.FlexibleSpace();
                 GUIContent actionDelete = new GUIContent("X", "Action:Delete");
-                HMButton.ActionNode(node, actionDelete, delegate (Node element)
+                HMButton.ActionNode(node, actionDelete, delegate (INode element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.RemoveNode, element));
                 });
@@ -72,17 +72,17 @@ namespace DSP_Helmod.UI.Gui
             {
                 GUILayout.BeginHorizontal();
                 GUIContent actionDown = new GUIContent("D", "Action:Down");
-                HMButton.ActionNode(node, actionDown, delegate (Node element)
+                HMButton.ActionNode(node, actionDown, delegate (INode element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownNode, element));
                 });
                 GUIContent actionDownLevel = new GUIContent("<", "Action:DownLevel");
-                HMButton.ActionNode(node, actionDownLevel, delegate (Node element)
+                HMButton.ActionNode(node, actionDownLevel, delegate (INode element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.DownLevelNode, element));
                 });
                 GUIContent actionUpLevel = new GUIContent(">", "Action:UpLevel");
-                HMButton.ActionNode(node, actionUpLevel, delegate (Node element)
+                HMButton.ActionNode(node, actionUpLevel, delegate (INode element)
                 {
                     HMEventQueue.EnQueue(parent, new HMEvent(HMEventType.UpLevelNode, element));
                 });
@@ -90,7 +90,7 @@ namespace DSP_Helmod.UI.Gui
             }
             GUILayout.EndVertical();
         }
-        public static void RecipeTime(Recipe recipe, Callback.ForVoid callback = null)
+        public static void RecipeTime(IRecipe recipe, Callback.ForVoid callback = null)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             HMButton.Texture(HMTexture.time, callback);
@@ -100,12 +100,12 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
-        public static void Item(Item item, double factor = 1, Callback.ForItem callback = null)
+        public static void Product(IItem item, double factor = 1, Callback.ForItem callback = null)
         {
             ItemColored(item, ItemColor.Normal, factor, false, callback);
         }
 
-        private static void ItemColored(Item item, ItemColor color, double factor = 1, bool withLogistic = false, Callback.ForItem callback = null)
+        private static void ItemColored(IItem item, ItemColor color, double factor = 1, bool withLogistic = false, Callback.ForItem callback = null)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
             HMButton.ItemColored(item, color, callback);
@@ -116,7 +116,7 @@ namespace DSP_Helmod.UI.Gui
             if (withLogistic && Settings.Instance.DisplayLogistic)
             {
                 GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
-                Item logistic = Compute.GetLogisticItem(item);
+                IItem logistic = Compute.GetLogisticItem(item);
                 GUILayout.Box(logistic.Icon, HMStyle.BoxIcon, HMStyle.Icon15LayoutOptions);
                 GUILayout.Label($"{logistic.Count * factor:N1}", HMStyle.TextButtonIcon);
                 GUILayout.EndHorizontal();
@@ -124,7 +124,7 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndVertical();
         }
 
-        public static void ItemProduct(Item item, double factor = 1, Callback.ForItem callback = null)
+        public static void ItemProduct(IItem item, double factor = 1, Callback.ForItem callback = null)
         {
             ItemColor itemColor = ItemColor.Normal;
             switch (item.State)
@@ -142,17 +142,17 @@ namespace DSP_Helmod.UI.Gui
             ItemColored(item, itemColor, factor, true, callback);
         }
 
-        public static void ItemIngredient(Item item, double factor = 1, Callback.ForItem callback = null)
+        public static void ItemIngredient(IItem item, double factor = 1, Callback.ForItem callback = null)
         {
             ItemColor itemColor = ItemColor.Yellow;
             ItemColored(item, itemColor, factor, true, callback);
         }
 
-        public static void ItemList(List<Item> items, Callback.ForItem callback = null)
+        public static void ItemList(List<IItem> items, Callback.ForItem callback = null)
         {
             GUILayout.BeginHorizontal();
             int index = 0;
-            foreach (Item item in items)
+            foreach (IItem item in items)
             {
                 if (index % 5 == 0)
                 {
@@ -162,7 +162,7 @@ namespace DSP_Helmod.UI.Gui
                 }
                 if (item.State == ItemState.Main || item.Count > 0.01)
                 {
-                    Item(item, 1, callback);
+                    Product(item, 1, callback);
                     index++;
                 }
             }
@@ -170,11 +170,11 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
         }
 
-        public static void ItemProductList(Node node, double time, Callback.ForItem callback = null)
+        public static void ItemProductList(INode node, double time, Callback.ForItem callback = null)
         {
             GUILayout.BeginHorizontal();
             int index = 0;
-            foreach (Item item in node.Products)
+            foreach (IItem item in node.Products)
             {
                 if (index % 5 == 0)
                 {
@@ -193,11 +193,11 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
         }
 
-        public static void ItemIngredientList(Node node, double time, Callback.ForItem callback = null)
+        public static void ItemIngredientList(INode node, double time, Callback.ForItem callback = null)
         {
             GUILayout.BeginHorizontal();
             int index = 0;
-            foreach (Item item in node.Ingredients)
+            foreach (IItem item in node.Ingredients)
             {
                 if (index % 5 == 0)
                 {

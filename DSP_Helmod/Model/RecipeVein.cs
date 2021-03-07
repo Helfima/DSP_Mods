@@ -8,62 +8,64 @@ using UnityEngine;
 
 namespace DSP_Helmod.Model
 {
-    public class Recipe : Node, IRecipe
+    public class RecipeVein : Node, IRecipe
     {
-        private RecipeProto proto;
+        private VeinProto proto;
+        private ItemProto itemProto;
         private Factory factory;
 
-        public Recipe(int id)
+        public RecipeVein(int id)
         {
             this.Id = id;
-            this.proto = LDB.recipes.Select(Id);
+            this.proto = LDB.veins.Select(Id);
             UpdateItems();
         }
 
-        public Recipe(RecipeProto proto, double count = 0)
+        public RecipeVein(VeinProto proto, double count = 0)
         {
             this.proto = proto;
             this.Count = count;
             UpdateItems();
         }
-        public Recipe(RecipeProto proto, Factory factory, double count = 0)
-        {
-            this.proto = proto;
-            this.Count = count;
-            this.factory = factory;
-            UpdateItems();
-        }
 
-        public RecipeProto Proto
+        public VeinProto Proto
         {
             get
             {
                 if (proto == null)
                 {
-                    proto = LDB.recipes.Select(Id);
+                    proto = LDB.veins.Select(Id);
                     UpdateItems();
                 }
                 return proto;
             }
         }
+        public ItemProto ItemProto
+        {
+            get
+            {
+                return itemProto;
+            }
+        }
 
         public double Energy
         {
-            get { return this.proto.TimeSpend/60.0; }
+            get { return proto.MiningTime/60.0; }
         }
 
         public Factory Factory
         {
             get
-            { 
-                if(factory == null)
+            {
+                if (factory == null)
                 {
-                    List<ItemProto> items = LDB.items.dataArray.Where(item => item.typeString.Equals(proto.madeFromString)).ToList();
-                    items.Sort(delegate (ItemProto item1, ItemProto item2)
-                    {
-                        return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
-                    });
-                    
+                    List<ItemProto> items = LDB.items.dataArray.Where(item => {
+                        if (itemProto.IsFluid)
+                        {
+                            return item.prefabDesc.oilMiner;
+                        }
+                        return item.prefabDesc.veinMiner;
+                        }).ToList();
                     factory = new Factory(items.First(), 1);
                 }
                 return factory; 
@@ -78,7 +80,13 @@ namespace DSP_Helmod.Model
         {
             get
             {
-                List<ItemProto> items = LDB.items.dataArray.Where(item => item.typeString.Equals(proto.madeFromString)).ToList();
+                List<ItemProto> items = LDB.items.dataArray.Where(item => {
+                    if (itemProto.IsFluid)
+                    {
+                        return item.prefabDesc.oilMiner;
+                    }
+                    return item.prefabDesc.veinMiner;
+                }).ToList();
                 items.Sort(delegate (ItemProto item1, ItemProto item2)
                 {
                     return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
@@ -89,22 +97,26 @@ namespace DSP_Helmod.Model
 
         private void UpdateItems()
         {
-            this.Products = RecipeProtoHelper.GetProductItems(proto);
-            this.Ingredients = RecipeProtoHelper.GetIngredientItems(proto);
+            this.Products = new List<IItem>();
+            ItemProto item = LDB.items.Select(proto.MiningItem);
+            this.itemProto = item;
+            this.Products.Add(new Item(item, 1));
+            this.Ingredients = new List<IItem>();
+            this.Ingredients.Add(new ItemVein(proto, 1));
             this.Id = proto.ID;
             this.Name = proto.name;
             this.Type = GetType().Name;
             this.Icon = proto.iconSprite.texture;
         }
 
-        public  Recipe Clone()
+        public IRecipe Clone()
         {
-            return new Recipe(proto, Count);
+            return new RecipeVein(proto, Count);
         }
 
         public IRecipe Clone(double value)
         {
-            return new Recipe(proto, new Factory(factory.Proto, factory.Count), value);
+            return new RecipeVein(proto, value);
         }
 
     }

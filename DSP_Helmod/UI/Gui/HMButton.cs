@@ -43,7 +43,7 @@ namespace DSP_Helmod.UI.Gui
             }
         }
 
-        public static void Node(Node node, Callback.ForNode callback)
+        public static void Node(INode node, Callback.ForNode callback)
         {
             if (node.Icon == null)
             {
@@ -61,7 +61,7 @@ namespace DSP_Helmod.UI.Gui
             }
         }
 
-        public static void Node(Node node, string tooltip, Callback.ForNode callback)
+        public static void Node(INode node, string tooltip, Callback.ForNode callback)
         {
             if (node.Icon == null)
             {
@@ -81,7 +81,7 @@ namespace DSP_Helmod.UI.Gui
             }
         }
 
-        public static void ActionNode(Node node, GUIContent action, Callback.ForNode callback)
+        public static void ActionNode(INode node, GUIContent action, Callback.ForNode callback)
         {
             if (action != null)
             {
@@ -103,11 +103,11 @@ namespace DSP_Helmod.UI.Gui
             }
         }
 
-        public static void Item(Item item, Callback.ForItem callback = null)
+        public static void Item(IItem item, Callback.ForItem callback = null)
         {
             ItemColored(item, ItemColor.Normal, callback);
         }
-        public static void ItemColored(Item item, ItemColor color, Callback.ForItem callback = null)
+        public static void ItemColored(IItem item, ItemColor color, Callback.ForItem callback = null)
         {
             GUIStyle style = new GUIStyle(GUI.skin.button);
             switch (color)
@@ -146,7 +146,7 @@ namespace DSP_Helmod.UI.Gui
                 }
             }
         }
-        public static void Icon(Item item, Callback.ForItem callback = null)
+        public static void Icon(IItem item, Callback.ForItem callback = null)
         {
             GUIStyle contentStyle = new GUIStyle(GUI.skin.button);
             contentStyle.normal.background = item.Icon;
@@ -160,7 +160,7 @@ namespace DSP_Helmod.UI.Gui
             
         }
 
-        public static void IconLogistic(Item item, Callback.ForItem callback = null)
+        public static void IconLogistic(IItem item, Callback.ForItem callback = null)
         {
             if (GUILayout.Button(item.Icon, HMStyle.Icon30LayoutOptions))
             {

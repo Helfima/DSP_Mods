@@ -8,7 +8,7 @@ namespace DSP_Helmod.Model
 {
     public class Database
     {
-        private static List<Item> factories = new List<Item>();
+        private static List<Factory> factories = new List<Factory>();
 
         private static List<Item> logistics = new List<Item>();
 
@@ -19,7 +19,7 @@ namespace DSP_Helmod.Model
                 switch (itemProto.Type)
                 {
                     case EItemType.Production:
-                        Database.factories.Add(new Item(itemProto, 1));
+                        Database.factories.Add(new Factory(itemProto, 1));
                         break;
                     case EItemType.Logistics:
                         Database.logistics.Add(new Item(itemProto, 1));
@@ -30,6 +30,11 @@ namespace DSP_Helmod.Model
         public static List<Item> LogisticItems
         {
             get { return Database.logistics.Where(item => item.Proto.prefabDesc.isBelt).ToList(); }
+        }
+
+        public static List<Factory> Factories
+        {
+            get { return Database.factories; }
         }
     }
 }

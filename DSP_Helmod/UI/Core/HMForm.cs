@@ -11,6 +11,8 @@ namespace DSP_Helmod.UI.Core
         //public event EventHandler<HMEvent> HMEventHandler;
 
         protected UIController parent;
+        protected SelectorMode selectorMode;
+
         protected Rect windowRect0 = new Rect(200, 20, 600, 300);
         public int id = 66600001;
         protected string name = "DSP Helmod";
@@ -51,12 +53,20 @@ namespace DSP_Helmod.UI.Core
         public void OnGUI()
         {
             if (!IsInit) Init();
+            AutoResize(1920, 1200);
             // change alpha
             GUI.backgroundColor = new Color(1, 1, 1, Settings.Instance.WindowAlpha);
             // build window
             windowRect0 = GUI.Window(id, windowRect0, DoWindow, name, HMStyle.Form);
             CheckInputInRect(windowRect0);
         }
+
+        private void AutoResize(int screenWidth, int screenHeight, float factor = 1f)
+        {
+            Vector2 resizeRatio = new Vector2((float)Screen.width / screenWidth, (float)Screen.height / screenHeight);
+            GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(resizeRatio.x * factor, resizeRatio.y * factor, 1.0f));
+        }
+
         abstract public void OnUpdate();
         // Make the contents of the window.
         // The value of GUI.color is set to what it was when the window
@@ -140,9 +150,10 @@ namespace DSP_Helmod.UI.Core
             this.windowRect0 = new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, windowRect0.width, windowRect0.height);
         }
 
-        public void SwitchShow()
+        public void SwitchShow(SelectorMode selectorMode = SelectorMode.Normal)
         {
-            // si show va fermer ensuite d'ou OnClose
+             // si show va fermer ensuite d'ou OnClose
+            this.selectorMode = selectorMode;
             if (Show) OnClose();
             Show = !Show;
         }

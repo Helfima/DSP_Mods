@@ -29,8 +29,15 @@ namespace DSP_Helmod.UI
             HMEvent.Handler += mainPanel.OnEvent;
             AddForm(mainPanel);
 #if DEBUG
+            PropertiesPanel propertiesPanel = new PropertiesPanel(this);
+            HMEvent.Handler += propertiesPanel.OnEvent;
+            AddForm(propertiesPanel);
+
             SelectorItem itemSelector = new SelectorItem(this);
             AddForm(itemSelector);
+
+            SelectorVein veinSelector = new SelectorVein(this);
+            AddForm(veinSelector);
 #endif
 
             SelectorRecipe recipeSelector = new SelectorRecipe(this);

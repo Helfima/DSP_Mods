@@ -94,7 +94,14 @@ namespace DSP_Helmod.UI
             {
                 RecipeProto recipe = recipes[selection];
                 //HMLogger.Debug($"Recipe:{recipe.name}");
-                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
+                if (selectorMode == SelectorMode.Normal)
+                {
+                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
+                }
+                else if (selectorMode == SelectorMode.Properties)
+                {
+                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, recipe));
+                }
                 selection = -1;
             }
             GUILayout.EndScrollView();

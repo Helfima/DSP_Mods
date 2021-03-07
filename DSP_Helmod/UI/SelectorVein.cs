@@ -11,15 +11,15 @@ using DSP_Helmod.Helpers;
 
 namespace DSP_Helmod.UI
 {
-    public class SelectorItem : HMForm
+    public class SelectorVein : HMForm
     {
-        protected EItemType groupSelected = 0;
+        protected EMinerType groupSelected = 0;
         protected string recipeSelected;
         protected int selection;
 
-        public SelectorItem(UIController parent) : base(parent) {
-            this.name = "Item Selector";
-            this.Caption = "Add Item";
+        public SelectorVein(UIController parent) : base(parent) {
+            this.name = "Vein Selector";
+            this.Caption = "Add Vein";
             this.IsTool = true;
         }
         public override void OnInit()
@@ -37,23 +37,23 @@ namespace DSP_Helmod.UI
             DrawContent();
         }
 
-        private Dictionary<EItemType, List<ItemProto>> GetItems()
+        private Dictionary<EMinerType, List<VeinProto>> GetItems()
         {
-            Dictionary<EItemType, List<ItemProto>> items = new Dictionary<EItemType, List<ItemProto>>();
-            foreach (ItemProto itemProto in LDB.items.dataArray)
+            Dictionary<EMinerType, List<VeinProto>> items = new Dictionary<EMinerType, List<VeinProto>>();
+            foreach (VeinProto veinProto in LDB.veins.dataArray)
             {
-                EItemType key = itemProto.Type;
-                if (!items.ContainsKey(key)) items.Add(key, new List<ItemProto>());
-                items[key].Add(itemProto);
+                EMinerType key = veinProto.prefabDesc.minerType;
+                if (!items.ContainsKey(key)) items.Add(key, new List<VeinProto>());
+                items[key].Add(veinProto);
             }
             return items;
         }
 
         private void DrawContent()
         {
-            Dictionary<EItemType, List<ItemProto>> itemList = GetItems();
+            Dictionary<EMinerType, List<VeinProto>> itemList = GetItems();
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
-            foreach (EItemType entry in itemList.Keys)
+            foreach (EMinerType entry in itemList.Keys)
             {
                 if (GUILayout.Button(entry.ToString()))
                 {
@@ -63,7 +63,7 @@ namespace DSP_Helmod.UI
             }
             GUILayout.EndHorizontal();
 
-            List<ItemProto> items = itemList[groupSelected];
+            List<VeinProto> items = itemList[groupSelected];
             DrawElements(items);
             //GUILayout.EndHorizontal();
             if (Event.current.type == EventType.Repaint)
@@ -78,27 +78,27 @@ namespace DSP_Helmod.UI
 
         }
 
-        private void DrawElements(List<ItemProto> items)
+        private void DrawElements(List<VeinProto> items)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
             GUIContent[] contents = new GUIContent[items.Count];
             Texture2D[] images = new Texture2D[items.Count];
             int index = 0;
-            foreach (ItemProto item in items)
+            foreach (VeinProto item in items)
             {
                 Texture2D texture = item.iconSprite.texture;
                 string tooltip = item.name;
                 images[index] = texture;
-                GUIContent content = new GUIContent(texture, ItemProtoHelper.GetTootip(item));
+                GUIContent content = new GUIContent(texture, VeinProtoHelper.GetTootip(item));
                 contents[index] = content;
                 index++;
             }
             //GUILayout.BeginHorizontal(boxStyle, GUILayout.Width(80));
-            GUILayoutOption[] GridLayoutOptions = new GUILayoutOption[] { GUILayout.MaxWidth(450) };
+            GUILayoutOption[] GridLayoutOptions = new GUILayoutOption[] { GUILayout.MaxWidth(450), GUILayout.MaxHeight(100) };
             selection = GUILayout.SelectionGrid(-1, contents, 10, GridLayoutOptions);
             if (selection != -1)
             {
-                ItemProto item = items[selection];
+                VeinProto item = items[selection];
                 if (selectorMode == SelectorMode.Normal)
                 {
                     HMEvent.SendEvent(this, new HMEvent(HMEventType.AddItem, item));
@@ -109,6 +109,7 @@ namespace DSP_Helmod.UI
                 }
                 selection = -1;
             }
+            GUILayout.FlexibleSpace();
             GUILayout.EndScrollView();
         }
 

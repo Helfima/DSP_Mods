@@ -186,7 +186,7 @@ namespace DSP_Helmod.UI
                             {
                                 GUI.color = Color.yellow;
                             }
-                            HMButton.IconLogistic(logistic, delegate(Item element) {
+                            HMButton.IconLogistic(logistic, delegate(IItem element) {
                                 HMEventQueue.EnQueue(this, new HMEvent(HMEventType.ChangeLogisticItem, element));
                             });
                             GUI.color = Color.white;
@@ -232,7 +232,7 @@ namespace DSP_Helmod.UI
                 {
                     GUI.color = Color.yellow;
                 }
-                HMCell.Node(currentSheet, Classes.Language.Get("open.sheet"), delegate (Node element) {
+                HMCell.Node(currentSheet, Classes.Language.Get("open.sheet"), delegate (INode element) {
                     SetCurrentNodes((Nodes)element);
                 });
                 GUI.color = Color.white;
@@ -279,7 +279,7 @@ namespace DSP_Helmod.UI
                             {
                                 GUI.color = Color.yellow;
                             }
-                            HMCell.Node(node, Classes.Language.Get("open.node"), delegate (Node element)
+                            HMCell.Node(node, Classes.Language.Get("open.node"), delegate (INode element)
                             {
                                 SetCurrentNodes((Nodes)element);
                             });
@@ -327,7 +327,7 @@ namespace DSP_Helmod.UI
             ScrollInputPosition = GUILayout.BeginScrollView(ScrollInputPosition, HMStyle.ScrollListDetail, HMStyle.ScrollListDetailLayoutOptions);
             if (currentNode != null && currentNode.Ingredients != null)
             {
-                HMCell.ItemIngredientList(currentNode, currentSheet.Time, delegate(Item element){
+                HMCell.ItemIngredientList(currentNode, currentSheet.Time, delegate(IItem element){
                         HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
                 });
             }
@@ -386,10 +386,11 @@ namespace DSP_Helmod.UI
                 int end = currentNode.Children.Count;
                 for (int index = 0; index < end; index++ )
                 {
-                    Node node = currentNode.Children[index];
+                    INode node = currentNode.Children[index];
                     GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
 
                     // actions
+                    //HMLogger.Debug("DrawTable:actions");
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnActionLayoutOptions);
                     HMCell.NodeActions(currentNode, node);
                     GUILayout.EndHorizontal();
@@ -398,31 +399,34 @@ namespace DSP_Helmod.UI
                     GUILayout.TextField("100");
                     GUILayout.EndHorizontal();
                     // recipe
+                    //HMLogger.Debug("DrawTable:recipe");
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
-                    HMCell.Node(node, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), Classes.Language.Get("edition.recipe"), delegate (Node element)
+                    HMCell.Node(node, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), Classes.Language.Get("edition.recipe"), delegate (INode element)
                     {
-                        if (element is Recipe)
+                        if (element is IRecipe)
                         {
                             HMEventQueue.EnQueue(currentNode, new HMEvent(HMEventType.EditionRecipe, element));
                         }
                     });
                     GUILayout.EndHorizontal();
                     // power
+                    //HMLogger.Debug("DrawTable:power");
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
                     HMCell.NodePower(node, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), delegate ()
                     {
-                        if (node is Recipe)
+                        if (node is IRecipe)
                         {
                             HMEventQueue.EnQueue(currentNode, new HMEvent(HMEventType.EditionRecipe, node));
                         }
                     });
                     GUILayout.EndHorizontal();
                     //machine
+                    //HMLogger.Debug("DrawTable:machine");
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
-                    if(node is Recipe)
+                    if(node is IRecipe)
                     {
-                        Recipe recipe = (Recipe)node;
-                        HMCell.Item(recipe.Factory, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), delegate(Item item)
+                        IRecipe recipe = (IRecipe)node;
+                        HMCell.Product(recipe.Factory, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), delegate(IItem item)
                         {
                             HMEventQueue.EnQueue(currentNode, new HMEvent(HMEventType.EditionRecipe, node));
                         });
@@ -434,13 +438,14 @@ namespace DSP_Helmod.UI
                     
                     GUILayout.EndHorizontal();
                     // Products
+                    //HMLogger.Debug("DrawTable:Products");
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
-                    foreach (Item item in node.Products)
+                    foreach (IItem item in node.Products)
                     {
                         if (item.State == ItemState.Main || item.Count > 0.01)
                         {
                             item.Flow = item.Count / currentSheet.Time;
-                            HMCell.ItemProduct(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (Item element)
+                            HMCell.ItemProduct(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (IItem element)
                             {
                                 if (element.State == ItemState.Main)
                                 {
@@ -455,14 +460,15 @@ namespace DSP_Helmod.UI
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
-
+                    //Ingredients
+                    //HMLogger.Debug("DrawTable:Ingredients");
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
-                    foreach (Item item in node.Ingredients)
+                    foreach (IItem item in node.Ingredients)
                     {
                         if (item.State == ItemState.Main || item.Count > 0.01)
                         {
                             item.Flow = item.Count / currentSheet.Time;
-                            HMCell.ItemIngredient(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (Item element)
+                            HMCell.ItemIngredient(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (IItem element)
                             {
                                 HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
                             });
@@ -514,6 +520,7 @@ namespace DSP_Helmod.UI
             Nodes parentNode;
             Node node;
             RecipeProto recipeProto;
+            Recipe recipe;
             Item item;
             switch (e.Type)
             {
@@ -524,6 +531,11 @@ namespace DSP_Helmod.UI
                     if (currentNode == null) CreateNewSheet();
                     recipeProto = e.GetItem<RecipeProto>();
                     AddRecipe(recipeProto);
+                    break;
+                case HMEventType.ChooseRecipe:
+                    if (currentNode == null) CreateNewSheet();
+                    recipe = e.GetItem<Recipe>();
+                    AddRecipe(recipe);
                     break;
                 case HMEventType.AddRecipeByIngredient:
                     item = e.GetItem<Item>();
@@ -580,19 +592,38 @@ namespace DSP_Helmod.UI
             Compute();
         }
 
+        private void AddRecipe(Recipe recipe)
+        {
+            currentNode.Add(recipe.Clone());
+            Compute();
+        }
+
         private void AddRecipe(Item item)
         {
-            if (item != null && item.Proto != null && item.Proto.recipes != null && item.Proto.recipes.Count > 0)
+            if (item != null && item.Proto != null)
             {
-                if (item.Proto.recipes.Count == 1)
+                if (item.Proto.isRaw && item.Proto.MiningFrom != null && item.Proto.MiningFrom != "" && (item.Proto.recipes == null || item.Proto.recipes.Count == 0))
                 {
-                    RecipeProto recipe = item.Proto.recipes.First();
-                    currentNode.Add(new Recipe(recipe));
-                    Compute();
+                    // recherche la source
+                    VeinProto veinProto = LDB.veins.dataArray.Where(vein => vein.MiningItem == item.Id).FirstOrDefault();
+                    if (veinProto != null)
+                    {
+                        currentNode.Add(new RecipeVein(veinProto));
+                        Compute();
+                    }
                 }
-                else
+                else if (item.Proto.recipes != null && item.Proto.recipes.Count > 0)
                 {
-                    HMEvent.SendEvent(currentNode, new HMEvent(HMEventType.ChooseRecipe, item));
+                    if (item.Proto.recipes.Count == 1)
+                    {
+                        RecipeProto recipe = item.Proto.recipes.First();
+                        currentNode.Add(new Recipe(recipe));
+                        Compute();
+                    }
+                    else
+                    {
+                        HMEvent.SendEvent(currentNode, new HMEvent(HMEventType.SwitchChooseRecipe, item));
+                    }
                 }
             }
 

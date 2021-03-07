@@ -46,16 +46,16 @@ namespace DSP_Helmod.UI
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (node is Recipe)
+            if (node is IRecipe)
             {
-                Recipe recipe = (Recipe)node;
+                IRecipe recipe = (IRecipe)node;
                 foreach(Factory factory in recipe.Factories)
                 {
                     if (recipe.Factory.Name.Equals(factory.Name))
                     {
                         GUI.color = Color.yellow;
                     }
-                    HMCell.Item(factory, factory.Speed, delegate(Item element){
+                    HMCell.Product(factory, factory.Speed, delegate(IItem element){
                         UpdateFactory(recipe, factory);
                     });
                     GUI.color = Color.white;
@@ -65,7 +65,7 @@ namespace DSP_Helmod.UI
             GUILayout.EndHorizontal();
         }
 
-        private void UpdateFactory(Recipe recipe, Factory factory)
+        private void UpdateFactory(IRecipe recipe, Factory factory)
         {
             recipe.Factory = factory;
             HMEventQueue.EnQueue(this, new HMEvent(HMEventType.UpdateSheet, recipe));
@@ -101,9 +101,9 @@ namespace DSP_Helmod.UI
                 GUILayout.EndHorizontal();
             }
             {
-                if (node is Recipe)
+                if (node is IRecipe)
                 {
-                    Recipe recipe = ((Recipe)node).Clone(1);
+                    IRecipe recipe = ((IRecipe)node).Clone(1);
                     //Debug.Log($"Recipe count:{recipe.Count}");
                     GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
 
@@ -120,11 +120,11 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     //machine
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
-                    HMCell.Item(recipe.Factory);
+                    HMCell.Product(recipe.Factory, recipe.Factory.Count);
                     GUILayout.EndHorizontal();
                     // Products
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
-                    foreach (Item item in recipe.Products)
+                    foreach (IItem item in recipe.Products)
                     {
                         HMCell.ItemProduct(item, recipe.Count);
                     }
@@ -132,7 +132,7 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
-                    foreach (Item item in recipe.Ingredients)
+                    foreach (IItem item in recipe.Ingredients)
                     {
                         HMCell.ItemIngredient(item, recipe.Count);
                     }

@@ -36,19 +36,19 @@ namespace DSP_Helmod.Helpers
             return stringBuilder.ToString();
         }
 
-        public static List<Item> GetProductItems(RecipeProto recipe)
+        public static List<IItem> GetProductItems(RecipeProto recipe)
         {
             return GetItems(recipe.Results, recipe.ResultCounts);
         }
 
-        public static List<Item> GetIngredientItems(RecipeProto recipe)
+        public static List<IItem> GetIngredientItems(RecipeProto recipe)
         {
             return GetItems(recipe.Items, recipe.ItemCounts);
         }
 
-        internal static List<Item> GetItems(int[] itemIds, int[] counts)
+        internal static List<IItem> GetItems(int[] itemIds, int[] counts)
         {
-            List<Item> items = new List<Item>();
+            List<IItem> items = new List<IItem>();
             for (int i = 0; i < counts.Length; i++)
             {
                 double count = counts[i];
