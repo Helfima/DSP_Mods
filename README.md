@@ -41,4 +41,5 @@ A "Select Unity instance" dialog will show you some thing like..
 | Project       | Machine      | Type   | Port  | Information |
 | ------------- | ------------ | ------ | ----- | ----------- |
 | WindowsPlayer | Your_PC_Name | Player | 56593 | PID:xxxx    |
+
 1. Click OK on Debug messagebox
