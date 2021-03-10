@@ -64,7 +64,15 @@ namespace DSP_Helmod.Model
         {
             get
             {
-                return proto.recipes.Select(recipe => new Recipe(recipe, 1)).ToList<IRecipe>();
+                //HMLogger.Debug($"Try Item.Recipes");
+                List<IRecipe> recipes = new List<IRecipe>();
+                // probleme de cast sinon
+                foreach(Recipe recipe in proto.recipes.Select(recipe => new Recipe(recipe, 1)).ToList())
+                {
+                    recipes.Add(recipe);
+                }
+                //HMLogger.Debug($"Item.Recipes:{recipes.Count}");
+                return recipes;
             }
         }
 

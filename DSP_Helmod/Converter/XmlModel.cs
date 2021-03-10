@@ -38,7 +38,7 @@ namespace DSP_Helmod.Converter
             DataModel dataModel = new DataModel(Version);
             if (Sheets != null)
             {
-                Classes.HMLogger.Debug($"Xml sheets: {Sheets.Count}");
+                //Classes.HMLogger.Debug($"Xml sheets: {Sheets.Count}");
                 foreach (XmlSheet xmlSheet in Sheets)
                 {
                     dataModel.Sheets.Add(xmlSheet.GetObject());

@@ -35,6 +35,25 @@ namespace DSP_Helmod.Helpers
             }
             return stringBuilder.ToString();
         }
+        public static string GetTootip(IRecipe recipe)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(recipe.Name);
+            //stringBuilder.AppendLine(recipe.Type.ToString());
+            stringBuilder.AppendLine($"Energy: {recipe.Energy}");
+            stringBuilder.AppendLine($"Made in: {recipe.Factory.Name}");
+            stringBuilder.AppendLine("Products:");
+            foreach (IItem item in recipe.Products)
+            {
+                stringBuilder.AppendLine($"{item.Count}x{item.Name}");
+            }
+            stringBuilder.AppendLine("Ingredients:");
+            foreach (IItem item in recipe.Ingredients)
+            {
+                stringBuilder.AppendLine($"{item.Count}x{item.Name}");
+            }
+            return stringBuilder.ToString();
+        }
 
         public static List<IItem> GetProductItems(RecipeProto recipe)
         {

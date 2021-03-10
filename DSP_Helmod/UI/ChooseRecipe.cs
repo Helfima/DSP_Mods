@@ -13,9 +13,8 @@ namespace DSP_Helmod.UI
 {
     class ChooseRecipe : HMForm
     {
-        private string value;
         private Nodes nodes;
-        private Item item;
+        private IItem item;
         public ChooseRecipe(UIController parent) : base(parent)
         {
             this.name = "Choose Recipe";
@@ -23,6 +22,7 @@ namespace DSP_Helmod.UI
         }
         public override void OnDoWindow()
         {
+            DrawHeader();
             DrawContent();
         }
 
@@ -36,8 +36,10 @@ namespace DSP_Helmod.UI
 
         }
 
-        private void DrawContent()
+        private void DrawHeader()
         {
+            //HMLogger.Debug("DrawHeader");
+
             GUILayout.BeginHorizontal(GUILayout.MaxHeight(25));
 
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
@@ -58,10 +60,21 @@ namespace DSP_Helmod.UI
 
             GUILayout.EndHorizontal();
 
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition, HMStyle.ScrollDataLayoutOptions);
-            foreach (IRecipe recipe in item.Recipes)
+        }
+        private void DrawContent()
+        {
+            //HMLogger.Debug("DrawContent");
+
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, HMStyle.ScrollChooseLayoutOptions);
+            if (item != null)
             {
-                DrawRecipe(recipe);
+                List<IRecipe> recipes = Database.SelectRecipeByProduct(item);
+                //HMLogger.Debug($"Recipes:{recipes.Count}");
+                foreach (IRecipe recipe in recipes)
+                {
+                    //HMLogger.Debug($"Recipe:{recipe.Name}");
+                    DrawRecipe(recipe);
+                }
             }
             GUILayout.EndScrollView();
 
@@ -69,12 +82,13 @@ namespace DSP_Helmod.UI
 
         public void DrawRecipe(IRecipe recipe)
         {
+            //HMLogger.Debug("DrawRecipe");
             GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
 
             // recipe
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
             HMCell.Node(recipe, null, delegate(INode element) {
-                HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
+                HMEvent.SendEvent(this, new HMEvent(HMEventType.ChooseRecipe, recipe));
             });
             GUILayout.EndHorizontal();
             // Machine
@@ -83,7 +97,7 @@ namespace DSP_Helmod.UI
             GUILayout.EndHorizontal();
             // Products
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
-            foreach (Item item in recipe.Products)
+            foreach (IItem item in recipe.Products)
             {
                 HMCell.ItemProduct(item, item.Count);
             }
@@ -91,7 +105,7 @@ namespace DSP_Helmod.UI
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
-            foreach (Item item in recipe.Ingredients)
+            foreach (IItem item in recipe.Ingredients)
             {
                 HMCell.ItemIngredient(item, item.Count);
             }
@@ -106,9 +120,9 @@ namespace DSP_Helmod.UI
             switch (e.Type)
             {
                 case HMEventType.SwitchChooseRecipe:
-                    SwitchShow();
                     nodes = (Nodes)sender;
-                    item = e.GetItem<Item>();
+                    item = e.GetItem<IItem>();
+                    SwitchShow();
                     break;
             }
         }

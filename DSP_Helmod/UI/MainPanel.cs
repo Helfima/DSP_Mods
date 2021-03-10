@@ -24,7 +24,6 @@ namespace DSP_Helmod.UI
         protected List<HMForm> toolbarForms;
         protected List<RecipeProto> recipes = new List<RecipeProto>();
 
-        protected DataModel model;
         protected Nodes currentSheet;
         protected Nodes currentNode;
 
@@ -34,9 +33,8 @@ namespace DSP_Helmod.UI
 
         protected int timeSelected = 0;
         protected string[] timesString = new string[] {"1s", "1mn", "1h" };
-        protected string SavePath;
         public MainPanel(UIController parent) : base(parent) {
-            this.name = "DSP Helmod V1.1.0";
+            this.name = $"DSP Helmod V{PluginInfo.Instance.version_number}";
 #if DEBUG
             this.Show = true;
 #endif
@@ -45,34 +43,6 @@ namespace DSP_Helmod.UI
         }
         public override void OnInit()
         {
-            HMLogger.Debug("MainPanel.OnInit");
-            if (SavePath == null)
-            {
-                // placement dans AppData
-                SavePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DSP_Helmod/datamodel.xml");
-                try
-                {
-                    // ancien chemin
-                    string oldSave = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DSP_Helmod/datamodel.xml");
-                    if (System.IO.File.Exists(oldSave))
-                    {
-                            string oldFolder = System.IO.Path.GetDirectoryName(oldSave);
-                            string newFolder = System.IO.Path.GetDirectoryName(SavePath);
-                            System.IO.Directory.Move(oldFolder, newFolder);
-                    }
-                }
-                catch { }
-            }
-            if (model == null)
-            {
-                model = DataModelConverter.ReadXml(SavePath);
-                if (model != null && model.Sheets != null && model.Sheets.Count > 0)
-                {
-                    SetCurrentSheet(model.Sheets.First());
-                    ComputeAll();
-                }
-            }
-            if (model == null) model = new DataModel();
         }
 
 
@@ -106,10 +76,10 @@ namespace DSP_Helmod.UI
             textAlignStyle.alignment = TextAnchor.LowerRight;
 
             GUILayout.BeginHorizontal(GUILayout.MaxHeight(50), GUILayout.MinHeight(50));
-            if (model != null)
+            if (Database.DataModel != null)
             {
                 int index = 0;
-                foreach (Nodes sheet in model.Sheets)
+                foreach (Nodes sheet in Database.DataModel.Sheets)
                 {
                     if(index % 15 == 0)
                     {
@@ -144,7 +114,7 @@ namespace DSP_Helmod.UI
                 List<string> toolbarString = new List<string>();
                 foreach (HMForm form in parent.Forms)
                 {
-                    if (form.IsTool)
+                    if (form.InMain)
                     {
                         toolbarForms.Add(form);
                         toolbarString.Add(form.Name);
@@ -444,8 +414,8 @@ namespace DSP_Helmod.UI
                     {
                         if (item.State == ItemState.Main || item.Count > 0.01)
                         {
-                            item.Flow = item.Count / currentSheet.Time;
-                            HMCell.ItemProduct(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (IItem element)
+                            item.Flow = item.Count * node.Effects.Productivity / currentSheet.Time;
+                            HMCell.ItemProduct(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal) * node.Effects.Productivity, delegate (IItem element)
                             {
                                 if (element.State == ItemState.Main)
                                 {
@@ -488,13 +458,11 @@ namespace DSP_Helmod.UI
         private void CreateNewSheet()
         {
             Nodes sheet = new Nodes();
-            model.Sheets.Add(sheet);
+            Database.DataModel.Sheets.Add(sheet);
             SetCurrentSheet(sheet);
         }
         private void SetCurrentNodes(Nodes nodes)
         {
-            HMLogger.Debug($"Old Current Nodes: {currentNode.Type}.{currentNode.Name}");
-            HMLogger.Debug($"SetCurrentNodes: {nodes.Type}.{nodes.Name}");
             this.currentNode = nodes;
         }
         private void SetCurrentSheet(Nodes sheet)
@@ -516,25 +484,23 @@ namespace DSP_Helmod.UI
         }
         public void OnEvent(object sender, HMEvent e)
         {
-            HMLogger.Debug("OnEvent()");
             Nodes parentNode;
             Node node;
-            RecipeProto recipeProto;
-            Recipe recipe;
+            IRecipe recipe;
             Item item;
             switch (e.Type)
             {
-                case HMEventType.OpenClose:
-                    SwitchShow();
+                case HMEventType.LoadedModel:
+                    SetCurrentSheet(Database.DataModel.Sheets.First());
                     break;
                 case HMEventType.AddRecipe:
                     if (currentNode == null) CreateNewSheet();
-                    recipeProto = e.GetItem<RecipeProto>();
-                    AddRecipe(recipeProto);
+                    recipe = e.GetItem<IRecipe>();
+                    AddRecipe(recipe);
                     break;
                 case HMEventType.ChooseRecipe:
                     if (currentNode == null) CreateNewSheet();
-                    recipe = e.GetItem<Recipe>();
+                    recipe = e.GetItem<IRecipe>();
                     AddRecipe(recipe);
                     break;
                 case HMEventType.AddRecipeByIngredient:
@@ -585,14 +551,7 @@ namespace DSP_Helmod.UI
             }
         }
 
-        private void AddRecipe(RecipeProto recipe)
-        {
-            HMLogger.Debug(recipe.madeFromString);
-            currentNode.Add(new Recipe(recipe));
-            Compute();
-        }
-
-        private void AddRecipe(Recipe recipe)
+        private void AddRecipe(IRecipe recipe)
         {
             currentNode.Add(recipe.Clone());
             Compute();
@@ -602,22 +561,12 @@ namespace DSP_Helmod.UI
         {
             if (item != null && item.Proto != null)
             {
-                if (item.Proto.isRaw && item.Proto.MiningFrom != null && item.Proto.MiningFrom != "" && (item.Proto.recipes == null || item.Proto.recipes.Count == 0))
+                List<IRecipe> recipes = Database.SelectRecipeByProduct(item);
+                if (recipes != null && recipes.Count > 0)
                 {
-                    // recherche la source
-                    VeinProto veinProto = LDB.veins.dataArray.Where(vein => vein.MiningItem == item.Id).FirstOrDefault();
-                    if (veinProto != null)
+                    if (recipes.Count == 1)
                     {
-                        currentNode.Add(new RecipeVein(veinProto));
-                        Compute();
-                    }
-                }
-                else if (item.Proto.recipes != null && item.Proto.recipes.Count > 0)
-                {
-                    if (item.Proto.recipes.Count == 1)
-                    {
-                        RecipeProto recipe = item.Proto.recipes.First();
-                        currentNode.Add(new Recipe(recipe));
+                        currentNode.Add(recipes.First().Clone());
                         Compute();
                     }
                     else
@@ -638,7 +587,7 @@ namespace DSP_Helmod.UI
         private void ComputeAll()
         {
             Compute compute = new Compute();
-            foreach(Nodes sheet in model.Sheets)
+            foreach(Nodes sheet in Database.DataModel.Sheets)
             {
                 compute.Update(sheet);
             }
@@ -646,23 +595,20 @@ namespace DSP_Helmod.UI
 
         private void DeleteSheet()
         {
-            model.Sheets.Remove(currentSheet);
-            if(model.Sheets.Count == 0)
+            Database.DataModel.Sheets.Remove(currentSheet);
+            if(Database.DataModel.Sheets.Count == 0)
             {
                 CreateNewSheet();
             }
             else
             {
-                SetCurrentSheet(model.Sheets.First());
+                SetCurrentSheet(Database.DataModel.Sheets.First());
             }
         }
 
         public override void OnClose()
         {
-            if (SavePath != null)
-            {
-                DataModelConverter.WriteXml(SavePath, model);
-            }
+            Database.SaveModel();
         }
     }
 }

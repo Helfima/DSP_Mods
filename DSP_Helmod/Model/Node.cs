@@ -10,6 +10,7 @@ namespace DSP_Helmod.Model
 {
     abstract public class Node: INode
     {
+        protected Effects effects = new Effects();
         public int Id { get; set; }
         public int Index { get; set; }
         public string Name { get; set; }
@@ -20,7 +21,10 @@ namespace DSP_Helmod.Model
         public Nodes Parent { get; set; }
         protected List<IItem> products = new List<IItem>();
         protected List<IItem> ingredients = new List<IItem>();
-
+        public Effects Effects
+        {
+            get { return effects; }
+        }
         public List<IItem> Products
         {
             get { return products; }
@@ -33,7 +37,6 @@ namespace DSP_Helmod.Model
         }
         public bool Match(MatrixValue other)
         {
-            Classes.HMLogger.Trace($"Test Node match {this.GetType()}: {Type}=={other.Type} && {Name}=={other.Name}");
             if (other == null || Type == null || Name == null) return false;
             return Type.Equals(other.Type) && Name.Equals(other.Name);
         }

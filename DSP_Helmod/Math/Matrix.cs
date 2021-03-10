@@ -75,16 +75,13 @@ namespace DSP_Helmod.Math
         public void AddColumn(MatrixHeader column)
         {
             string key = GetColumnKey(column);
-            HMLogger.Trace("Matrix.AddColumn:" + key);
             if (!columnIndex.ContainsKey(key))
             {
                 // add column
                 int icol = columns.Length;
                 Array.Resize(ref columns, icol + 1);
-                HMLogger.Trace("Matrix.columns.Length:" + columns.Length);
                 columns[icol] = column;
                 columnIndex.Add(key, icol);
-                HMLogger.Trace("Matrix.columns added");
                 rows = ResizeArray<double>(rows, headers.Length, columns.Length);
             }
         }
@@ -204,16 +201,13 @@ namespace DSP_Helmod.Math
         public void AddColumn(MatrixValue value)
         {
             string key = GetColumnKey(value);
-            HMLogger.Trace("MatrixRow.AddColumn:" + key);
             if (!columnIndex.ContainsKey(key))
             {
                 MatrixHeader column = new MatrixHeader(value.Type, value.Name);
                 int icol = columns.Length;
                 Array.Resize(ref columns, icol + 1);
-                HMLogger.Trace("MatrixRow.columns.Length:" + columns.Length);
                 columns[icol] = column;
                 columnIndex.Add(key, icol);
-                HMLogger.Trace("MatrixRow.columns added");
             }
         }
         public void AddValue(MatrixValue value)

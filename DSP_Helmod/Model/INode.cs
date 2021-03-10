@@ -18,6 +18,7 @@ namespace DSP_Helmod.Model
         double Power { get; set; }
         List<IItem> Products { get; set; }
         List<IItem> Ingredients { get; set; }
+        Effects Effects { get; }
         Texture2D Icon { get; set; }
         Nodes Parent { get; set; }
         bool Match(MatrixValue other);

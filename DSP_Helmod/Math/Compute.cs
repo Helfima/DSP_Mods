@@ -22,7 +22,6 @@ namespace DSP_Helmod.Math
         public void Update(Nodes nodes)
         {
             if (nodes == null) return;
-            HMLogger.Debug($"Compute.Update({nodes.GetType()})");
             Time = nodes.Time;
             nodes.Count = 1;
             ComputeNode(nodes);
@@ -32,7 +31,6 @@ namespace DSP_Helmod.Math
         {
             
             if (nodes == null || nodes.Children == null || nodes.Children.Count == 0) return;
-            HMLogger.Debug($"Children:{nodes.Children.Count}");
             nodes.Objectives = null;
             nodes.CopyInputsToObjectives();
             foreach (INode node in nodes.Children)
@@ -40,8 +38,6 @@ namespace DSP_Helmod.Math
                 if (node is Nodes)
                 {
                     Nodes childNodes = (Nodes)node;
-                    //childNodes.Count = 1;
-                    //childNodes.Inputs = nodes.Inputs;
                     ComputeNode(childNodes);
                 }
             }
@@ -58,7 +54,6 @@ namespace DSP_Helmod.Math
                 }
             }
 
-            HMLogger.Debug(matrix.ToString());
             MatrixValue[] result = solver.Solve(matrix, nodes.Objectives);
             foreach (INode node in nodes.Children)
             {
@@ -74,7 +69,6 @@ namespace DSP_Helmod.Math
             ComputeFactory(nodes);
             ComputePower(nodes);
             ComputeInputOutput(nodes);
-            HMLogger.Debug(solver.ToString());
         }
 
         private void ComputePower(Nodes nodes)
@@ -101,9 +95,7 @@ namespace DSP_Helmod.Math
                 if(node is IRecipe)
                 {
                     IRecipe recipe = (IRecipe)node;
-                    recipe.Factory.Count = recipe.Energy * recipe.Count / (recipe.Factory.Speed * Time);
-                    HMLogger.Trace($"Factory.count (recipe.Name): recipe.Energy*recipe.Count/(recipe.Factory.Speed*Time)=recipe.Factory.Count");
-                    HMLogger.Trace($"Factory.count ({recipe.Name}): {recipe.Energy}*{recipe.Count}/({recipe.Factory.Speed}*{Time}=={recipe.Factory.Count}");
+                    recipe.Factory.Count = recipe.Energy * recipe.Count / (recipe.Factory.Speed * recipe.Effects.Speed * Time);
                     node.Power = recipe.Factory.Count * recipe.Factory.Power;
                 }
             }
@@ -119,11 +111,11 @@ namespace DSP_Helmod.Math
                 {
                     if (products.ContainsKey(item.Name))
                     {
-                        products[item.Name].Count += node.Count * item.Count;
+                        products[item.Name].Count += node.Count * item.Count * node.Effects.Productivity;
                     }
                     else
                     {
-                        products.Add(item.Name, item.Clone(node.Count));
+                        products.Add(item.Name, item.Clone(node.Count * node.Effects.Productivity));
                     }
                 }
                 foreach (IItem item in node.Ingredients)
@@ -168,7 +160,7 @@ namespace DSP_Helmod.Math
                 foreach(IItem item in node.Products)
                 {
                     products.Add(item.Name);
-                    rowData.AddValue(new MatrixValue(item.Type, item.Name, item.Count));
+                    rowData.AddValue(new MatrixValue(item.Type, item.Name, item.Count * node.Effects.Productivity));
                 }
                 foreach (IItem item in node.Ingredients)
                 {

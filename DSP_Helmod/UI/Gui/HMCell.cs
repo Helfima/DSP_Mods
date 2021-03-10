@@ -108,7 +108,7 @@ namespace DSP_Helmod.UI.Gui
         private static void ItemColored(IItem item, ItemColor color, double factor = 1, bool withLogistic = false, Callback.ForItem callback = null)
         {
             GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
-            HMButton.ItemColored(item, color, callback);
+            HMButton.ItemColored(item, color, factor, callback);
             GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
             if (item.Count * factor < limit) GUILayout.Label($"{item.Count * factor:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{item.Count * factor:N1}", HMStyle.TextButtonIcon);
@@ -166,6 +166,7 @@ namespace DSP_Helmod.UI.Gui
                     index++;
                 }
             }
+            if (index == 0) GUILayout.Label("");
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
@@ -189,6 +190,7 @@ namespace DSP_Helmod.UI.Gui
                     index++;
                 }
             }
+            if (index == 0) GUILayout.Label("");
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
@@ -212,6 +214,7 @@ namespace DSP_Helmod.UI.Gui
                     index++;
                 }
             }
+            if (index == 0) GUILayout.Label("");
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }

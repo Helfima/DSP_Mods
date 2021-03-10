@@ -8,20 +8,22 @@ using DSP_Helmod.Classes;
 using DSP_Helmod.Helpers;
 using DSP_Helmod.UI.Core;
 using UnityEngine;
+using DSP_Helmod.Model;
 
 namespace DSP_Helmod.UI
 {
     public class SelectorRecipe : HMForm
     {
-        protected ERecipeType groupSelected = 0;
+        protected string groupSelected = "";
         protected string recipeSelected;
         protected int selection;
 
         public SelectorRecipe(UIController parent) : base(parent) {
             this.name = "Recipe Selector";
             this.Caption = "Add Recipe";
+            this.InMain = true;
             this.IsTool = true;
-            this.windowRect0 = new Rect(400, 200, 600, 400);
+            this.windowRect0 = new Rect(400, 200, 700, 400);
         }
         public override void OnInit()
         {
@@ -39,71 +41,63 @@ namespace DSP_Helmod.UI
             DrawContent();
         }
 
-        private Dictionary<ERecipeType, List<RecipeProto>> GetRecipes()
-        {
-            Dictionary<ERecipeType, List<RecipeProto>> recipes = new Dictionary<ERecipeType, List<RecipeProto>>();
-            foreach (RecipeProto recipeProto in LDB.recipes.dataArray)
-            {
-                ERecipeType key = recipeProto.Type;
-                if (!recipes.ContainsKey(key)) recipes.Add(key, new List<RecipeProto>());
-                recipes[key].Add(recipeProto);
-            }
-            return recipes;
-        }
-
         private void DrawContent()
         {
-            Dictionary<ERecipeType, List<RecipeProto>> recipeList = GetRecipes();
+            Dictionary<string, List<IRecipe>> recipeList = Database.RecipesByGroup;
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
-            foreach (ERecipeType entry in recipeList.Keys)
+            foreach (string entry in recipeList.Keys)
             {
                 if (GUILayout.Button(entry.ToString()))
                 {
                     groupSelected = entry;
                 }
-                if (groupSelected == 0) groupSelected = entry;
+                if (groupSelected == "") groupSelected = entry;
             }
             GUILayout.EndHorizontal();
 
-            List<RecipeProto> recipes = recipeList[groupSelected];
+            List<IRecipe> recipes = recipeList[groupSelected];
             DrawElements(recipes);
             //GUILayout.EndHorizontal();
             
 
         }
 
-        private void DrawElements(List<RecipeProto> recipes)
+        private void DrawElements(List<IRecipe> recipes)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
-            GUIContent[] contents = new GUIContent[recipes.Count];
-            Texture2D[] images = new Texture2D[recipes.Count];
+
+            GUILayout.BeginHorizontal(HMStyle.Icon50LayoutOptions);
             int index = 0;
-            foreach (RecipeProto recipe in recipes)
+            foreach (IRecipe recipe in recipes)
             {
-                Texture2D texture = recipe.iconSprite.texture;
-                string tooltip = recipe.name;
-                images[index] = texture;
-                GUIContent content = new GUIContent(texture, RecipeProtoHelper.GetTootip(recipe));
-                contents[index] = content;
+                if (index != 0 && index % 10 == 0)
+                {
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                }
+                HMButton.Node(recipe, RecipeProtoHelper.GetTootip(recipe), delegate(INode element) {
+                    if (selectorMode == SelectorMode.Normal)
+                    {
+                        HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
+                    }
+                    else if (selectorMode == SelectorMode.Properties)
+                    {
+                        object proto = null;
+                        if (recipe is Recipe) proto = ((Recipe)recipe).Proto;
+                        if (recipe is RecipeVein) proto = ((RecipeVein)recipe).Proto;
+                        if (recipe is RecipeOrbit) proto = ((RecipeOrbit)recipe).Proto;
+                        if (recipe is RecipeOcean) proto = ((RecipeOcean)recipe).Proto;
+                        if (recipe is RecipeCustom) proto = ((RecipeCustom)recipe).Proto;
+                        if(proto != null)
+                            HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, proto));
+                    }
+                });
                 index++;
             }
-            //GUILayout.BeginHorizontal(boxStyle, GUILayout.Width(80));
-            GUILayoutOption[] GridLayoutOptions = new GUILayoutOption[] { GUILayout.MaxWidth(450) };
-            selection = GUILayout.SelectionGrid(-1, contents, 10, GridLayoutOptions);
-            if (selection != -1)
-            {
-                RecipeProto recipe = recipes[selection];
-                //HMLogger.Debug($"Recipe:{recipe.name}");
-                if (selectorMode == SelectorMode.Normal)
-                {
-                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));
-                }
-                else if (selectorMode == SelectorMode.Properties)
-                {
-                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, recipe));
-                }
-                selection = -1;
-            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
             GUILayout.EndScrollView();
         }
 

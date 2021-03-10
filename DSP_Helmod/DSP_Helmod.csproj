@@ -42,10 +42,8 @@
       <HintPath>..\packages\MathNet.Numerics.4.15.0\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
@@ -70,6 +68,7 @@
     <Compile Include="Classes\ListExtensions.cs" />
     <Compile Include="Classes\HMLogger.cs" />
     <Compile Include="Classes\Language.cs" />
+    <Compile Include="Classes\PluginInfo.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Converter\DataModelConverter.cs" />
     <Compile Include="Classes\HMEvent.cs" />
@@ -81,13 +80,16 @@
     <Compile Include="Converter\XmlSheet.cs" />
     <Compile Include="Converter\XmlNode.cs" />
     <Compile Include="ExampleClass.cs" />
+    <Compile Include="Helpers\PlanetProtoHelper.cs" />
     <Compile Include="Helpers\ItemProtoHelper.cs" />
     <Compile Include="Helpers\RecipeProtoHelper.cs" />
     <Compile Include="HelmodPlugin.cs" />
+    <Compile Include="Helpers\VegeProtoHelper.cs" />
     <Compile Include="Helpers\VeinProtoHelper.cs" />
     <Compile Include="Math\Compute.cs" />
     <Compile Include="Math\Solver.cs" />
     <Compile Include="Model\Database.cs" />
+    <Compile Include="Model\Effects.cs" />
     <Compile Include="Model\Factory.cs" />
     <Compile Include="Model\IItem.cs" />
     <Compile Include="Model\INode.cs" />
@@ -96,6 +98,9 @@
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\BaseItem.cs" />
+    <Compile Include="Model\RecipeCustom.cs" />
+    <Compile Include="Model\RecipeOcean.cs" />
+    <Compile Include="Model\RecipeOrbit.cs" />
     <Compile Include="Model\RecipeVein.cs" />
     <Compile Include="Model\Recipe.cs" />
     <Compile Include="Model\Nodes.cs" />
@@ -109,6 +114,8 @@
     <Compile Include="UI\ChooseRecipe.cs" />
     <Compile Include="UI\Core\HMForm.cs" />
     <Compile Include="UI\Core\HMTooltip.cs" />
+    <Compile Include="UI\AboutPanel.cs" />
+    <Compile Include="UI\EditionPreference.cs" />
     <Compile Include="UI\PropertiesPanel.cs" />
     <Compile Include="UI\EditionProduct.cs" />
     <Compile Include="UI\EditionRecipe.cs" />
@@ -118,6 +125,8 @@
     <Compile Include="UI\Gui\HMStyle.cs" />
     <Compile Include="UI\Gui\HMTexture.cs" />
     <Compile Include="UI\MainTooltip.cs" />
+    <Compile Include="UI\SelectorPlanet.cs" />
+    <Compile Include="UI\SelectorVege.cs" />
     <Compile Include="UI\SelectorVein.cs" />
     <Compile Include="UI\TopMenu.cs" />
     <Compile Include="UI\MainPanel.cs" />
@@ -127,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Build\CopyDll.bat" />
-    <None Include="manifest.json" />
+    <EmbeddedResource Include="manifest.json" />
     <None Include="README.md" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -151,12 +160,12 @@
     <EmbeddedResource Include="Assets\Resources\time_x64.png" />
     <EmbeddedResource Include="Assets\Resources\form_gray_x64.png" />
     <EmbeddedResource Include="Assets\Resources\form_gray_active_x64.png" />
-    <Content Include="changelog.txt" />
+    <EmbeddedResource Include="changelog.txt" />
     <Content Include="icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)..\packages\Mono.pdb2mdb.0.1.0.20130128\toolspdb2mdb.exe $(TargetPath)
-$(ProjectDir)\Build\CopyDll.bat $(TargetPath) $(ProjectDir)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)\Build\pdb2mdb.exe $(TargetPath)
+$(ProjectDir)\Build\CopyDll.bat $(ConfigurationName) $(ProjectDir) $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
 </Project>

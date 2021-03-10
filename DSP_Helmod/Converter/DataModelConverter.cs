@@ -50,7 +50,6 @@ namespace DSP_Helmod.Converter
                 XmlSerializer deserializer = new XmlSerializer(typeof(XmlModel));
                 XmlModel xmlModel = (XmlModel)deserializer.Deserialize(reader);
                 reader.Close();
-                HMLogger.Debug($"xmlModel.Version:{xmlModel.Version}");
                 return xmlModel.GetObject();
             }
             return null;

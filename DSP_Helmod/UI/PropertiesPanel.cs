@@ -242,10 +242,7 @@ namespace DSP_Helmod.UI
             Dictionary<string, PropertyData> data = new Dictionary<string, PropertyData>();
 
             Type myType = element.GetType();
-            //Debug.Log($"DrawElement:{myType.Name}");
             MemberInfo[] myMemberInfos = myType.GetMembers();
-            //Debug.Log($"myMemberInfo:{myMemberInfos.Length}");
-            PropertyInfo[] myPropertyInfo = myType.GetProperties();
             for (int i = 0; i < myMemberInfos.Length; i++)
             {
                 PropertyData propertyData = new PropertyData();
@@ -275,6 +272,15 @@ namespace DSP_Helmod.UI
                     case PrefabDesc prefabDesc:
                         propertyData.Value = PrepareString(prefabDesc);
                         break;
+                    case ItemProto itemProto:
+                        propertyData.Value = PrepareString(itemProto);
+                        break;
+                    case RecipeProto recipeProto:
+                        propertyData.Value = PrepareString(recipeProto);
+                        break;
+                    case TechProto techProto:
+                        propertyData.Value = PrepareString(techProto);
+                        break;
                     default:
                         propertyData.Value = valueName;
                         break;
@@ -289,10 +295,9 @@ namespace DSP_Helmod.UI
             StringBuilder builder = new StringBuilder();
             if (element != null)
             {
+                SortedDictionary<string, string> values = new SortedDictionary<string, string>();
                 Type myType = element.GetType();
-                Debug.Log($"myType:{myType.Name}");
                 MemberInfo[] myMemberInfos = myType.GetMembers();
-                Debug.Log($"myMemberInfo:{myMemberInfos.Length}");
                 for (int i = 0; i < myMemberInfos.Length; i++)
                 {
                     MemberInfo myMemberInfo = myMemberInfos[i];
@@ -306,28 +311,28 @@ namespace DSP_Helmod.UI
                     catch { }
                     if (valueName != null)
                     {
-                        builder.Append($"{myMemberInfo.Name}:");
-                        Debug.Log($"myMemberInfo.Name:{myMemberInfo.Name}");
                         string result = "";
                         switch (valueName)
                         {
                             case Array array:
-                                Debug.Log($"array:{array.Length}");
                                 for (int index = 0; index < array.Length; index++)
                                 {
                                     object arrayValue = array.GetValue(index);
                                     if(arrayValue != null)
                                         result += arrayValue.ToString() + ",";
                                 }
-                                builder.Append(result);
                                 break;
                             default:
-                                Debug.Log($"other:{valueName}");
-                                builder.Append(valueName);
+                                result = valueName.ToString();
                                 break;
                         }
-                        builder.AppendLine();
+                        values.Add(myMemberInfo.Name, result);
                     }
+                }
+                foreach (KeyValuePair<string,string> entry in values)
+                {
+                    if(entry.Value != "" && entry.Value != "0")
+                        builder.AppendLine($"{entry.Key}:{entry.Value}");
                 }
             }
             return builder.ToString();

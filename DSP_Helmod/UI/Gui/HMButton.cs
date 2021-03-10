@@ -103,11 +103,11 @@ namespace DSP_Helmod.UI.Gui
             }
         }
 
-        public static void Item(IItem item, Callback.ForItem callback = null)
+        public static void Item(IItem item, double factor = 1.0, Callback.ForItem callback = null)
         {
-            ItemColored(item, ItemColor.Normal, callback);
+            ItemColored(item, ItemColor.Normal, factor, callback);
         }
-        public static void ItemColored(IItem item, ItemColor color, Callback.ForItem callback = null)
+        public static void ItemColored(IItem item, ItemColor color, double factor = 1.0, Callback.ForItem callback = null)
         {
             GUIStyle style = new GUIStyle(GUI.skin.button);
             switch (color)
@@ -139,7 +139,7 @@ namespace DSP_Helmod.UI.Gui
             }
             else
             {
-                GUIContent content = new GUIContent(item.Icon, item.Name);
+                GUIContent content = new GUIContent(item.Icon, $"{item.Name}\nFlow: {item.Flow * factor * 60:N2}/mn");
                 if (GUILayout.Button(content, style, HMStyle.Icon45LayoutOptions))
                 {
                     if (callback != null) callback(item);

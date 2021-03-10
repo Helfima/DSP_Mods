@@ -15,7 +15,7 @@ namespace DSP_Helmod.UI.Core
 
         protected Rect windowRect0 = new Rect(200, 20, 600, 300);
         public int id = 66600001;
-        protected string name = "DSP Helmod";
+        protected new string name = "DSP Helmod";
         protected Color BackgroundColor = Color.white;
 
         protected bool IsInit = false;
@@ -24,6 +24,7 @@ namespace DSP_Helmod.UI.Core
         public bool Show = false;
         protected bool WindowButtons = true;
         protected bool AlphaButtons = false;
+        public bool InMain = false;
         public bool IsTool = false;
         public bool IsPersistant = false;
         public string Caption = "";
@@ -75,7 +76,7 @@ namespace DSP_Helmod.UI.Core
         {
             if (AlphaButtons)
             {
-                float newAlpha = GUI.HorizontalSlider(new Rect(windowRect0.width - 100, 3, 60, 20), Settings.Instance.WindowAlpha, 0, 1);
+                float newAlpha = GUI.HorizontalSlider(new Rect(windowRect0.width - 200, 3, 60, 20), Settings.Instance.WindowAlpha, 0, 1);
                 if(newAlpha != Settings.Instance.WindowAlpha)
                 {
                     Debug.Log($"New alpha:{newAlpha}");
@@ -84,6 +85,14 @@ namespace DSP_Helmod.UI.Core
             }
             if (WindowButtons)
             {
+                if (GUI.Button(new Rect(windowRect0.width - 90, 0, 30, 20), "*"))
+                {
+                    HMEvent.SendEvent(this, new HMEvent(HMEventType.OpenClose, typeof(EditionPreference)));
+                }
+                if (GUI.Button(new Rect(windowRect0.width - 60, 0, 30, 20), "?"))
+                {
+                    HMEvent.SendEvent(this, new HMEvent(HMEventType.OpenClose, typeof(AboutPanel)));
+                }
                 if (GUI.Button(new Rect(windowRect0.width - 30, 0, 30, 20), "X"))
                 {
                     SwitchShow();
@@ -117,14 +126,8 @@ namespace DSP_Helmod.UI.Core
             }
             else
             {
-                if (tooltip.Contains("\n"))
-                {
-                    GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), tooltip, HMStyle.TextTooltip);
-                }
-                else
-                {
-                    GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 150, 25), tooltip, HMStyle.TextTooltip);
-                }
+                string[] split = tooltip.Split('\n');
+                GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 15 * (1 + split.Length)), tooltip, HMStyle.TextTooltip);
             }
         }
         private void DrawTooltip2(string tooltip)

@@ -17,10 +17,13 @@ namespace DSP_Helmod.UI
 {
     public class TopMenu : HMForm
     {
-        
+        private int length = 0;
         public TopMenu(UIController parent) : base(parent) {
+#if DEBUG
+            this.length = 1;
+#endif
             this.Show = true;
-            this.windowRect0 = new Rect(20, 20, 120, 50);
+            this.windowRect0 = new Rect(20, 20, 120, 50 + 25 * length);
             this.WindowButtons = false;
             this.BackgroundColor = Color.black;
         }
@@ -38,11 +41,18 @@ namespace DSP_Helmod.UI
         public override void OnDoWindow()
         {
             HMButton.Action("Open/Close", delegate () {
-                HMEvent.SendEvent(this, new HMEvent(HMEventType.OpenClose, null));
+                HMEvent.SendEvent(this, new HMEvent(HMEventType.OpenClose, typeof(MainPanel)));
             });
+            if (length > 0)
+            {
+                HMButton.Action("Properties", delegate ()
+                {
+                    HMEvent.SendEvent(this, new HMEvent(HMEventType.OpenClose, typeof(PropertiesPanel)));
+                });
+            }
         }
 
-        
+
         public void OnEvent(object sender, HMEvent e)
         {
             

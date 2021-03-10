@@ -17,14 +17,29 @@ namespace DSP_Helmod.Model
         public RecipeVein(int id)
         {
             this.Id = id;
-            this.proto = LDB.veins.Select(Id);
-            UpdateItems();
+            IRecipe recipe = Database.SelectRecipe<RecipeVein>(id);
+            if (recipe is RecipeVein)
+            {
+                RecipeVein recipeVein = (RecipeVein)recipe;
+                this.proto = recipeVein.Proto;
+                this.factory = new Factory(recipeVein.Factory.Id);
+                UpdateItems();
+            }
         }
 
         public RecipeVein(VeinProto proto, double count = 0)
         {
             this.proto = proto;
             this.Count = count;
+            UpdateItems();
+            this.factory = (Factory)GetFactories().First().Clone();
+        }
+
+        public RecipeVein(VeinProto proto, Factory factory, double count = 0)
+        {
+            this.proto = proto;
+            this.Count = count;
+            this.factory = factory;
             UpdateItems();
         }
 
@@ -59,14 +74,7 @@ namespace DSP_Helmod.Model
             {
                 if (factory == null)
                 {
-                    List<ItemProto> items = LDB.items.dataArray.Where(item => {
-                        if (itemProto.IsFluid)
-                        {
-                            return item.prefabDesc.oilMiner;
-                        }
-                        return item.prefabDesc.veinMiner;
-                        }).ToList();
-                    factory = new Factory(items.First(), 1);
+                    factory = (Factory)GetFactories().First().Clone();
                 }
                 return factory; 
             }
@@ -80,28 +88,28 @@ namespace DSP_Helmod.Model
         {
             get
             {
-                List<ItemProto> items = LDB.items.dataArray.Where(item => {
-                    if (itemProto.IsFluid)
-                    {
-                        return item.prefabDesc.oilMiner;
-                    }
-                    return item.prefabDesc.veinMiner;
-                }).ToList();
-                items.Sort(delegate (ItemProto item1, ItemProto item2)
-                {
-                    return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
-                });
-                return items.Select(item => new Factory(item, 1)).ToList();
+                return GetFactories();
             }
         }
-
+        internal List<Factory> GetFactories()
+        {
+            return Database.FactoriesVein.Where(item => {
+                if (itemProto.IsFluid)
+                {
+                    return item.IsOilMiner;
+                }
+                return item.IsVeinMiner;
+            }).ToList();
+        }
         private void UpdateItems()
         {
-            this.Products = new List<IItem>();
+            this.Products.Clear();
+            this.effects.Productivity = 1 / GameData.MiningCostRate;
+            this.effects.Speed = 1 * GameData.MiningSpeedScale;
             ItemProto item = LDB.items.Select(proto.MiningItem);
             this.itemProto = item;
             this.Products.Add(new Item(item, 1));
-            this.Ingredients = new List<IItem>();
+            this.Ingredients.Clear();
             this.Ingredients.Add(new ItemVein(proto, 1));
             this.Id = proto.ID;
             this.Name = proto.name;
@@ -109,14 +117,9 @@ namespace DSP_Helmod.Model
             this.Icon = proto.iconSprite.texture;
         }
 
-        public IRecipe Clone()
+        public IRecipe Clone(double count = 1)
         {
-            return new RecipeVein(proto, Count);
-        }
-
-        public IRecipe Clone(double value)
-        {
-            return new RecipeVein(proto, value);
+            return new RecipeVein(proto, new Factory(factory.Proto, factory.Count), count);
         }
 
     }

@@ -16,6 +16,7 @@ namespace DSP_Helmod.UI
         MainTooltip mainTooltip;
         private int formId = 6660000;
         public string Tooltip;
+        public bool loaded = false;
 
         public UIController()
         {
@@ -28,6 +29,10 @@ namespace DSP_Helmod.UI
             MainPanel mainPanel = new MainPanel(this);
             HMEvent.Handler += mainPanel.OnEvent;
             AddForm(mainPanel);
+
+            AboutPanel aboutPanel = new AboutPanel(this);
+            HMEvent.Handler += aboutPanel.OnEvent;
+            AddForm(aboutPanel);
 #if DEBUG
             PropertiesPanel propertiesPanel = new PropertiesPanel(this);
             HMEvent.Handler += propertiesPanel.OnEvent;
@@ -38,10 +43,20 @@ namespace DSP_Helmod.UI
 
             SelectorVein veinSelector = new SelectorVein(this);
             AddForm(veinSelector);
+
+            SelectorVege vegeSelector = new SelectorVege(this);
+            AddForm(vegeSelector);
+
+            SelectorPlanet planetSelector = new SelectorPlanet(this);
+            AddForm(planetSelector);
 #endif
 
             SelectorRecipe recipeSelector = new SelectorRecipe(this);
             AddForm(recipeSelector);
+
+            EditionPreference editionPreference = new EditionPreference(this);
+            HMEvent.Handler += editionPreference.OnEvent;
+            AddForm(editionPreference);
 
             EditionProduct editionProduct = new EditionProduct(this);
             HMEvent.Handler += editionProduct.OnEvent;
@@ -55,6 +70,13 @@ namespace DSP_Helmod.UI
             HMEvent.Handler += chooseRecipe.OnEvent;
             AddForm(chooseRecipe);
 
+            HMEvent.Handler += OnEvent;
+        }
+
+        private void Load()
+        {
+            Model.Database.Load();
+            loaded = true;
         }
 
         public List<HMForm> Forms
@@ -71,8 +93,8 @@ namespace DSP_Helmod.UI
 
         public void OnGUI()
         {
-            if (DSPGame.Game == null || !DSPGame.Game.running) return;
-
+            if (DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame) return;
+            
             HMEventQueue.DeQueue();
 
             foreach (HMForm form in forms)
@@ -83,11 +105,14 @@ namespace DSP_Helmod.UI
 
         }
 
+        /// <summary>
+        /// Run at first
+        /// </summary>
         public void Update()
         {
-            if (DSPGame.Game == null || !DSPGame.Game.running) return;
-            
-            
+            if (DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame) return;
+            if (!loaded) Load();
+
             //HMEventQueue.DeQueue();
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -118,5 +143,18 @@ namespace DSP_Helmod.UI
             }
         }
 
+        public void OnEvent(object sender, HMEvent e)
+        {
+            switch (e.Type)
+            {
+                case HMEventType.OpenClose:
+                    Type type = e.GetItem<Type>();
+                    foreach (HMForm form in forms)
+                    {
+                        if (form.GetType().Equals(type)) form.SwitchShow();
+                    }
+                    break;
+            }
+        }
     }
 }

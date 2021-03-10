@@ -11,15 +11,15 @@ using DSP_Helmod.Helpers;
 
 namespace DSP_Helmod.UI
 {
-    public class SelectorVein : HMForm
+    public class SelectorVege : HMForm
     {
         protected EMinerType groupSelected = 0;
         protected string recipeSelected;
         protected int selection;
 
-        public SelectorVein(UIController parent) : base(parent) {
-            this.name = "Vein Selector";
-            this.Caption = "Add Vein";
+        public SelectorVege(UIController parent) : base(parent) {
+            this.name = "Vege Selector";
+            this.Caption = "Add Vege";
             this.IsTool = true;
         }
         public override void OnInit()
@@ -37,13 +37,13 @@ namespace DSP_Helmod.UI
             DrawContent();
         }
 
-        private Dictionary<EMinerType, List<VeinProto>> GetItems()
+        private Dictionary<EMinerType, List<VegeProto>> GetItems()
         {
-            Dictionary<EMinerType, List<VeinProto>> items = new Dictionary<EMinerType, List<VeinProto>>();
-            foreach (VeinProto veinProto in LDB.veins.dataArray)
+            Dictionary<EMinerType, List<VegeProto>> items = new Dictionary<EMinerType, List<VegeProto>>();
+            foreach (VegeProto veinProto in LDB.veges.dataArray)
             {
                 EMinerType key = veinProto.prefabDesc.minerType;
-                if (!items.ContainsKey(key)) items.Add(key, new List<VeinProto>());
+                if (!items.ContainsKey(key)) items.Add(key, new List<VegeProto>());
                 items[key].Add(veinProto);
             }
             return items;
@@ -51,7 +51,7 @@ namespace DSP_Helmod.UI
 
         private void DrawContent()
         {
-            Dictionary<EMinerType, List<VeinProto>> itemList = GetItems();
+            Dictionary<EMinerType, List<VegeProto>> itemList = GetItems();
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
             foreach (EMinerType entry in itemList.Keys)
             {
@@ -63,7 +63,7 @@ namespace DSP_Helmod.UI
             }
             GUILayout.EndHorizontal();
 
-            List<VeinProto> items = itemList[groupSelected];
+            List<VegeProto> items = itemList[groupSelected];
             DrawElements(items);
             //GUILayout.EndHorizontal();
             if (Event.current.type == EventType.Repaint)
@@ -78,15 +78,14 @@ namespace DSP_Helmod.UI
 
         }
 
-        private void DrawElements(List<VeinProto> items)
+        private void DrawElements(List<VegeProto> items)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
             GUIContent[] contents = new GUIContent[items.Count];
             int index = 0;
-            foreach (VeinProto item in items)
+            foreach (VegeProto item in items)
             {
-                Texture2D texture = item.iconSprite.texture;
-                GUIContent content = new GUIContent(texture, VeinProtoHelper.GetTootip(item));
+                GUIContent content = new GUIContent(item.name, VegeProtoHelper.GetTootip(item));
                 contents[index] = content;
                 index++;
             }
@@ -95,7 +94,7 @@ namespace DSP_Helmod.UI
             selection = GUILayout.SelectionGrid(-1, contents, 10, GridLayoutOptions);
             if (selection != -1)
             {
-                VeinProto item = items[selection];
+                VegeProto item = items[selection];
                 if (selectorMode == SelectorMode.Normal)
                 {
                     HMEvent.SendEvent(this, new HMEvent(HMEventType.AddItem, item));

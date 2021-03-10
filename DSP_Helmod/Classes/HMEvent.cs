@@ -47,6 +47,7 @@ namespace DSP_Helmod.Classes
 
     public enum HMEventType
     {
+        LoadedModel,
         OpenClose,
         Update,
         AddRecipe,

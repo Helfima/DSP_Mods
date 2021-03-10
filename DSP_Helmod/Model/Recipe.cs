@@ -12,18 +12,25 @@ namespace DSP_Helmod.Model
     {
         private RecipeProto proto;
         private Factory factory;
-
         public Recipe(int id)
         {
             this.Id = id;
-            this.proto = LDB.recipes.Select(Id);
-            UpdateItems();
+            IRecipe irecipe = Database.SelectRecipe<Recipe>(id);
+            if (irecipe is Recipe)
+            {
+                Recipe recipe = (Recipe)irecipe;
+                this.proto = recipe.Proto;
+                this.factory = new Factory(recipe.Factory.Id);
+                UpdateItems();
+            }
         }
 
         public Recipe(RecipeProto proto, double count = 0)
         {
             this.proto = proto;
             this.Count = count;
+            List<Factory> factories = GetFactories();
+            this.factory = (Factory)factories.First()?.Clone();
             UpdateItems();
         }
         public Recipe(RecipeProto proto, Factory factory, double count = 0)
@@ -38,15 +45,9 @@ namespace DSP_Helmod.Model
         {
             get
             {
-                if (proto == null)
-                {
-                    proto = LDB.recipes.Select(Id);
-                    UpdateItems();
-                }
                 return proto;
             }
         }
-
         public double Energy
         {
             get { return this.proto.TimeSpend/60.0; }
@@ -58,13 +59,7 @@ namespace DSP_Helmod.Model
             { 
                 if(factory == null)
                 {
-                    List<ItemProto> items = LDB.items.dataArray.Where(item => item.typeString.Equals(proto.madeFromString)).ToList();
-                    items.Sort(delegate (ItemProto item1, ItemProto item2)
-                    {
-                        return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
-                    });
-                    
-                    factory = new Factory(items.First(), 1);
+                    factory = (Factory)GetFactories().First().Clone();
                 }
                 return factory; 
             }
@@ -78,13 +73,13 @@ namespace DSP_Helmod.Model
         {
             get
             {
-                List<ItemProto> items = LDB.items.dataArray.Where(item => item.typeString.Equals(proto.madeFromString)).ToList();
-                items.Sort(delegate (ItemProto item1, ItemProto item2)
-                {
-                    return item1.prefabDesc.assemblerSpeed.CompareTo(item2.prefabDesc.assemblerSpeed);
-                });
-                return items.Select(item => new Factory(item, 1)).ToList();
+                return GetFactories();
             }
+        }
+
+        internal List<Factory> GetFactories()
+        {
+            return Database.Factories.Where(item => item.TypeString.Equals(proto.madeFromString)).ToList();
         }
 
         private void UpdateItems()
@@ -97,14 +92,9 @@ namespace DSP_Helmod.Model
             this.Icon = proto.iconSprite.texture;
         }
 
-        public  Recipe Clone()
+        public IRecipe Clone(double count = 1)
         {
-            return new Recipe(proto, Count);
-        }
-
-        public IRecipe Clone(double value)
-        {
-            return new Recipe(proto, new Factory(factory.Proto, factory.Count), value);
+            return new Recipe(proto, new Factory(factory.Proto, factory.Count), count);
         }
 
     }

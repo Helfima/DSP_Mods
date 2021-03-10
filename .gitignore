@@ -2,4 +2,6 @@
 .vs
 */Bin
 */obj
+*/Build/Debug
+*/Build/Release
 /packages

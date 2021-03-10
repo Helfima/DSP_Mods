@@ -44,7 +44,6 @@ namespace DSP_Helmod.Converter
             {
                 Recipe recipe = (Recipe)node;
                 xmlNode.Factory = recipe.Factory.Id;
-                HMLogger.Debug($"xmlNode.Factory={recipe.Factory.Id}");
             }
             xmlNode.IsNodes = node is Nodes;
             if (node is Nodes)
@@ -70,43 +69,123 @@ namespace DSP_Helmod.Converter
 
         public Node GetObject()
         {
-            
-            
-            if (IsNodes)
+            try
             {
-                Nodes nodes = new Nodes();
-                if (Inputs != null)
+                if (IsNodes)
                 {
-                    foreach (XmlInput xmlInput in Inputs)
+                    Nodes nodes = new Nodes();
+                    if (Inputs != null)
                     {
-                        nodes.SetInput(xmlInput.GetObject());
+                        foreach (XmlInput xmlInput in Inputs)
+                        {
+                            nodes.SetInput(xmlInput.GetObject());
+                        }
+                    }
+                    foreach (XmlNode xmlNode in Children)
+                    {
+                        nodes.Add(xmlNode.GetObject());
+                    }
+                    return nodes;
+                }
+                else
+                {
+                    IRecipe recipe = null;
+                    switch (Type)
+                    {
+                        case "Recipe":
+                            recipe = Database.SelectRecipe<Recipe>(Id);
+                            break;
+                        case "RecipeVein":
+                            recipe = Database.SelectRecipe<RecipeVein>(Id);
+                            break;
+                        case "RecipeOrbit":
+                            recipe = Database.SelectRecipe<RecipeOrbit>(Id);
+                            break;
+                        case "RecipeOcean":
+                            recipe = Database.SelectRecipe<RecipeOcean>(Id);
+                            break;
+                        case "RecipeCustom":
+                            recipe = Database.SelectRecipe<RecipeCustom>(Id);
+                            break;
+                    }
+                    if (recipe != null && Factory > 0)
+                    {
+                        recipe.Factory = new Factory(Factory);
+                    }
+                    return (Node)recipe;
+                }
+            }
+            catch(Exception e)
+            {
+                HMLogger.Error(e.Message);
+            }
+            return null;
+        }
+        public Node GetObject2()
+        {
+            try
+            {
+                if (IsNodes)
+                {
+                    Nodes nodes = new Nodes();
+                    if (Inputs != null)
+                    {
+                        foreach (XmlInput xmlInput in Inputs)
+                        {
+                            nodes.SetInput(xmlInput.GetObject());
+                        }
+                    }
+                    foreach (XmlNode xmlNode in Children)
+                    {
+                        nodes.Add(xmlNode.GetObject());
+                    }
+                    return nodes;
+                }
+                else
+                {
+                    switch (Type)
+                    {
+                        case "Recipe":
+                            Recipe recipe = new Recipe(Id);
+                            if (Factory > 0)
+                            {
+                                recipe.Factory = new Factory(Factory);
+                            }
+                            return recipe;
+                        case "RecipeVein":
+                            RecipeVein recipeVein = new RecipeVein(Id);
+                            if (Factory > 0)
+                            {
+                                recipeVein.Factory = new Factory(Factory);
+                            }
+                            return recipeVein;
+                        case "RecipeOrbit":
+                            RecipeOrbit recipeOrbit = new RecipeOrbit(Id);
+                            if (Factory > 0)
+                            {
+                                recipeOrbit.Factory = new Factory(Factory);
+                            }
+                            return recipeOrbit;
+                        case "RecipeOcean":
+                            RecipeOcean recipeOcean = new RecipeOcean(Id);
+                            if (Factory > 0)
+                            {
+                                recipeOcean.Factory = new Factory(Factory);
+                            }
+                            return recipeOcean;
+                        case "RecipeCustom":
+                            RecipeCustom recipeCustom = new RecipeCustom(Id);
+                            if (Factory > 0)
+                            {
+                                recipeCustom.Factory = new Factory(Factory);
+                            }
+                            return recipeCustom;
                     }
                 }
-                foreach (XmlNode xmlNode in Children)
-                {
-                    nodes.Add(xmlNode.GetObject());
-                }
-                return nodes;
             }
-            else
+            catch (Exception e)
             {
-                switch (Type)
-                {
-                    case "Recipe":
-                        Recipe recipe = new Recipe(Id);
-                        if (Factory > 0)
-                        {
-                            recipe.Factory = new Factory(Factory);
-                        }
-                        return recipe;
-                    case "RecipeVein":
-                        RecipeVein recipeVein = new RecipeVein(Id);
-                        if (Factory > 0)
-                        {
-                            recipeVein.Factory = new Factory(Factory);
-                        }
-                        return recipeVein;
-                }
+                HMLogger.Error(e.Message);
             }
             return null;
         }

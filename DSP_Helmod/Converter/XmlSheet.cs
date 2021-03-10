@@ -46,9 +46,9 @@ namespace DSP_Helmod.Converter
 
         public Nodes GetObject()
         {
-            HMLogger.Debug($"XmlSheet.Time:{Time}");
-            HMLogger.Debug($"XmlSheet.Inputs:{Inputs.Count}");
-            HMLogger.Debug($"XmlSheet.Children:{Children.Count}");
+            //HMLogger.Debug($"XmlSheet.Time:{Time}");
+            //HMLogger.Debug($"XmlSheet.Inputs:{Inputs.Count}");
+            //HMLogger.Debug($"XmlSheet.Children:{Children.Count}");
             Nodes nodes = new Nodes(Time);
             if (Inputs != null)
             {

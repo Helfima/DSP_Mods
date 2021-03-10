@@ -11,6 +11,6 @@ namespace DSP_Helmod.Model
         double Energy { get; }
         Factory Factory { get; set; }
         List<Factory> Factories { get; }
-        IRecipe Clone(double value);
+        IRecipe Clone(double count = 1);
     }
 }

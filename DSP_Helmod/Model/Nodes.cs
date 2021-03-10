@@ -163,13 +163,11 @@ namespace DSP_Helmod.Model
         /// </summary>
         public void CopyInputsToObjectives()
         {
-            Classes.HMLogger.Trace($"CopyInputsToObjectives:{inputs != null}");
             objectives = null;
             if (inputs != null && inputs.Length > 0)
             {
                 foreach (MatrixValue input in inputs)
                 {
-                    Classes.HMLogger.Trace($"Copy input:{input}");
                     objectives = AddMatrixValue(objectives, input, true);
                 }
             }

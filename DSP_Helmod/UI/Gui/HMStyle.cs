@@ -30,6 +30,7 @@ namespace DSP_Helmod.UI.Gui
 
         public static GUILayoutOption[] BoxIconLayoutOptions = new GUILayoutOption[] { GUILayout.Height(70) };
 
+        public static GUILayoutOption[] Icon50LayoutOptions = new GUILayoutOption[] { GUILayout.Height(50), GUILayout.Width(50) };
         public static GUILayoutOption[] Icon45LayoutOptions = new GUILayoutOption[] { GUILayout.Height(45), GUILayout.Width(45) };
         public static GUILayoutOption[] IconText45LayoutOptions = new GUILayoutOption[] { GUILayout.Height(15), GUILayout.Width(45) };
         public static GUILayoutOption[] Icon30LayoutOptions = new GUILayoutOption[] { GUILayout.Height(30), GUILayout.Width(30) };
@@ -44,6 +45,7 @@ namespace DSP_Helmod.UI.Gui
 
         public static GUILayoutOption[] ScrollNavLayoutOptions = new GUILayoutOption[] { GUILayout.Height(500), GUILayout.Width(150) };
         public static GUILayoutOption[] ScrollDataLayoutOptions = new GUILayoutOption[] { GUILayout.Height(500) };
+        public static GUILayoutOption[] ScrollChooseLayoutOptions = new GUILayoutOption[] { GUILayout.Height(300) };
         public static GUILayoutOption[] ColumnActionLayoutOptions = new GUILayoutOption[] { GUILayout.Width(100) };
         public static GUILayoutOption[] ColumnProductionLayoutOptions = new GUILayoutOption[] { GUILayout.Width(40) };
         public static GUILayoutOption[] ColumnRecipeLayoutOptions = new GUILayoutOption[] { GUILayout.Width(80) };

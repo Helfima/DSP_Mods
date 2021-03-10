@@ -13,8 +13,6 @@ namespace DSP_Helmod.UI
 {
     public class EditionRecipe : HMForm
     {
-        private string value;
-        private Nodes nodes;
         private Node node;
         public EditionRecipe(UIController parent) : base(parent)
         {
@@ -104,6 +102,7 @@ namespace DSP_Helmod.UI
                 if (node is IRecipe)
                 {
                     IRecipe recipe = ((IRecipe)node).Clone(1);
+                    recipe.Factory.Count = recipe.Energy * recipe.Count / (recipe.Factory.Speed);
                     //Debug.Log($"Recipe count:{recipe.Count}");
                     GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
 
@@ -120,13 +119,13 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     //machine
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
-                    HMCell.Product(recipe.Factory, recipe.Factory.Count);
+                    HMCell.Product(recipe.Factory, 1);
                     GUILayout.EndHorizontal();
                     // Products
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
                     foreach (IItem item in recipe.Products)
                     {
-                        HMCell.ItemProduct(item, recipe.Count);
+                        HMCell.ItemProduct(item, recipe.Count * node.Effects.Productivity);
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
@@ -150,7 +149,6 @@ namespace DSP_Helmod.UI
             {
                 case HMEventType.EditionRecipe:
                     SwitchShow();
-                    nodes = (Nodes)sender;
                     node = e.GetItem<Node>();
                     break;
             }
