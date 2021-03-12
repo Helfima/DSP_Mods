@@ -27,6 +27,7 @@ namespace DSP_Helmod.UI.Gui
         }
 
         public static GUIStyle Form = ChangeTexture(new GUIStyle(GUI.skin.window), HMTexture.form_gray, HMTexture.form_gray_active);
+        public static GUIStyle FormTooltip = ChangeTexture(new GUIStyle(GUI.skin.window), Texture2D.blackTexture, Texture2D.blackTexture);
 
         public static GUILayoutOption[] BoxIconLayoutOptions = new GUILayoutOption[] { GUILayout.Height(70) };
 

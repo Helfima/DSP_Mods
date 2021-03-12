@@ -65,7 +65,7 @@ namespace DSP_Helmod.UI
 
         private void UpdateFactory(IRecipe recipe, Factory factory)
         {
-            recipe.Factory = factory;
+            recipe.Factory = (Factory)factory.Clone();
             HMEventQueue.EnQueue(this, new HMEvent(HMEventType.UpdateSheet, recipe));
         }
         private void DrawDetail()

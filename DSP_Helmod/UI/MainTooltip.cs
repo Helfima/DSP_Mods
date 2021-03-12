@@ -9,19 +9,20 @@ using UnityEngine;
 
 namespace DSP_Helmod.UI
 {
-    public class MainTooltip : HMForm
+    public class MainTooltip : HMTooltip
     {
         public MainTooltip(UIController parent) : base(parent)
         {
-            this.name = "";
-            this.WindowButtons = false;
         }
         public override void OnInit()
         {
             
         }
-        public void OnDoWindow(string tooltip)
+        
+        public override void OnDoWindow(string tooltip)
         {
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
             if (tooltip.StartsWith("Action:"))
             {
                 string label = tooltip.Substring(tooltip.IndexOf(':') + 1);
@@ -31,31 +32,11 @@ namespace DSP_Helmod.UI
             {
                 GUILayout.Label(tooltip, HMStyle.TextTooltip);
             }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
         }
 
-        public override void OnUpdate()
-        {
-            string tooltip = parent.Tooltip;
-            if (tooltip != null && tooltip != "" && tooltip != " ")
-            {
-                Show = true;
-            }
-            else Show = false;
-        }
-
-        public override void OnDoWindow()
-        {
-            Position = new Rect(Event.current.mousePosition.x + 240, Event.current.mousePosition.y + 20, 200, 200);
-
-            //GUI.backgroundColor = Color.red;
-            //GUILayout.BeginArea(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 50, 200, 200));
-            OnDoWindow(parent.Tooltip);
-            //GUILayout.EndArea();
-        }
-
-        public override void OnClose()
-        {
-            
-        }
     }
 }

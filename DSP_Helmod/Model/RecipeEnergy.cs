@@ -8,35 +8,25 @@ using UnityEngine;
 
 namespace DSP_Helmod.Model
 {
-    public class RecipeOrbit : Node, IRecipe
+    public class RecipeEnergy : Node, IRecipe
     {
         private ItemProto proto;
         private Factory factory;
 
-        public RecipeOrbit(int id)
+        public RecipeEnergy(int id)
         {
             this.Id = id;
-            IRecipe recipe = Database.SelectRecipe<RecipeOrbit>(id);
-            if (recipe is RecipeOrbit)
+            IRecipe recipe = Database.SelectRecipe<RecipeCustom>(id);
+            if (recipe is RecipeCustom)
             {
-                RecipeOrbit recipeOrbit = (RecipeOrbit)recipe;
-                this.proto = recipeOrbit.Proto;
-                this.factory = new Factory(recipeOrbit.Factory.Id);
+                RecipeCustom recipeCustom = (RecipeCustom)recipe;
+                this.proto = recipeCustom.Proto;
+                this.factory = new Factory(recipeCustom.Factory.Id);
                 UpdateItems();
             }
         }
 
-        public RecipeOrbit(ItemProto proto, double count = 0)
-        {
-            this.proto = proto;
-            this.Count = count;
-            // 2105=Orbital Collector
-            Factory factory = new Factory(2105);
-            this.factory = factory;
-            UpdateItems();
-        }
-
-        public RecipeOrbit(ItemProto proto, Factory factory, double count = 0)
+        public RecipeEnergy(ItemProto proto, Factory factory, double count = 0)
         {
             this.proto = proto;
             this.Count = count;
@@ -65,6 +55,17 @@ namespace DSP_Helmod.Model
             get { return Database.FactoriesOrbiter; }
         }
 
+        public new List<IItem> Products
+        {
+            get { return products; }
+            set { products = value; }
+        }
+        public new List<IItem> Ingredients
+        {
+            get { return ingredients; }
+            set { ingredients = value; }
+        }
+
         private void UpdateItems()
         {
             this.Products.Clear();
@@ -78,7 +79,7 @@ namespace DSP_Helmod.Model
 
         public IRecipe Clone(double count = 1)
         {
-            return new RecipeOrbit(proto, new Factory(factory.Proto, factory.Count), count);
+            return new RecipeEnergy(proto, new Factory(factory.Proto, factory.Count), count);
         }
 
     }

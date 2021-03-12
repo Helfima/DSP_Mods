@@ -12,7 +12,8 @@ namespace DSP_Helmod.Helpers
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine(item.name);
-            stringBuilder.AppendLine(item.typeString);
+            stringBuilder.AppendLine($"Type:{item.typeString}");
+            stringBuilder.AppendLine($"Id:{item.ID}");
             //stringBuilder.AppendLine(item.description);
 #if DEBUG
             stringBuilder.AppendLine("----------DEBUG------------");

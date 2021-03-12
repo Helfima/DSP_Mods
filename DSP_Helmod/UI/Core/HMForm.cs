@@ -105,8 +105,9 @@ namespace DSP_Helmod.UI.Core
             {
                 if (lastTooltip != "")
                 {
-                    //parent.Tooltip = GUI.tooltip;
-                    DrawTooltip(GUI.tooltip);
+                    parent.TooltipPosition = new Vector2(windowRect0.x + Event.current.mousePosition.x, windowRect0.y + Event.current.mousePosition.y);
+                    parent.Tooltip = GUI.tooltip;
+                    //DrawTooltip(GUI.tooltip);
                 }
 
                 lastTooltip = GUI.tooltip;
@@ -130,24 +131,7 @@ namespace DSP_Helmod.UI.Core
                 GUI.Box(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 15 * (1 + split.Length)), tooltip, HMStyle.TextTooltip);
             }
         }
-        private void DrawTooltip2(string tooltip)
-        {
-            if (tooltip == null || tooltip == "") return;
-            //Debug.Log("Draw tooltip" + GUI.tooltip);
-            GUI.backgroundColor = Color.red;
-            GUILayout.BeginArea(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 50, 200, 200));
-            if (tooltip.StartsWith("Action:"))
-            {
-                string label = tooltip.Substring(tooltip.IndexOf(':') + 1);
-                GUILayout.Label(label, HMStyle.TextTooltip);
-            }
-            else
-            {
-                GUILayout.Label(tooltip, HMStyle.TextTooltip);
-            }
-            GUILayout.EndArea();
-        }
-
+       
         public void MoveMousePosition()
         {
             this.windowRect0 = new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, windowRect0.width, windowRect0.height);
@@ -166,6 +150,7 @@ namespace DSP_Helmod.UI.Core
             if (Show)
             {
                 Show = false;
+                parent.Tooltip = "";
                 OnClose();
             }
         }

@@ -98,6 +98,7 @@
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\BaseItem.cs" />
+    <Compile Include="Model\RecipeEnergy.cs" />
     <Compile Include="Model\RecipeCustom.cs" />
     <Compile Include="Model\RecipeOcean.cs" />
     <Compile Include="Model\RecipeOrbit.cs" />
@@ -113,8 +114,8 @@
     <Compile Include="Test\Items.cs" />
     <Compile Include="UI\ChooseRecipe.cs" />
     <Compile Include="UI\Core\HMForm.cs" />
-    <Compile Include="UI\Core\HMTooltip.cs" />
     <Compile Include="UI\AboutPanel.cs" />
+    <Compile Include="UI\Core\HMTooltip.cs" />
     <Compile Include="UI\EditionPreference.cs" />
     <Compile Include="UI\PropertiesPanel.cs" />
     <Compile Include="UI\EditionProduct.cs" />

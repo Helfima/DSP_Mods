@@ -43,10 +43,7 @@ namespace DSP_Helmod.Model
 
         public RecipeProto Proto
         {
-            get
-            {
-                return proto;
-            }
+            get { return proto; }
         }
         public double Energy
         {
@@ -55,26 +52,13 @@ namespace DSP_Helmod.Model
 
         public Factory Factory
         {
-            get
-            { 
-                if(factory == null)
-                {
-                    factory = (Factory)GetFactories().First().Clone();
-                }
-                return factory; 
-            }
-            set
-            {
-                factory = value;
-            }
+            get { return factory; }
+            set { factory = value; }
         }
 
         public List<Factory> Factories
         {
-            get
-            {
-                return GetFactories();
-            }
+            get { return GetFactories(); }
         }
 
         internal List<Factory> GetFactories()

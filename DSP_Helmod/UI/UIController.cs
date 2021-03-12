@@ -15,6 +15,7 @@ namespace DSP_Helmod.UI
         private List<HMForm> forms = new List<HMForm>();
         MainTooltip mainTooltip;
         private int formId = 6660000;
+        public Vector2 TooltipPosition;
         public string Tooltip;
         public bool loaded = false;
 
@@ -101,7 +102,7 @@ namespace DSP_Helmod.UI
             {
                 if (form.Show) form.OnGUI();
             }
-            //if(mainTooltip.Show) mainTooltip.OnGUI();
+            if(mainTooltip.Show) mainTooltip.OnGUI();
 
         }
 
@@ -131,8 +132,7 @@ namespace DSP_Helmod.UI
             {
                 if (form.Show) form.OnUpdate();
             }
-
-            //mainTooltip.OnUpdate();
+            mainTooltip.OnUpdate();
         }
 
         public void CloseAll()

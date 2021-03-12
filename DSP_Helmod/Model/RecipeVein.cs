@@ -45,22 +45,11 @@ namespace DSP_Helmod.Model
 
         public VeinProto Proto
         {
-            get
-            {
-                if (proto == null)
-                {
-                    proto = LDB.veins.Select(Id);
-                    UpdateItems();
-                }
-                return proto;
-            }
+            get { return proto; }
         }
         public ItemProto ItemProto
         {
-            get
-            {
-                return itemProto;
-            }
+            get { return itemProto; }
         }
 
         public double Energy
@@ -70,26 +59,13 @@ namespace DSP_Helmod.Model
 
         public Factory Factory
         {
-            get
-            {
-                if (factory == null)
-                {
-                    factory = (Factory)GetFactories().First().Clone();
-                }
-                return factory; 
-            }
-            set
-            {
-                factory = value;
-            }
+            get { return factory; }
+            set { factory = value; }
         }
 
         public List<Factory> Factories
         {
-            get
-            {
-                return GetFactories();
-            }
+            get { return GetFactories(); }
         }
         internal List<Factory> GetFactories()
         {

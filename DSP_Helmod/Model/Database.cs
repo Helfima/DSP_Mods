@@ -87,6 +87,13 @@ namespace DSP_Helmod.Model
                     AddRecipeByProduct(recipe);
                     AddRecipeByGroup(recipe, "Ocean");
                 }
+                if (RecipeCustom.Ids.Contains(itemProto.ID))
+                {
+                    RecipeCustom recipe = new RecipeCustom(itemProto.ID, 1);
+                    recipes.Add(recipe);
+                    AddRecipeByProduct(recipe);
+                    AddRecipeByGroup(recipe, "Custom");
+                }
             }
             foreach (RecipeProto recipeProto in LDB.recipes.dataArray)
             {
