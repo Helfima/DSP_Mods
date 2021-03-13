@@ -47,10 +47,12 @@ namespace DSP_Helmod.UI
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
             foreach (string entry in recipeList.Keys)
             {
+                if(groupSelected == entry) GUI.color = Color.yellow;
                 if (GUILayout.Button(entry.ToString()))
                 {
                     groupSelected = entry;
                 }
+                GUI.color = Color.white;
                 if (groupSelected == "") groupSelected = entry;
             }
             GUILayout.EndHorizontal();
@@ -66,7 +68,7 @@ namespace DSP_Helmod.UI
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
 
-            GUILayout.BeginHorizontal(HMStyle.Icon50LayoutOptions);
+            GUILayout.BeginHorizontal(HMLayoutOptions.Icon50);
             int index = 0;
             foreach (IRecipe recipe in recipes)
             {
@@ -76,7 +78,7 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                 }
-                HMButton.Node(recipe, RecipeProtoHelper.GetTootip(recipe), delegate(INode element) {
+                HMButton.Node(recipe, $"Recipe:{recipe.GetType().Name}={recipe.Id}", delegate(INode element) {
                     if (selectorMode == SelectorMode.Normal)
                     {
                         HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, recipe));

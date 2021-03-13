@@ -13,6 +13,7 @@ namespace DSP_Helmod.Model
         public static List<int> Ids = new List<int>() { 1121, 2206, 2207 };
         private ItemProto proto;
         private Factory factory;
+        private double energy = 1.0;
 
         public RecipeCustom(int id)
         {
@@ -33,7 +34,7 @@ namespace DSP_Helmod.Model
         
         public double Energy
         {
-            get { return 1.0; }
+            get { return energy; }
         }
 
         public Factory Factory
@@ -91,6 +92,8 @@ namespace DSP_Helmod.Model
             this.Name = proto.name;
             this.Type = GetType().Name;
             this.Icon = proto.iconSprite.texture;
+            // pas de limite hormis la vitesse de tapis
+            this.energy = 3.0;
         }
         /// <summary>
         /// Energy Exchanger(2209): 1 Accumulator Full(2207) => Accumulator(2206)

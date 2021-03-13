@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DSP_Helmod.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,37 +30,17 @@ namespace DSP_Helmod.UI.Gui
         public static GUIStyle Form = ChangeTexture(new GUIStyle(GUI.skin.window), HMTexture.form_gray, HMTexture.form_gray_active);
         public static GUIStyle FormTooltip = ChangeTexture(new GUIStyle(GUI.skin.window), Texture2D.blackTexture, Texture2D.blackTexture);
 
-        public static GUILayoutOption[] BoxIconLayoutOptions = new GUILayoutOption[] { GUILayout.Height(70) };
-
-        public static GUILayoutOption[] Icon50LayoutOptions = new GUILayoutOption[] { GUILayout.Height(50), GUILayout.Width(50) };
-        public static GUILayoutOption[] Icon45LayoutOptions = new GUILayoutOption[] { GUILayout.Height(45), GUILayout.Width(45) };
-        public static GUILayoutOption[] IconText45LayoutOptions = new GUILayoutOption[] { GUILayout.Height(15), GUILayout.Width(45) };
-        public static GUILayoutOption[] Icon30LayoutOptions = new GUILayoutOption[] { GUILayout.Height(30), GUILayout.Width(30) };
-        public static GUILayoutOption[] IconText30LayoutOptions = new GUILayoutOption[] { GUILayout.Height(15), GUILayout.Width(30) };
-
-        public static GUILayoutOption[] Icon20LayoutOptions = new GUILayoutOption[] { GUILayout.Height(20), GUILayout.Width(20) };
-        public static GUILayoutOption[] Icon15LayoutOptions = new GUILayoutOption[] { GUILayout.Height(15), GUILayout.Width(15) };
-
-        public static GUILayoutOption[] ActionButtonLayoutOptions = new GUILayoutOption[] { GUILayout.Height(25), GUILayout.Width(25) };
-
-        public static GUILayoutOption[] ScrollListDetailLayoutOptions = new GUILayoutOption[] { GUILayout.Height(170) };
-
-        public static GUILayoutOption[] ScrollNavLayoutOptions = new GUILayoutOption[] { GUILayout.Height(500), GUILayout.Width(150) };
-        public static GUILayoutOption[] ScrollDataLayoutOptions = new GUILayoutOption[] { GUILayout.Height(500) };
-        public static GUILayoutOption[] ScrollChooseLayoutOptions = new GUILayoutOption[] { GUILayout.Height(300) };
-        public static GUILayoutOption[] ColumnActionLayoutOptions = new GUILayoutOption[] { GUILayout.Width(100) };
-        public static GUILayoutOption[] ColumnProductionLayoutOptions = new GUILayoutOption[] { GUILayout.Width(40) };
-        public static GUILayoutOption[] ColumnRecipeLayoutOptions = new GUILayoutOption[] { GUILayout.Width(80) };
-        public static GUILayoutOption[] ColumnPowerLayoutOptions = new GUILayoutOption[] { GUILayout.Width(80) };
-        public static GUILayoutOption[] ColumnMachineLayoutOptions = new GUILayoutOption[] { GUILayout.Width(80) };
-        public static GUILayoutOption[] ColumnProductsLayoutOptions = new GUILayoutOption[] { GUILayout.Width(200) };
-        public static GUILayoutOption[] ColumnIngredientsLayoutOptions = new GUILayoutOption[] { GUILayout.Width(320) };
-
-        public static GUIStyle ButtonIconBlue = ChangeTexture(GUI.skin.button, HMTexture.icon_blue);
-        public static GUIStyle ButtonIconGreen = ChangeTexture(GUI.skin.button, HMTexture.icon_green);
-        public static GUIStyle ButtonIconOrange = ChangeTexture(GUI.skin.button, HMTexture.icon_orange);
-        public static GUIStyle ButtonIconRed = ChangeTexture(GUI.skin.button, HMTexture.icon_red);
-        public static GUIStyle ButtonIconYellow = ChangeTexture(GUI.skin.button, HMTexture.icon_yellow);
+        public static GUIStyle ButtonIcon = new GUIStyle(GUI.skin.button) {
+            // interieur
+            padding = new RectOffset(5, 5, 5, 5),
+            // exterieur
+            margin = new RectOffset(1, 1, 1, 1)
+        };
+        public static GUIStyle ButtonIconBlue = ChangeTexture(ButtonIcon, HMTexture.icon_blue);
+        public static GUIStyle ButtonIconGreen = ChangeTexture(ButtonIcon, HMTexture.icon_green);
+        public static GUIStyle ButtonIconOrange = ChangeTexture(ButtonIcon, HMTexture.icon_orange);
+        public static GUIStyle ButtonIconRed = ChangeTexture(ButtonIcon, HMTexture.icon_red);
+        public static GUIStyle ButtonIconYellow = ChangeTexture(ButtonIcon, HMTexture.icon_yellow);
 
         public static GUIStyle BoxNavigate = new GUIStyle()
         {
@@ -104,7 +85,7 @@ namespace DSP_Helmod.UI.Gui
         {
             alignment = TextAnchor.MiddleCenter,
             margin = new RectOffset(0, 0, 0, 0),
-            padding = new RectOffset(0, 0, 0,0),
+            padding = new RectOffset(1, 1, 1, 1),
         };
 
         public static GUIStyle BoxStyle = new GUIStyle(GUI.skin.box)
@@ -117,11 +98,18 @@ namespace DSP_Helmod.UI.Gui
             margin = new RectOffset(0, 0, 0, 0),
             padding = new RectOffset(0, 0, 0, 0),
         };
+        public static GUIStyle BoxTooltip = ChangeTexture(new GUIStyle()
+        {
+            margin = new RectOffset(0, 0, 0, 0),
+            padding = new RectOffset(3, 3, 3, 3),
+            border = new RectOffset(5,5,5,5)
+            
+        }, HMTexture.tooltip_gray);
 
         public static GUIStyle TextBoxStyle = new GUIStyle(GUI.skin.box)
         {
-            margin = new RectOffset(2, 0, 0, 0),
-            padding = new RectOffset(0, 0, 0, 2),
+            padding = new RectOffset(0, 0, 0, 0),
+            margin = new RectOffset(1, 1, 1, 1),
         };
 
         public static GUIStyle ScrollListDetail = new GUIStyle()
@@ -129,5 +117,16 @@ namespace DSP_Helmod.UI.Gui
 
         };
 
+        public static GUIStyle None = new GUIStyle()
+        {
+            margin = new RectOffset(0, 0, 0, 0),
+            padding = new RectOffset(0, 0, 0, 0),
+        };
+
+        public static GUIStyle ScrollData = new GUIStyle()
+        {
+            margin = new RectOffset(0, 3, 0, 0),
+            padding = new RectOffset(0, 0, 0, 0),
+        };
     }
 }

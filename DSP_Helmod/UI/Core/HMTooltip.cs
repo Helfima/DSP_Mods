@@ -55,7 +55,11 @@ namespace DSP_Helmod.UI.Core
         void DoWindow(int windowID)
         {
             windowRect0 = new Rect(parent.TooltipPosition.x + 10, parent.TooltipPosition.y, 1000, 1000);
-            OnDoWindow(parent.Tooltip);
+            string tooltip = parent.Tooltip;
+            if (tooltip != null && tooltip != "" && tooltip != " ")
+            {
+                OnDoWindow(tooltip);
+            }
         }
         abstract public void OnDoWindow(string tooltip);
     }

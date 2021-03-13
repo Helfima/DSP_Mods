@@ -99,7 +99,7 @@ namespace DSP_Helmod.UI
                 }
             }
             
-            if (GUILayout.Button("New", HMStyle.Icon45LayoutOptions))
+            if (GUILayout.Button("New", HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
             {
                 CreateNewSheet();
             }
@@ -194,7 +194,7 @@ namespace DSP_Helmod.UI
 
         private void DrawNavigate()
         {
-            ScrollNavPosition = GUILayout.BeginScrollView(ScrollNavPosition, HMStyle.ScrollNavLayoutOptions);
+            ScrollNavPosition = GUILayout.BeginScrollView(ScrollNavPosition, HMLayoutOptions.ScrollNav);
             GUILayout.BeginVertical();
             if (currentSheet != null)
             {
@@ -266,7 +266,7 @@ namespace DSP_Helmod.UI
 
         private void DrawDetail()
         {
-            GUILayout.BeginVertical(GUILayout.Width(300));
+            GUILayout.BeginVertical(HMLayoutOptions.ListDetail);
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(25));
             GUILayout.Label("Information", HMStyle.TextAlignMiddleCenter);
             GUILayout.EndHorizontal();
@@ -282,10 +282,10 @@ namespace DSP_Helmod.UI
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(25));
             GUILayout.Label("Output", HMStyle.TextAlignMiddleCenter);
             GUILayout.EndHorizontal();
-            ScrollOutputPosition = GUILayout.BeginScrollView(ScrollOutputPosition, HMStyle.ScrollListDetail, HMStyle.ScrollListDetailLayoutOptions);
+            ScrollOutputPosition = GUILayout.BeginScrollView(ScrollOutputPosition, HMStyle.ScrollListDetail, HMLayoutOptions.ScrollListDetail);
             if (currentNode != null && currentNode.Products != null)
             {
-                HMCell.ItemProductList(currentNode, currentSheet.Time);
+                HMCell.ItemProductList(currentNode, currentSheet.Time, true);
             }
 
             GUILayout.EndScrollView();
@@ -294,10 +294,10 @@ namespace DSP_Helmod.UI
             GUILayout.Label("Input", HMStyle.TextAlignMiddleCenter);
             GUILayout.EndHorizontal();
 
-            ScrollInputPosition = GUILayout.BeginScrollView(ScrollInputPosition, HMStyle.ScrollListDetail, HMStyle.ScrollListDetailLayoutOptions);
+            ScrollInputPosition = GUILayout.BeginScrollView(ScrollInputPosition, HMStyle.ScrollListDetail, HMLayoutOptions.ScrollListDetail);
             if (currentNode != null && currentNode.Ingredients != null)
             {
-                HMCell.ItemIngredientList(currentNode, currentSheet.Time, delegate(IItem element){
+                HMCell.ItemIngredientList(currentNode, currentSheet.Time, true, delegate(IItem element){
                         HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
                 });
             }
@@ -310,33 +310,33 @@ namespace DSP_Helmod.UI
             GUIStyle textAlignStyle = new GUIStyle(GUI.skin.label);
             textAlignStyle.alignment = TextAnchor.MiddleCenter;
 
-            GUILayout.BeginHorizontal(GUILayout.MaxHeight(25));
+            GUILayout.BeginHorizontal(HMStyle.None, GUILayout.MaxHeight(25));
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnActionLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnAction);
             GUILayout.Label("Action", textAlignStyle);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductionLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnProduction);
             GUILayout.Label("%", textAlignStyle);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnRecipe);
             GUILayout.Label("Recipe", textAlignStyle);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnPower);
             GUILayout.Label("Power", textAlignStyle);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnMachine);
             GUILayout.Label("Machine", textAlignStyle);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnProducts);
             GUILayout.Label("Product", textAlignStyle);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnIngredients);
             GUILayout.Label("Ingredient", textAlignStyle);
             GUILayout.EndHorizontal();
 
@@ -345,32 +345,33 @@ namespace DSP_Helmod.UI
 
         private void DrawTable()
         {
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(HMStyle.None);
             if (currentNode != null && currentNode.Children.Count > 0)
             {
                 DrawTableHeader();
+                bool displayLogistic = Settings.Instance.DisplayLogistic;
                 GUIStyle textAlignStyle = new GUIStyle(GUI.skin.label);
                 textAlignStyle.alignment = TextAnchor.LowerRight;
 
-                scrollPosition = GUILayout.BeginScrollView(scrollPosition, HMStyle.ScrollDataLayoutOptions);
+                scrollPosition = GUILayout.BeginScrollView(scrollPosition, HMStyle.ScrollData, HMLayoutOptions.ScrollData);
                 int end = currentNode.Children.Count;
                 for (int index = 0; index < end; index++ )
                 {
                     INode node = currentNode.Children[index];
-                    GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
+                    GUILayout.BeginHorizontal(HMStyle.None);
 
                     // actions
                     //HMLogger.Debug("DrawTable:actions");
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnActionLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Actions, displayLogistic));
                     HMCell.NodeActions(currentNode, node);
                     GUILayout.EndHorizontal();
 
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductionLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Production, displayLogistic));
                     GUILayout.TextField("100");
                     GUILayout.EndHorizontal();
                     // recipe
                     //HMLogger.Debug("DrawTable:recipe");
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Recipe, displayLogistic));
                     HMCell.Node(node, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), Classes.Language.Get("edition.recipe"), delegate (INode element)
                     {
                         if (element is IRecipe)
@@ -381,7 +382,7 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     // power
                     //HMLogger.Debug("DrawTable:power");
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Power, displayLogistic));
                     HMCell.NodePower(node, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), delegate ()
                     {
                         if (node is IRecipe)
@@ -392,8 +393,8 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     //machine
                     //HMLogger.Debug("DrawTable:machine");
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
-                    if(node is IRecipe)
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Machine, displayLogistic));
+                    if (node is IRecipe)
                     {
                         IRecipe recipe = (IRecipe)node;
                         HMCell.Product(recipe.Factory, currentNode.GetDeepCount(Settings.Instance.DisplayTotal), delegate(IItem item)
@@ -409,13 +410,22 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     // Products
                     //HMLogger.Debug("DrawTable:Products");
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Products, displayLogistic));
+                    GUILayout.BeginVertical(HMStyle.None);
+                    GUILayout.BeginHorizontal(HMStyle.None);
+                    int pindex = 0;
                     foreach (IItem item in node.Products)
                     {
+                        if (pindex != 0 && pindex % HMLayoutOptions.numProducts == 0)
+                        {
+                            GUILayout.FlexibleSpace();
+                            GUILayout.EndHorizontal();
+                            GUILayout.BeginHorizontal(HMStyle.None);
+                        }
                         if (item.State == ItemState.Main || item.Count > 0.01)
                         {
                             item.Flow = item.Count * node.Effects.Productivity / currentSheet.Time;
-                            HMCell.ItemProduct(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal) * node.Effects.Productivity, delegate (IItem element)
+                            HMCell.ItemProduct(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal) * node.Effects.Productivity, true, delegate (IItem element)
                             {
                                 if (element.State == ItemState.Main)
                                 {
@@ -426,25 +436,40 @@ namespace DSP_Helmod.UI
                                     HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByProduct, element));
                                 }
                             });
+                            pindex++;
                         }
                     }
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
+                    GUILayout.EndVertical();
+                    GUILayout.EndHorizontal();
                     //Ingredients
                     //HMLogger.Debug("DrawTable:Ingredients");
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Ingredients, displayLogistic));
+                    GUILayout.BeginVertical(HMStyle.None);
+                    GUILayout.BeginHorizontal(HMStyle.None);
+                    int iindex = 0;
                     foreach (IItem item in node.Ingredients)
                     {
+                        if (iindex != 0 && iindex % HMLayoutOptions.numIngredients == 0)
+                        {
+                            GUILayout.FlexibleSpace();
+                            GUILayout.EndHorizontal();
+                            GUILayout.BeginHorizontal(HMStyle.None);
+                        }
                         if (item.State == ItemState.Main || item.Count > 0.01)
                         {
                             item.Flow = item.Count / currentSheet.Time;
-                            HMCell.ItemIngredient(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), delegate (IItem element)
+                            HMCell.ItemIngredient(item, node.GetItemDeepCount(Settings.Instance.DisplayTotal), true, delegate (IItem element)
                             {
                                 HMEventQueue.EnQueue(this, new HMEvent(HMEventType.AddRecipeByIngredient, element));
                             });
+                            iindex++;
                         }
                     }
                     GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                    GUILayout.EndVertical();
                     GUILayout.EndHorizontal();
 
                     GUILayout.EndHorizontal();

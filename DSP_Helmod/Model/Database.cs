@@ -153,6 +153,11 @@ namespace DSP_Helmod.Model
             IRecipe recipe = recipes.Where(element => element.Id == id).First();
             return recipe.Clone();
         }
+        public static IRecipe SelectRecipe(string type, int id)
+        {
+            IRecipe recipe = recipes.Where(element => element.GetType().Name == type && element.Id == id).FirstOrDefault();
+            return recipe?.Clone();
+        }
         public static T SelectRecipe<T>(int id)
         {
             IRecipe recipe = recipes.Where(element => element.Id == id && element is T).First();

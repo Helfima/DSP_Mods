@@ -68,6 +68,7 @@
     <Compile Include="Classes\ListExtensions.cs" />
     <Compile Include="Classes\HMLogger.cs" />
     <Compile Include="Classes\Language.cs" />
+    <Compile Include="Classes\NumberFormater.cs" />
     <Compile Include="Classes\PluginInfo.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Converter\DataModelConverter.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="UI\AboutPanel.cs" />
     <Compile Include="UI\Core\HMTooltip.cs" />
     <Compile Include="UI\EditionPreference.cs" />
+    <Compile Include="UI\Gui\HMLayoutOptions.cs" />
     <Compile Include="UI\PropertiesPanel.cs" />
     <Compile Include="UI\EditionProduct.cs" />
     <Compile Include="UI\EditionRecipe.cs" />
@@ -162,6 +164,7 @@
     <EmbeddedResource Include="Assets\Resources\form_gray_x64.png" />
     <EmbeddedResource Include="Assets\Resources\form_gray_active_x64.png" />
     <EmbeddedResource Include="changelog.txt" />
+    <EmbeddedResource Include="Assets\Resources\tooltip_gray_x64.png" />
     <Content Include="icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

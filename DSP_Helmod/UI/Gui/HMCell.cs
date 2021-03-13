@@ -15,9 +15,9 @@ namespace DSP_Helmod.UI.Gui
         private static double limit = 10;
         public static void Node(INode node, string tooltip = null, Callback.ForNode callback = null)
         {
-            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            GUILayout.BeginVertical();
             HMButton.Node(node, tooltip, callback);
-            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMLayoutOptions.Text45x15);
             if (node.Count < limit) GUILayout.Label($"{node.Count:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{node.Count:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
@@ -27,9 +27,9 @@ namespace DSP_Helmod.UI.Gui
         public static void Node(INode node, double factor, string tooltip = null, Callback.ForNode callback = null)
         {
             double count = node.Count * factor;
-            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            GUILayout.BeginVertical();
             HMButton.Node(node, tooltip, callback);
-            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMLayoutOptions.Text45x15);
             if (count < limit) GUILayout.Label($"{count:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{count:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
@@ -40,20 +40,20 @@ namespace DSP_Helmod.UI.Gui
         {
             double power = node.Power * factor;
             if (!(node is IRecipe)) power = power * node.Count;
-            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            GUILayout.BeginVertical();
+
             HMButton.Texture(HMTexture.eclaireTexture, callback);
-            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
-            if (power > 1e9) GUILayout.Label($"{power / 1e9:N1}GW", HMStyle.TextButtonIcon, GUILayout.Width(60));
-            else if (power > 1e6) GUILayout.Label($"{power / 1e6:N1}MW", HMStyle.TextButtonIcon, GUILayout.Width(60));
-            else if (power > 1e3) GUILayout.Label($"{power / 1e3:N1}kW", HMStyle.TextButtonIcon, GUILayout.Width(60));
-            else GUILayout.Label($"{power:N1}W", HMStyle.TextButtonIcon, GUILayout.Width(60));
+
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMLayoutOptions.Text45x15);
+            GUILayout.Label(NumberFormater.Format(power, "W"), HMStyle.TextButtonIcon, GUILayout.Width(60));
             GUILayout.EndHorizontal();
+
             GUILayout.EndVertical();
         }
 
         public static void NodeActions(Nodes parent, INode node)
         {
-            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            GUILayout.BeginVertical(HMStyle.None);
             {
                 GUILayout.BeginHorizontal();
                 GUIContent actionUp = new GUIContent("U", "Action:Up");
@@ -92,9 +92,9 @@ namespace DSP_Helmod.UI.Gui
         }
         public static void RecipeTime(IRecipe recipe, Callback.ForVoid callback = null)
         {
-            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            GUILayout.BeginVertical();
             HMButton.Texture(HMTexture.time, callback);
-            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMLayoutOptions.Text45x15);
             if (recipe.Energy < limit) GUILayout.Label($"{recipe.Energy:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{recipe.Energy:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
@@ -107,24 +107,24 @@ namespace DSP_Helmod.UI.Gui
 
         private static void ItemColored(IItem item, ItemColor color, double factor = 1, bool withLogistic = false, Callback.ForItem callback = null)
         {
-            GUILayout.BeginVertical(HMStyle.BoxIconLayoutOptions);
+            GUILayout.BeginVertical();
             HMButton.ItemColored(item, color, factor, callback);
-            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+            GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMLayoutOptions.Text45x15);
             if (item.Count * factor < limit) GUILayout.Label($"{item.Count * factor:N2}", HMStyle.TextButtonIcon);
             else GUILayout.Label($"{item.Count * factor:N1}", HMStyle.TextButtonIcon);
             GUILayout.EndHorizontal();
             if (withLogistic && Settings.Instance.DisplayLogistic)
             {
-                GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMStyle.IconText45LayoutOptions);
+                GUILayout.BeginHorizontal(HMStyle.TextBoxStyle, HMLayoutOptions.Text45x15);
                 IItem logistic = Compute.GetLogisticItem(item);
-                GUILayout.Box(logistic.Icon, HMStyle.BoxIcon, HMStyle.Icon15LayoutOptions);
+                GUILayout.Box(logistic.Icon, HMStyle.BoxIcon, HMLayoutOptions.Icon15);
                 GUILayout.Label($"{logistic.Count * factor:N1}", HMStyle.TextButtonIcon);
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndVertical();
         }
 
-        public static void ItemProduct(IItem item, double factor = 1, Callback.ForItem callback = null)
+        public static void ItemProduct(IItem item, double factor = 1, bool withLogistic = false, Callback.ForItem callback = null)
         {
             ItemColor itemColor = ItemColor.Normal;
             switch (item.State)
@@ -139,13 +139,13 @@ namespace DSP_Helmod.UI.Gui
                     itemColor = ItemColor.Blue;
                     break;
             }
-            ItemColored(item, itemColor, factor, true, callback);
+            ItemColored(item, itemColor, factor, withLogistic, callback);
         }
 
-        public static void ItemIngredient(IItem item, double factor = 1, Callback.ForItem callback = null)
+        public static void ItemIngredient(IItem item, double factor = 1, bool withLogistic = false, Callback.ForItem callback = null)
         {
             ItemColor itemColor = ItemColor.Yellow;
-            ItemColored(item, itemColor, factor, true, callback);
+            ItemColored(item, itemColor, factor, withLogistic, callback);
         }
 
         public static void ItemList(List<IItem> items, Callback.ForItem callback = null)
@@ -171,7 +171,7 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
         }
 
-        public static void ItemProductList(INode node, double time, Callback.ForItem callback = null)
+        public static void ItemProductList(INode node, double time, bool withLogistic = false, Callback.ForItem callback = null)
         {
             GUILayout.BeginHorizontal();
             int index = 0;
@@ -186,7 +186,7 @@ namespace DSP_Helmod.UI.Gui
                 if (item.State == ItemState.Main || item.Count > 0.01)
                 {
                     item.Flow = item.Count / time;
-                    ItemProduct(item, node.GetDeepCount(Settings.Instance.DisplayTotal), callback);
+                    ItemProduct(item, node.GetDeepCount(Settings.Instance.DisplayTotal), withLogistic, callback);
                     index++;
                 }
             }
@@ -195,7 +195,7 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.EndHorizontal();
         }
 
-        public static void ItemIngredientList(INode node, double time, Callback.ForItem callback = null)
+        public static void ItemIngredientList(INode node, double time, bool withLogistic = false, Callback.ForItem callback = null)
         {
             GUILayout.BeginHorizontal();
             int index = 0;
@@ -210,7 +210,7 @@ namespace DSP_Helmod.UI.Gui
                 if (item.State == ItemState.Main || item.Count > 0.01)
                 {
                     item.Flow = item.Count / time;
-                    ItemIngredient(item, node.GetDeepCount(Settings.Instance.DisplayTotal), callback);
+                    ItemIngredient(item, node.GetDeepCount(Settings.Instance.DisplayTotal), withLogistic, callback);
                     index++;
                 }
             }
@@ -218,8 +218,5 @@ namespace DSP_Helmod.UI.Gui
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
-
-
-
     }
 }

@@ -19,7 +19,7 @@ namespace DSP_Helmod.UI.Gui
         {
             if (texture != null)
             {
-                if (GUILayout.Button(texture, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button(texture, HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
                 {
                     if (callback != null) callback();
                 }
@@ -29,14 +29,14 @@ namespace DSP_Helmod.UI.Gui
         {
             if (sheet.Icon == null)
             {
-                if (GUILayout.Button(infoTexture, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button(infoTexture, HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
                 {
                     if (callback != null) callback(sheet);
                 }
             }
             else
             {
-                if (GUILayout.Button(sheet.Icon, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button(sheet.Icon, HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
                 {
                     if (callback != null) callback(sheet);
                 }
@@ -47,14 +47,14 @@ namespace DSP_Helmod.UI.Gui
         {
             if (node.Icon == null)
             {
-                if (GUILayout.Button("?", HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button("?", HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
                 {
                     if(callback != null) callback(node);
                 }
             }
             else
             {
-                if (GUILayout.Button(node.Icon, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button(node.Icon, HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
                 {
                     if (callback != null) callback(node);
                 }
@@ -66,7 +66,7 @@ namespace DSP_Helmod.UI.Gui
             if (node.Icon == null)
             {
                 GUIContent action = new GUIContent("?", tooltip);
-                if (GUILayout.Button(action, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button(action, HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
                 {
                     if (callback != null) callback(node);
                 }
@@ -74,7 +74,7 @@ namespace DSP_Helmod.UI.Gui
             else
             {
                 GUIContent action = new GUIContent(node.Icon, tooltip);
-                if (GUILayout.Button(action, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button(action, HMStyle.ButtonIcon, HMLayoutOptions.Icon45))
                 {
                     if (callback != null) callback(node);
                 }
@@ -85,7 +85,7 @@ namespace DSP_Helmod.UI.Gui
         {
             if (action != null)
             {
-                if (GUILayout.Button(action, HMStyle.ActionButtonLayoutOptions))
+                if (GUILayout.Button(action, HMLayoutOptions.ActionButton))
                 {
                     if (callback != null) callback(node);
                 }
@@ -109,7 +109,7 @@ namespace DSP_Helmod.UI.Gui
         }
         public static void ItemColored(IItem item, ItemColor color, double factor = 1.0, Callback.ForItem callback = null)
         {
-            GUIStyle style = new GUIStyle(GUI.skin.button);
+            GUIStyle style = HMStyle.ButtonIcon;
             switch (color)
             {
                 case ItemColor.Blue:
@@ -132,7 +132,7 @@ namespace DSP_Helmod.UI.Gui
 
             if (item.Icon == null)
             {
-                if (GUILayout.Button("?", style, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button("?", style, HMLayoutOptions.Icon45))
                 {
                     if(callback != null) callback(item);
                 }
@@ -140,7 +140,7 @@ namespace DSP_Helmod.UI.Gui
             else
             {
                 GUIContent content = new GUIContent(item.Icon, $"{item.Name}\nFlow: {item.Flow * factor * 60:N2}/mn");
-                if (GUILayout.Button(content, style, HMStyle.Icon45LayoutOptions))
+                if (GUILayout.Button(content, style, HMLayoutOptions.Icon45))
                 {
                     if (callback != null) callback(item);
                 }
@@ -153,7 +153,7 @@ namespace DSP_Helmod.UI.Gui
             contentStyle.onHover.background = item.Icon;
             contentStyle.fontStyle = FontStyle.Bold;
             contentStyle.alignment = TextAnchor.LowerRight;
-            if (GUILayout.Button(item.Count.ToString(), contentStyle, HMStyle.Icon45LayoutOptions))
+            if (GUILayout.Button(item.Count.ToString(), contentStyle, HMLayoutOptions.Icon45))
             {
                 if (callback != null) callback(item);
             }
@@ -162,7 +162,7 @@ namespace DSP_Helmod.UI.Gui
 
         public static void IconLogistic(IItem item, Callback.ForItem callback = null)
         {
-            if (GUILayout.Button(item.Icon, HMStyle.Icon30LayoutOptions))
+            if (GUILayout.Button(item.Icon, HMLayoutOptions.Icon30))
             {
                 if (callback != null) callback(item);
             }

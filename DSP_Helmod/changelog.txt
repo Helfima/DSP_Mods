@@ -1,10 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.1
-Date: 2021-03-12
+Date: 2021-03-13
   Changes:
     - Changed tooltip display
+    - Changed general display
   Bugfixes:
-    - Fixed factory number error when change in Edition Recipe
+    - Fixed factory number error when change it in Edition Recipe
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.0
 Date: 2021-03-10

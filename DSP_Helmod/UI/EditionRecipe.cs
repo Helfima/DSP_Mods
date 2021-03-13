@@ -72,27 +72,27 @@ namespace DSP_Helmod.UI
         {
             GUILayout.BeginHorizontal(GUILayout.MaxHeight(25));
             {
-                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductionLayoutOptions);
+                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnProduction);
                 GUILayout.Label("%", HMStyle.TextAlignMiddleCenter);
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
+                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnRecipe);
                 GUILayout.Label("Recipe", HMStyle.TextAlignMiddleCenter);
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
+                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnPower);
                 GUILayout.Label("Energy", HMStyle.TextAlignMiddleCenter);
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
+                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnMachine);
                 GUILayout.Label("Machine", HMStyle.TextAlignMiddleCenter);
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
+                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnProducts);
                 GUILayout.Label("Product", HMStyle.TextAlignMiddleCenter);
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
+                GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.ColumnIngredients);
                 GUILayout.Label("Ingredient", HMStyle.TextAlignMiddleCenter);
                 GUILayout.EndHorizontal();
 
@@ -106,23 +106,23 @@ namespace DSP_Helmod.UI
                     //Debug.Log($"Recipe count:{recipe.Count}");
                     GUILayout.BeginHorizontal(GUILayout.MaxHeight(70));
 
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductionLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Production, false));
                     GUILayout.TextField("100");
                     GUILayout.EndHorizontal();
                     // recipe
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnRecipeLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Recipe, false));
                     HMCell.Node(recipe);
                     GUILayout.EndHorizontal();
                     // energy
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnPowerLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Recipe, false));
                     HMCell.RecipeTime(recipe);
                     GUILayout.EndHorizontal();
                     //machine
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnMachineLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Machine, false));
                     HMCell.Product(recipe.Factory, 1);
                     GUILayout.EndHorizontal();
                     // Products
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnProductsLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Products, false));
                     foreach (IItem item in recipe.Products)
                     {
                         HMCell.ItemProduct(item, recipe.Count * node.Effects.Productivity);
@@ -130,7 +130,7 @@ namespace DSP_Helmod.UI
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
-                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMStyle.ColumnIngredientsLayoutOptions);
+                    GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Ingredients, false));
                     foreach (IItem item in recipe.Ingredients)
                     {
                         HMCell.ItemIngredient(item, recipe.Count);

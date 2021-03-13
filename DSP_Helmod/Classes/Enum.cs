@@ -29,4 +29,15 @@ namespace DSP_Helmod.Classes
         Normal,
         Properties
     }
+
+    public enum DataColumn
+    {
+        Actions,
+        Ingredients,
+        Machine,
+        Power,
+        Production,
+        Products,
+        Recipe
+    }
 }
