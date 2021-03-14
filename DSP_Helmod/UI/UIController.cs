@@ -48,6 +48,9 @@ namespace DSP_Helmod.UI
             SelectorVege vegeSelector = new SelectorVege(this);
             AddForm(vegeSelector);
 
+            SelectorStar starSelector = new SelectorStar(this);
+            AddForm(starSelector);
+
             SelectorPlanet planetSelector = new SelectorPlanet(this);
             AddForm(planetSelector);
 #endif
@@ -124,7 +127,14 @@ namespace DSP_Helmod.UI
             if (Input.GetKeyDown(Settings.Instance.OpenCloseKeyCode))
             {
                 MainPanel main = (MainPanel)forms.Where(form => form is MainPanel).First();
-                main.SwitchShow();
+                if (main.Show)
+                {
+                    CloseAll();
+                }
+                else
+                {
+                    main.SwitchShow();
+                }
             }
 
 

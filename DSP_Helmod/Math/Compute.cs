@@ -155,7 +155,7 @@ namespace DSP_Helmod.Math
             List<string> ingredients = new List<string>();
             foreach (INode node in nodes.Children)
             {
-                rowHeaders.Add(new MatrixHeader(node.Type, node.Name));
+                rowHeaders.Add(new MatrixHeader(node.Type, node.Name, node.Production));
                 MatrixRow rowData = new MatrixRow(node.Type, node.Name);
                 foreach(IItem item in node.Products)
                 {

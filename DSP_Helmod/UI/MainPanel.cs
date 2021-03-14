@@ -221,27 +221,13 @@ namespace DSP_Helmod.UI
             if (nodes != null && nodes.Children != null && nodes.Children.Count > 0)
             {
                 int index = 1;
-                foreach (Node node in nodes.Children)
+                List<INode> navNodes = nodes.Children.Where(item => item is Nodes).ToList();
+                foreach (Node node in navNodes)
                 {
                     if (node is Nodes)
                     {
-                        GUILayout.BeginHorizontal(HMStyle.BoxNavigate);
-                        {
-                            //GUILayoutOption width = GUILayout.Width(5);
-                            //if (index == nodes.Children.Count)
-                            //{
-                            //    GUILayout.BeginVertical(GUILayout.Height(50));
-                            //    GUILayout.Box(HMTexture.icon_blue, HMStyle.TreeBarNavigate, width);
-                            //    GUILayout.EndVertical();
-                            //}
-                            //else
-                            //{
-                            //    GUILayout.BeginVertical(HMStyle.TreeBarNavigateStretch);
-                            //    GUILayout.BeginHorizontal(HMStyle.TreeBarNavigate, width);
-                            //    GUILayout.EndHorizontal();
-                            //    GUILayout.EndVertical();
-                            //}
-                        }
+                        if(index == navNodes.Count) GUILayout.BeginHorizontal(HMStyle.BoxNavigateTreeLeaf);
+                        else GUILayout.BeginHorizontal(HMStyle.BoxNavigateTree);
                         {
                             GUILayout.BeginVertical();
                             Nodes childNodes = (Nodes)node;
@@ -367,7 +353,7 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal(HMStyle.BoxStyle, HMLayoutOptions.GetDataCell(DataColumn.Production, displayLogistic));
-                    GUILayout.TextField("100");
+                    node.ProductionString = GUILayout.TextField(node.ProductionString);
                     GUILayout.EndHorizontal();
                     // recipe
                     //HMLogger.Debug("DrawTable:recipe");

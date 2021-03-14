@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DSP_Helmod.UI
 {
@@ -16,6 +17,7 @@ namespace DSP_Helmod.UI
         private string value;
         private Nodes nodes;
         private Item item;
+        private bool focus = false;
         public EditionProduct(UIController parent) : base(parent)
         {
             this.name = "Edition Product";
@@ -28,27 +30,44 @@ namespace DSP_Helmod.UI
 
         public override void OnInit()
         {
-            this.windowRect0 = new Rect(200, 20, 200, 100);
+            this.windowRect0 = new Rect(200, 20, 300, 100);
         }
 
         public override void OnUpdate()
         {
-            
+            if (Event.current.functionKey && Event.current.keyCode == KeyCode.KeypadEnter)
+            {
+                Submit();
+            }
+            //GameObject inputFieldGo = GameObject.Find("MyTextField");
+            //InputField inputFieldCo = inputFieldGo.GetComponent<InputField>();
+            //Debug.Log(inputFieldCo.text);
         }
 
         private void DrawContent()
         {
             GUILayout.BeginHorizontal(HMStyle.BoxStyle);
+            GUI.SetNextControlName("MyTextField");
             value = GUILayout.TextField(value);
             GUILayout.EndHorizontal();
             if (GUILayout.Button("OK"))
             {
-                double result;
-                double.TryParse(value, out result);
-                nodes.SetInput(item, result);
-                HMEvent.SendEvent(this, new HMEvent(HMEventType.UpdateSheet, nodes));
-                Close();
+                Submit();
             }
+            if (!focus)
+            {
+                GUI.FocusControl("MyTextField");
+                focus = true;
+            }
+        }
+
+        private void Submit()
+        {
+            double result;
+            double.TryParse(value, out result);
+            nodes.SetInput(item, result);
+            HMEvent.SendEvent(this, new HMEvent(HMEventType.UpdateSheet, nodes));
+            Close();
         }
 
         public void OnEvent(object sender, HMEvent e)
@@ -60,6 +79,7 @@ namespace DSP_Helmod.UI
                     nodes = (Nodes)sender;
                     item = e.GetItem<Item>();
                     value = nodes.GetInputValue(item).ToString();
+                    focus = false;
                     break;
             }
         }

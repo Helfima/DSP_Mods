@@ -81,6 +81,7 @@
     <Compile Include="Converter\XmlSheet.cs" />
     <Compile Include="Converter\XmlNode.cs" />
     <Compile Include="ExampleClass.cs" />
+    <Compile Include="Helpers\StarHelper.cs" />
     <Compile Include="Helpers\PlanetProtoHelper.cs" />
     <Compile Include="Helpers\ItemProtoHelper.cs" />
     <Compile Include="Helpers\RecipeProtoHelper.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="UI\Gui\HMStyle.cs" />
     <Compile Include="UI\Gui\HMTexture.cs" />
     <Compile Include="UI\MainTooltip.cs" />
+    <Compile Include="UI\SelectorStar.cs" />
     <Compile Include="UI\SelectorPlanet.cs" />
     <Compile Include="UI\SelectorVege.cs" />
     <Compile Include="UI\SelectorVein.cs" />
@@ -165,6 +167,8 @@
     <EmbeddedResource Include="Assets\Resources\form_gray_active_x64.png" />
     <EmbeddedResource Include="changelog.txt" />
     <EmbeddedResource Include="Assets\Resources\tooltip_gray_x64.png" />
+    <EmbeddedResource Include="Assets\Resources\tree_x64.png" />
+    <EmbeddedResource Include="Assets\Resources\tree_leaf_x64.png" />
     <Content Include="icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

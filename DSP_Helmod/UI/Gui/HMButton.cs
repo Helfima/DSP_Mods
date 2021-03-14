@@ -103,6 +103,30 @@ namespace DSP_Helmod.UI.Gui
             }
         }
 
+        public static void Text(string text, int width = 100, int height = 25, Callback.ForVoid callback = null)
+        {
+            if (text != null)
+            {
+                GUIContent action = new GUIContent(text);
+                if (GUILayout.Button(action, new GUILayoutOption[] { GUILayout.Height(height), GUILayout.Width(width) }))
+                {
+                    if (callback != null) callback();
+                }
+            }
+        }
+
+        public static void Text(string text, string tooltip, int width = 100, int height = 25, Callback.ForVoid callback = null)
+        {
+            if (text != null)
+            {
+                GUIContent action = new GUIContent(text, tooltip);
+                if (GUILayout.Button(action, new GUILayoutOption[] { GUILayout.Height(height), GUILayout.Width(width) }))
+                {
+                    if (callback != null) callback();
+                }
+            }
+        }
+
         public static void Item(IItem item, double factor = 1.0, Callback.ForItem callback = null)
         {
             ItemColored(item, ItemColor.Normal, factor, callback);

@@ -11,15 +11,15 @@ using DSP_Helmod.Helpers;
 
 namespace DSP_Helmod.UI
 {
-    public class SelectorPlanet : HMForm
+    public class SelectorStar : HMForm
     {
-        protected EPlanetType groupSelected = 0;
+        protected EStarType groupSelected = 0;
         protected string recipeSelected;
         protected int selection;
 
-        public SelectorPlanet(UIController parent) : base(parent) {
-            this.name = "Planet Selector";
-            this.Caption = "Add Planet";
+        public SelectorStar(UIController parent) : base(parent) {
+            this.name = "Star Selector";
+            this.Caption = "Add Star";
             this.IsTool = true;
         }
         public override void OnInit()
@@ -37,13 +37,13 @@ namespace DSP_Helmod.UI
             DrawContent();
         }
 
-        private Dictionary<EPlanetType, List<PlanetData>> GetItems()
+        private Dictionary<EStarType, List<StarData>> GetItems()
         {
-            Dictionary<EPlanetType, List<PlanetData>> items = new Dictionary<EPlanetType, List<PlanetData>>();
-            foreach (PlanetData planetData in Model.GameData.Planets)
+            Dictionary<EStarType, List<StarData>> items = new Dictionary<EStarType, List<StarData>>();
+            foreach (StarData planetData in Model.GameData.Stars)
             {
-                EPlanetType key = planetData.type;
-                if (!items.ContainsKey(key)) items.Add(key, new List<PlanetData>());
+                EStarType key = planetData.type;
+                if (!items.ContainsKey(key)) items.Add(key, new List<StarData>());
                 items[key].Add(planetData);
             }
             return items;
@@ -51,9 +51,9 @@ namespace DSP_Helmod.UI
 
         private void DrawContent()
         {
-            Dictionary<EPlanetType, List<PlanetData>> itemList = GetItems();
+            Dictionary<EStarType, List<StarData>> itemList = GetItems();
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
-            foreach (EPlanetType entry in itemList.Keys)
+            foreach (EStarType entry in itemList.Keys)
             {
                 if (GUILayout.Button(entry.ToString()))
                 {
@@ -63,18 +63,18 @@ namespace DSP_Helmod.UI
             }
             GUILayout.EndHorizontal();
 
-            List<PlanetData> items = itemList[groupSelected];
+            List<StarData> items = itemList[groupSelected];
             DrawElements(items);
             
         }
 
-        private void DrawElements(List<PlanetData> items)
+        private void DrawElements(List<StarData> items)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
 
             GUILayout.BeginHorizontal();
             int index = 0;
-            foreach (PlanetData item in items)
+            foreach (StarData item in items)
             {
                 if (index != 0 && index % 5 == 0)
                 {
@@ -82,7 +82,7 @@ namespace DSP_Helmod.UI
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                 }
-                HMButton.Text(item.name, PlanetProtoHelper.GetTootip(item), 100, 25, delegate () {
+                HMButton.Text(item.name, StarHelper.GetTootip(item), 100, 25, delegate () {
                     if (selectorMode == SelectorMode.Normal)
                     {
                         HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, item));

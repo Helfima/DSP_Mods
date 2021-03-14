@@ -16,6 +16,8 @@ namespace DSP_Helmod.Model
         string Type { get; set; }
         double Count { get; set; }
         double Power { get; set; }
+        double Production { get; set; }
+        string ProductionString { get; set; }
         List<IItem> Products { get; set; }
         List<IItem> Ingredients { get; set; }
         Effects Effects { get; }

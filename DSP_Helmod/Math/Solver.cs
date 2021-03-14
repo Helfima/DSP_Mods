@@ -53,7 +53,7 @@ namespace DSP_Helmod.Math
                 //coefficient
                 double c = -z / v;
                 //% production
-                double p = 1;
+                double p = matrix.Headers[xrow].Production;
                 //recipe count
                 this.recipeCount[xrow] = p * c;
                 for (int icol = 0; icol < matrix.Y; icol++)

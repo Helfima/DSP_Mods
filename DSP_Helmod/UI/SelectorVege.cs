@@ -65,47 +65,38 @@ namespace DSP_Helmod.UI
 
             List<VegeProto> items = itemList[groupSelected];
             DrawElements(items);
-            //GUILayout.EndHorizontal();
-            if (Event.current.type == EventType.Repaint)
-            {
-                if (lastTooltip != "")
-                {
-                    GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), GUI.tooltip);
-                }
-
-                lastTooltip = GUI.tooltip;
-            }
-
+           
         }
 
         private void DrawElements(List<VegeProto> items)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
-            GUIContent[] contents = new GUIContent[items.Count];
+
+            GUILayout.BeginHorizontal();
             int index = 0;
             foreach (VegeProto item in items)
             {
-                GUIContent content = new GUIContent(item.name, VegeProtoHelper.GetTootip(item));
-                contents[index] = content;
+                if (index != 0 && index % 5 == 0)
+                {
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                }
+                HMButton.Text(item.name, VegeProtoHelper.GetTootip(item), 100, 25, delegate () {
+                    if (selectorMode == SelectorMode.Normal)
+                    {
+                        HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, item));
+                    }
+                    else if (selectorMode == SelectorMode.Properties)
+                    {
+                        HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, item));
+                    }
+                });
                 index++;
             }
-            //GUILayout.BeginHorizontal(boxStyle, GUILayout.Width(80));
-            GUILayoutOption[] GridLayoutOptions = new GUILayoutOption[] { GUILayout.MaxWidth(450), GUILayout.MaxHeight(100) };
-            selection = GUILayout.SelectionGrid(-1, contents, 10, GridLayoutOptions);
-            if (selection != -1)
-            {
-                VegeProto item = items[selection];
-                if (selectorMode == SelectorMode.Normal)
-                {
-                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddItem, item));
-                }
-                else if(selectorMode == SelectorMode.Properties)
-                {
-                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, item));
-                }
-                selection = -1;
-            }
             GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
             GUILayout.EndScrollView();
         }
 

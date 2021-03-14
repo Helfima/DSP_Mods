@@ -128,5 +128,21 @@ namespace DSP_Helmod.UI.Gui
             margin = new RectOffset(0, 3, 0, 0),
             padding = new RectOffset(0, 0, 0, 0),
         };
+
+        public static GUIStyle BoxNavigateTree = ChangeTexture(new GUIStyle()
+        {
+            margin = new RectOffset(0, 0, 0, 0),
+            padding = new RectOffset(10, 0, 0, 0),
+            border = new RectOffset(25, 25, 25, 25)
+
+        }, HMTexture.tree);
+
+        public static GUIStyle BoxNavigateTreeLeaf = ChangeTexture(new GUIStyle()
+        {
+            margin = new RectOffset(0, 0, 0, 0),
+            padding = new RectOffset(10, 0, 0, 0),
+            border = new RectOffset(25, 25, 25, 25)
+
+        }, HMTexture.tree_leaf);
     }
 }

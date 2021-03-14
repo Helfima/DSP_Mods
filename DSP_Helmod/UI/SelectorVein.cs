@@ -8,6 +8,7 @@ using DSP_Helmod.Classes;
 using DSP_Helmod.UI.Core;
 using UnityEngine;
 using DSP_Helmod.Helpers;
+using DSP_Helmod.Model;
 
 namespace DSP_Helmod.UI
 {
@@ -65,48 +66,32 @@ namespace DSP_Helmod.UI
 
             List<VeinProto> items = itemList[groupSelected];
             DrawElements(items);
-            //GUILayout.EndHorizontal();
-            if (Event.current.type == EventType.Repaint)
-            {
-                if (lastTooltip != "")
-                {
-                    GUI.Label(new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y + 20, 200, 200), GUI.tooltip);
-                }
-
-                lastTooltip = GUI.tooltip;
-            }
-
+            
         }
 
         private void DrawElements(List<VeinProto> items)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
-            GUIContent[] contents = new GUIContent[items.Count];
+            GUILayout.BeginHorizontal();
             int index = 0;
             foreach (VeinProto item in items)
             {
-                Texture2D texture = item.iconSprite.texture;
-                GUIContent content = new GUIContent(texture, VeinProtoHelper.GetTootip(item));
-                contents[index] = content;
+                if (index != 0 && index % 10 == 0)
+                {
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                }
+                HMButton.Texture(item.iconSprite.texture, delegate () {
+                    if (selectorMode == SelectorMode.Properties)
+                    {
+                        HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, item));
+                    }
+                });
                 index++;
             }
-            //GUILayout.BeginHorizontal(boxStyle, GUILayout.Width(80));
-            GUILayoutOption[] GridLayoutOptions = new GUILayoutOption[] { GUILayout.MaxWidth(450), GUILayout.MaxHeight(100) };
-            selection = GUILayout.SelectionGrid(-1, contents, 10, GridLayoutOptions);
-            if (selection != -1)
-            {
-                VeinProto item = items[selection];
-                if (selectorMode == SelectorMode.Normal)
-                {
-                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddItem, item));
-                }
-                else if(selectorMode == SelectorMode.Properties)
-                {
-                    HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, item));
-                }
-                selection = -1;
-            }
             GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
         }
 

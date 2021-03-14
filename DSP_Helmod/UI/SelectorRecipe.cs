@@ -68,7 +68,7 @@ namespace DSP_Helmod.UI
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
 
-            GUILayout.BeginHorizontal(HMLayoutOptions.Icon50);
+            GUILayout.BeginHorizontal();
             int index = 0;
             foreach (IRecipe recipe in recipes)
             {

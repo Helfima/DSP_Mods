@@ -162,7 +162,10 @@ namespace DSP_Helmod.Math
     }
     public class MatrixHeader : MatrixElement, IEquatable<MatrixHeader>
     {
-        public MatrixHeader(string type, string name) : base(type, name) { }
+        public double Production = 1;
+        public MatrixHeader(string type, string name, double production = 1) : base(type, name) {
+            Production = production;
+        }
 
         public bool Equals(MatrixHeader other)
         {

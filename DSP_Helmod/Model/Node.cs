@@ -11,12 +11,28 @@ namespace DSP_Helmod.Model
     abstract public class Node: INode
     {
         protected Effects effects = new Effects();
+        protected double product = 1;
         public int Id { get; set; }
         public int Index { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public double Count { get; set; }
         public double Power { get; set; }
+        public double Production {
+            get { return product; }
+            set { product = value; }
+        }
+        public string ProductionString
+        {
+            get { 
+                return $"{product * 100.0}";
+            }
+            set { 
+                double percent = 100;
+                double.TryParse(value, out percent);
+                product = percent / 100.0;
+            }
+        }
         public Texture2D Icon { get; set; }
         public Nodes Parent { get; set; }
         protected List<IItem> products = new List<IItem>();

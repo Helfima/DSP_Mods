@@ -27,5 +27,8 @@ namespace DSP_Helmod.UI.Gui
         public static Texture2D tooltip_gray = LoadAssembly.LoadTexture2D("tooltip_gray_x64", 64, 64);
 
         public static Texture2D time = LoadAssembly.LoadTexture2D("time_x64", 64, 64);
+
+        public static Texture2D tree = LoadAssembly.LoadTexture2D("tree_x64", 64, 64);
+        public static Texture2D tree_leaf = LoadAssembly.LoadTexture2D("tree_leaf_x64", 64, 64);
     }
 }

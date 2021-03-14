@@ -249,5 +249,19 @@ namespace DSP_Helmod.Model
                 return planets;
             }
         }
+
+        public static List<StarData> Stars
+        {
+            get
+            {
+                if (UIGame == null || UIGame.gameData == null) return new List<StarData>();
+                List<StarData> stars = new List<StarData>();
+                foreach (StarData starData in UIGame.gameData.galaxy.stars)
+                {
+                    stars.Add(starData);
+                }
+                return stars;
+            }
+        }
     }
 }

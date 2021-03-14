@@ -10,7 +10,7 @@ namespace DSP_Helmod.Model
 {
     public class RecipeCustom : Node, IRecipe
     {
-        public static List<int> Ids = new List<int>() { 1121, 2206, 2207 };
+        public static List<int> Ids = new List<int>() { 2206, 2207 };
         private ItemProto proto;
         private Factory factory;
         private double energy = 1.0;
@@ -63,9 +63,6 @@ namespace DSP_Helmod.Model
         {
             switch (this.Id)
             {
-                case 1121:
-                    Fractionator();
-                    break;
                 case 2206:
                     EnergyExchangerDischarge();
                     break;
@@ -73,27 +70,6 @@ namespace DSP_Helmod.Model
                     EnergyExchangerCharge();
                     break;
             }
-        }
-        /// <summary>
-        /// Fractionator(2314): 100 Hydrogen(1120) => 99 Hydrogen(1120) + 1 Deuterium(1121)
-        /// </summary>
-        internal void Fractionator()
-        {
-            ItemProto fractionator = LDB.items.Select(2314);
-            ItemProto deuterium = LDB.items.Select(1121);
-            ItemProto hydrogen = LDB.items.Select(1120);
-            this.proto = deuterium;
-            this.factory = new Factory(fractionator, 1);
-            this.Products.Clear();
-            this.Products.Add(new Item(hydrogen, 99));
-            this.Products.Add(new Item(deuterium, 1));
-            this.Ingredients.Clear();
-            this.Ingredients.Add(new Item(hydrogen, 100));
-            this.Name = proto.name;
-            this.Type = GetType().Name;
-            this.Icon = proto.iconSprite.texture;
-            // pas de limite hormis la vitesse de tapis
-            this.energy = 3.0;
         }
         /// <summary>
         /// Energy Exchanger(2209): 1 Accumulator Full(2207) => Accumulator(2206)
