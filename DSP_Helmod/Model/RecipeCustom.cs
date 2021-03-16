@@ -31,7 +31,10 @@ namespace DSP_Helmod.Model
         {
             get { return proto;}
         }
-        
+        public int GridIndex
+        {
+            get { return this.proto.GridIndex; }
+        }
         public double Energy
         {
             get { return energy; }

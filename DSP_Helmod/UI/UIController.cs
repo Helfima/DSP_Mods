@@ -97,7 +97,7 @@ namespace DSP_Helmod.UI
 
         public void OnGUI()
         {
-            if (DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame) return;
+            if (DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame || !Model.GameData.HasUI) return;
             
             HMEventQueue.DeQueue();
 
@@ -114,7 +114,7 @@ namespace DSP_Helmod.UI
         /// </summary>
         public void Update()
         {
-            if (DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame) return;
+            if (DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame || !Model.GameData.HasUI) return;
             if (!loaded) Load();
 
             //HMEventQueue.DeQueue();

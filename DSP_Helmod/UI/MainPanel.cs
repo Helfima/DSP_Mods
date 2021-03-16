@@ -260,6 +260,8 @@ namespace DSP_Helmod.UI
             GUILayout.BeginHorizontal();
             if (currentNode != null)
             {
+                double count = currentNode.Count;
+                if (count == 0) count = 1.0;
                 HMCell.NodePower(currentNode, currentNode.GetDeepCount(Settings.Instance.DisplayTotal) / currentNode.Count);
             }
             GUILayout.EndHorizontal();
@@ -502,7 +504,8 @@ namespace DSP_Helmod.UI
             switch (e.Type)
             {
                 case HMEventType.LoadedModel:
-                    SetCurrentSheet(Database.DataModel.Sheets.First());
+                    if (Database.DataModel.Sheets.Count > 0) SetCurrentSheet(Database.DataModel.Sheets.First());
+                    else CreateNewSheet();
                     break;
                 case HMEventType.AddRecipe:
                     if (currentNode == null) CreateNewSheet();

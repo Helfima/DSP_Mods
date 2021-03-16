@@ -47,6 +47,10 @@ namespace DSP_Helmod.Model
         {
             get { return proto; }
         }
+        public int GridIndex
+        {
+            get { return 1; }
+        }
         public ItemProto ItemProto
         {
             get { return itemProto; }

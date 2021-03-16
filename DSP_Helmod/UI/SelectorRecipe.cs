@@ -43,7 +43,7 @@ namespace DSP_Helmod.UI
 
         private void DrawContent()
         {
-            Dictionary<string, List<IRecipe>> recipeList = Database.RecipesByGroup;
+            SortedDictionary<string, List<IRecipe>> recipeList = Database.RecipesByGroup;
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
             foreach (string entry in recipeList.Keys)
             {
@@ -72,7 +72,7 @@ namespace DSP_Helmod.UI
             int index = 0;
             foreach (IRecipe recipe in recipes)
             {
-                if (index != 0 && index % 10 == 0)
+                if (index != 0 && index % 14 == 0)
                 {
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();

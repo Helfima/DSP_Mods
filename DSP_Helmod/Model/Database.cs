@@ -27,9 +27,9 @@ namespace DSP_Helmod.Model
 
         private static Dictionary<int, List<IRecipe>> recipesByProduct = new Dictionary<int, List<IRecipe>>();
 
-        private static Dictionary<string, List<IRecipe>> recipesByGroup = new Dictionary<string, List<IRecipe>>();
+        private static SortedDictionary<string, List<IRecipe>> recipesByGroup = new SortedDictionary<string, List<IRecipe>>();
 
-        public static Dictionary<string, List<IRecipe>> RecipesByGroup
+        public static SortedDictionary<string, List<IRecipe>> RecipesByGroup
         {
             get { return recipesByGroup; }
         }
@@ -122,6 +122,10 @@ namespace DSP_Helmod.Model
             {
                 return factory1.Speed.CompareTo(factory2.Speed);
             });
+            foreach (KeyValuePair<string, List<IRecipe>> entry in recipesByGroup)
+            {
+                entry.Value.Sort((x, y) => x.Name.CompareTo(y.Name));
+            }
             // load file
             LoadModel();
         }
@@ -217,6 +221,10 @@ namespace DSP_Helmod.Model
         public static bool InGame
         {
             get { return UIGame != null && UIGame.gameData != null; }
+        }
+        public static bool HasUI
+        {
+            get { return UIGame != null && (!UIGame.hideAllUI0 && !UIGame.hideAllUI1); }
         }
         public static double MiningCostRate
         {

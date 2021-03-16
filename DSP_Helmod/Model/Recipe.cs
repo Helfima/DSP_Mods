@@ -49,7 +49,10 @@ namespace DSP_Helmod.Model
         {
             get { return this.proto.TimeSpend/60.0; }
         }
-
+        public int GridIndex
+        {
+            get { return this.proto.GridIndex; }
+        }
         public Factory Factory
         {
             get { return factory; }

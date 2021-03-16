@@ -8,6 +8,7 @@ namespace DSP_Helmod.Model
 {
     public interface IRecipe : INode
     {
+        int GridIndex { get; }
         double Energy { get; }
         Factory Factory { get; set; }
         List<Factory> Factories { get; }
