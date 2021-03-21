@@ -19,6 +19,7 @@ namespace DSP_Helmod.Classes
         private ConfigEntry<int> itemIdLogistic;
         private ConfigEntry<bool> displayTotal;
         private ConfigEntry<float> windowAlpha;
+        private ConfigEntry<FactorySelection> factorySelection;
 
         public KeyCode OpenCloseKeyCode
         {
@@ -45,6 +46,11 @@ namespace DSP_Helmod.Classes
             get { return windowAlpha.Value; }
             set { windowAlpha.Value = value; }
         }
+        public FactorySelection FactorySelection
+        {
+            get { return factorySelection.Value; }
+            set { factorySelection.Value = value; }
+        }
 
         private Settings()
         {
@@ -59,6 +65,7 @@ namespace DSP_Helmod.Classes
             itemIdLogistic = configFile.Bind<int>("Settings", "ItemIdLogistic", -1, "Item id for logistic in the main panel.");
             displayTotal = configFile.Bind<bool>("Settings", "DisplayTotal", false, "Display total in the main panel.");
             windowAlpha = configFile.Bind<float>("Settings", "WindowAlpha", 1, "Alpha background of windows.");
+            factorySelection = configFile.Bind<FactorySelection>("Settings", "FactorySelection", FactorySelection.First, "Priority for factory selection.");
             configFile.Save();
         }
         

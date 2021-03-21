@@ -567,8 +567,25 @@ namespace DSP_Helmod.UI
 
         private void AddRecipe(IRecipe recipe)
         {
-            currentNode.Add(recipe.Clone());
+            IRecipe newRecipe = recipe.Clone();
+            UpdateRecipeFactory(newRecipe);
+            currentNode.Add(newRecipe);
             Compute();
+        }
+
+        private void UpdateRecipeFactory(IRecipe recipe)
+        {
+            if (recipe.Factories.Count > 1)
+            {
+                if (Settings.Instance.FactorySelection == FactorySelection.Last)
+                {
+                    recipe.Factory = recipe.Factories.Last();
+                }
+                else
+                {
+                    recipe.Factory = recipe.Factories.First();
+                }
+            }
         }
 
         private void AddRecipe(Item item)
@@ -580,7 +597,9 @@ namespace DSP_Helmod.UI
                 {
                     if (recipes.Count == 1)
                     {
-                        currentNode.Add(recipes.First().Clone());
+                        IRecipe newRecipe = recipes.First().Clone();
+                        UpdateRecipeFactory(newRecipe);
+                        currentNode.Add(newRecipe);
                         Compute();
                     }
                     else

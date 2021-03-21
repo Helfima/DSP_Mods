@@ -8,18 +8,19 @@ using DSP_Helmod.Classes;
 using DSP_Helmod.UI.Core;
 using UnityEngine;
 using DSP_Helmod.Helpers;
+using DSP_Helmod.Model;
 
-namespace DSP_Helmod.UI
+namespace DSP_Helmod.UI.Selectors
 {
-    public class SelectorPlanet : HMForm
+    public class SelectorVein : HMForm
     {
-        protected EPlanetType groupSelected = 0;
+        protected EMinerType groupSelected = 0;
         protected string recipeSelected;
         protected int selection;
 
-        public SelectorPlanet(UIController parent) : base(parent) {
-            this.name = "Planet Selector";
-            this.Caption = "Add Planet";
+        public SelectorVein(UIController parent) : base(parent) {
+            this.name = "Vein Selector";
+            this.Caption = "Add Vein";
             this.IsTool = true;
         }
         public override void OnInit()
@@ -37,23 +38,23 @@ namespace DSP_Helmod.UI
             DrawContent();
         }
 
-        private Dictionary<EPlanetType, List<PlanetData>> GetItems()
+        private Dictionary<EMinerType, List<VeinProto>> GetItems()
         {
-            Dictionary<EPlanetType, List<PlanetData>> items = new Dictionary<EPlanetType, List<PlanetData>>();
-            foreach (PlanetData planetData in Model.GameData.Planets)
+            Dictionary<EMinerType, List<VeinProto>> items = new Dictionary<EMinerType, List<VeinProto>>();
+            foreach (VeinProto veinProto in LDB.veins.dataArray)
             {
-                EPlanetType key = planetData.type;
-                if (!items.ContainsKey(key)) items.Add(key, new List<PlanetData>());
-                items[key].Add(planetData);
+                EMinerType key = veinProto.prefabDesc.minerType;
+                if (!items.ContainsKey(key)) items.Add(key, new List<VeinProto>());
+                items[key].Add(veinProto);
             }
             return items;
         }
 
         private void DrawContent()
         {
-            Dictionary<EPlanetType, List<PlanetData>> itemList = GetItems();
+            Dictionary<EMinerType, List<VeinProto>> itemList = GetItems();
             GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(20), GUILayout.Width(80));
-            foreach (EPlanetType entry in itemList.Keys)
+            foreach (EMinerType entry in itemList.Keys)
             {
                 if (GUILayout.Button(entry.ToString()))
                 {
@@ -63,31 +64,26 @@ namespace DSP_Helmod.UI
             }
             GUILayout.EndHorizontal();
 
-            List<PlanetData> items = itemList[groupSelected];
+            List<VeinProto> items = itemList[groupSelected];
             DrawElements(items);
             
         }
 
-        private void DrawElements(List<PlanetData> items)
+        private void DrawElements(List<VeinProto> items)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUI.skin.box);
-
             GUILayout.BeginHorizontal();
             int index = 0;
-            foreach (PlanetData item in items)
+            foreach (VeinProto item in items)
             {
-                if (index != 0 && index % 5 == 0)
+                if (index != 0 && index % 10 == 0)
                 {
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
                 }
-                HMButton.Text(item.name, PlanetProtoHelper.GetTootip(item), 100, 25, delegate () {
-                    if (selectorMode == SelectorMode.Normal)
-                    {
-                        HMEvent.SendEvent(this, new HMEvent(HMEventType.AddRecipe, item));
-                    }
-                    else if (selectorMode == SelectorMode.Properties)
+                HMButton.Texture(item.iconSprite.texture, delegate () {
+                    if (selectorMode == SelectorMode.Properties)
                     {
                         HMEvent.SendEvent(this, new HMEvent(HMEventType.AddProperties, item));
                     }
@@ -96,7 +92,6 @@ namespace DSP_Helmod.UI
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
-
             GUILayout.EndScrollView();
         }
 

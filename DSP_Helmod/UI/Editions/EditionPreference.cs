@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace DSP_Helmod.UI
+namespace DSP_Helmod.UI.Editions
 {
     public class EditionPreference : HMForm
     {
-        protected SectionPreference selection = SectionPreference.Controls;
+        protected SectionPreference selection = SectionPreference.General;
         protected Dictionary<string, string> controls = new Dictionary<string, string>();
         public EditionPreference(UIController parent) : base(parent)
         {
@@ -55,6 +55,9 @@ namespace DSP_Helmod.UI
             GUILayout.BeginVertical();
             switch (selection)
             {
+                case SectionPreference.General:
+                    DrawGeneral();
+                    break;
                 case SectionPreference.Controls:
                     DrawControls();
                     break;
@@ -63,12 +66,28 @@ namespace DSP_Helmod.UI
             GUILayout.EndScrollView();
         }
 
+        private void DrawGeneral()
+        {
+            {
+                GUILayout.BeginHorizontal();
+                GUIContent title = new GUIContent($"{"Factory selection":30}:", "Default factory selection when added");
+                GUILayout.Label(title);
+                GUI.color = Color.white;
+                if (Settings.Instance.FactorySelection == FactorySelection.First) GUI.color = Color.yellow;
+                HMButton.Text(FactorySelection.First.ToString(), "Slower", 100, 25, delegate () { Settings.Instance.FactorySelection = FactorySelection.First; });
+                GUI.color = Color.white;
+                if (Settings.Instance.FactorySelection == FactorySelection.Last) GUI.color = Color.yellow;
+                HMButton.Text(FactorySelection.Last.ToString(), "Faster", 100, 25, delegate () { Settings.Instance.FactorySelection = FactorySelection.Last; });
+                GUI.color = Color.white;
+                GUILayout.EndHorizontal();
+            }
+        }
         private void DrawControls()
         {
             foreach (KeyValuePair<string, string> entry in controls)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"{entry.Key:30}:{entry.Value}");
+                GUILayout.Label($"{entry.Key:30}: [{entry.Value}]");
                 GUILayout.EndHorizontal();
             }
         }
@@ -86,6 +105,7 @@ namespace DSP_Helmod.UI
 
     public enum SectionPreference
     {
+        General,
         Controls
     }
 }

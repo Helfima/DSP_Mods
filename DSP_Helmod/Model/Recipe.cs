@@ -45,6 +45,10 @@ namespace DSP_Helmod.Model
         {
             get { return proto; }
         }
+        public string MadeIn
+        {
+            get { return proto.madeFromString; }
+        }
         public double Energy
         {
             get { return this.proto.TimeSpend/60.0; }

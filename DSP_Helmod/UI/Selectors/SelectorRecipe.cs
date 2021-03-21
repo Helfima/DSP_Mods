@@ -10,7 +10,7 @@ using DSP_Helmod.UI.Core;
 using UnityEngine;
 using DSP_Helmod.Model;
 
-namespace DSP_Helmod.UI
+namespace DSP_Helmod.UI.Selectors
 {
     public class SelectorRecipe : HMForm
     {

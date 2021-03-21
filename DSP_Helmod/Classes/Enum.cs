@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace DSP_Helmod.Classes
 {
+    public enum FactorySelection
+    {
+        First,
+        Last
+    }
+
     public enum ItemState
     {
         Normal,

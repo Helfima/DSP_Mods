@@ -9,7 +9,7 @@ using DSP_Helmod.UI.Core;
 using UnityEngine;
 using DSP_Helmod.Helpers;
 
-namespace DSP_Helmod.UI
+namespace DSP_Helmod.UI.Selectors
 {
     public class SelectorVege : HMForm
     {

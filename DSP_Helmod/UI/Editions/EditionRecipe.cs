@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace DSP_Helmod.UI
+namespace DSP_Helmod.UI.Editions
 {
     public class EditionRecipe : HMForm
     {
@@ -39,8 +39,10 @@ namespace DSP_Helmod.UI
         private void DrawMachines()
         {
 
-            GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(25), GUILayout.Width(100));
+            GUILayout.BeginHorizontal(HMStyle.BoxStyle, GUILayout.MaxHeight(25));
             GUILayout.Label("Machines", HMStyle.TextAlignMiddleCenter);
+            HMButton.Text("Apply on all", "Apply selection of machine on all recipes", 100, 25, delegate () { ModelBuilder.ApplyFactoryOnAll(node as IRecipe); });
+            GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

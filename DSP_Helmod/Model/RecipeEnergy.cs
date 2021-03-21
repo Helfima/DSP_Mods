@@ -38,6 +38,10 @@ namespace DSP_Helmod.Model
         {
             get { return proto;}
         }
+        public string MadeIn
+        {
+            get { return factory.TypeString; }
+        }
         public int GridIndex
         {
             get { return this.proto.GridIndex; }

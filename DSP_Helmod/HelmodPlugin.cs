@@ -14,7 +14,7 @@ using UnityEngine.EventSystems;
 
 namespace DSP_Helmod
 {
-    [BepInPlugin("helmod.dsp.plugin", "DSP Helmod Plug-In", "1.4.2")]
+    [BepInPlugin("helmod.dsp.plugin", "DSP Helmod Plug-In", "1.4.3")]
     public class HelmodPlugin : BaseUnityPlugin
     {
         public static string PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

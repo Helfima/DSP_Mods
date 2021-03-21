@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DSP_Helmod.UI
+namespace DSP_Helmod.UI.Editions
 {
     public class EditionProduct : HMForm
     {
