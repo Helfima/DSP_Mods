@@ -23,6 +23,7 @@ Debug Dyson Sphere Program Mods
     player-connection-debug=1
     ```
 1. Ensure you installed https://dsp.thunderstore.io/package/xiaoye97/BepInEx/
+    Extract content folder xiaoye97-BepInEx-5.4.17.zip\BepInExPack in game Folder
 1. Rebuild mod, and execute DSP_Helmod\Build\CopyDll.bat. To obtain .mdb file execute
     ```
     DSP_Helmod\Build\pdb2mdb.exe DSP_Helmod.dll
@@ -43,3 +44,6 @@ A "Select Unity instance" dialog will show you some thing like..
     | WindowsPlayer | Your_PC_Name | Player | 56593 | PID:xxxx    |
 
 1. Click OK on Debug messagebox
+
+Troubles
+    if error "Failed to load mono" check DSPGAME_Data\boot.config

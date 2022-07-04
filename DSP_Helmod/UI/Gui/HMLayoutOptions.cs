@@ -59,8 +59,8 @@ namespace DSP_Helmod.UI.Gui
         public static GUILayoutOption[] ListDetail = new GUILayoutOption[] { GUILayout.Width(250) };
         public static GUILayoutOption[] ScrollListDetail = new GUILayoutOption[] { GUILayout.Height(170) };
 
-        public static GUILayoutOption[] ScrollNav = new GUILayoutOption[] { GUILayout.Height(500), GUILayout.Width(140) };
-        public static GUILayoutOption[] ScrollData = new GUILayoutOption[] { GUILayout.Height(500) };
+        public static GUILayoutOption[] ScrollNav = new GUILayoutOption[] { GUILayout.ExpandHeight(true), GUILayout.Width(140) };
+        public static GUILayoutOption[] ScrollData = new GUILayoutOption[] { GUILayout.ExpandHeight(true)};
         public static GUILayoutOption[] ScrollChoose = new GUILayoutOption[] { GUILayout.Height(300) };
 
         public static GUILayoutOption[] ColumnAction = new GUILayoutOption[] { ColumnWidthAction };

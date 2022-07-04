@@ -65,7 +65,9 @@ namespace DSP_Helmod.UI.Core
 
         private void AutoResize(int screenWidth, int screenHeight, float factor = 1f)
         {
-            Vector2 resizeRatio = new Vector2((float)Screen.width / screenWidth, (float)Screen.height / screenHeight);
+            var scaleWidth = (float)Screen.width / screenWidth;
+            var scaleHeight = (float)Screen.height / screenHeight;
+            Vector2 resizeRatio = new Vector2(scaleHeight, scaleHeight);
             GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(resizeRatio.x * factor, resizeRatio.y * factor, 1.0f));
         }
 
