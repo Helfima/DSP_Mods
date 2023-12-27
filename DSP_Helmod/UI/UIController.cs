@@ -96,19 +96,19 @@ namespace DSP_Helmod.UI
             form.id = formId;
             forms.Add(form);
         }
-
+        private bool IsUpdating = false;
         public void OnGUI()
         {
-            if (DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame || !Model.GameData.HasUI) return;
-            
+            if (IsUpdating || DSPGame.Game == null || !DSPGame.Game.running || !Model.GameData.InGame || !Model.GameData.HasUI) return;
+            IsUpdating = true;
             HMEventQueue.DeQueue();
 
             foreach (HMForm form in forms)
             {
                 if (form.Show) form.OnGUI();
             }
-            if(mainTooltip.Show) mainTooltip.OnGUI();
-
+            if (mainTooltip.Show) mainTooltip.OnGUI();
+            IsUpdating = false;
         }
 
         /// <summary>

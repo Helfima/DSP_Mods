@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.5
+Date: 2023-12-27
+  Bugfixes:
+    - Fixed error of cast int to double (PrefabDesc.labAssembleSpeed)
+    - Fixed error UI (GUILayout.FlexibleSpace())
+---------------------------------------------------------------------------------------------------
 Version: 1.4.4
 Date: 2022-07-03
   Bugfixes:

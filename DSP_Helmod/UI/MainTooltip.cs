@@ -23,32 +23,37 @@ namespace DSP_Helmod.UI
         
         public override void OnDoWindow(string tooltip)
         {
-            GUILayout.BeginVertical();
-            GUILayout.BeginHorizontal();
-            if (tooltip.StartsWith("Action:"))
+            try
             {
-                GUILayout.BeginVertical(HMStyle.BoxTooltip);
-                string label = tooltip.Substring(tooltip.IndexOf(':') + 1);
-                GUILayout.Label(label);
+                GUILayout.BeginVertical();
+                GUILayout.BeginHorizontal();
+                if (tooltip.StartsWith("Action:"))
+                {
+                    GUILayout.BeginVertical(HMStyle.BoxTooltip);
+                    string label = tooltip.Substring(tooltip.IndexOf(':') + 1);
+                    GUILayout.Label(label);
+                    GUILayout.EndVertical();
+                }
+                else if (tooltip.StartsWith("Recipe:"))
+                {
+                    GUILayout.BeginVertical(HMStyle.BoxTooltip, new GUILayoutOption[] { GUILayout.Height(50), GUILayout.Width(250) });
+                    DrawRecipeRegex(tooltip);
+                    GUILayout.EndVertical();
+                    //GUILayout.Label(tooltip);
+                }
+                else
+                {
+                    GUILayout.BeginVertical(HMStyle.BoxTooltip);
+                    GUILayout.Label(tooltip);
+                    GUILayout.EndVertical();
+                }
+                GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
             }
-            else if (tooltip.StartsWith("Recipe:"))
+            catch (Exception ex)
             {
-                GUILayout.BeginVertical(HMStyle.BoxTooltip, new GUILayoutOption[] { GUILayout.Height(50), GUILayout.Width(250) });
-                DrawRecipeRegex(tooltip);
-                GUILayout.EndVertical();
-                //GUILayout.Label(tooltip);
+                Debug.LogException(ex);
             }
-            else
-            {
-                GUILayout.BeginVertical(HMStyle.BoxTooltip);
-                GUILayout.Label(tooltip);
-                GUILayout.EndVertical();
-            }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.EndVertical();
         }
 
         private Regex RecipeRegex = new Regex("Recipe:([a-zA-Z]*)=([0-9]*)", RegexOptions.IgnoreCase);

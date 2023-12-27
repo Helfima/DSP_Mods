@@ -47,7 +47,7 @@ namespace DSP_Helmod.Model
         {
             if (proto == null || proto.prefabDesc == null) return 1;
             if (proto.prefabDesc.isAssembler) return ((double)proto.prefabDesc.assemblerSpeed) / 10000;
-            if (proto.prefabDesc.isLab) return proto.prefabDesc.labAssembleSpeed;
+            if (proto.prefabDesc.isLab) return ((double)proto.prefabDesc.labAssembleSpeed);
             if (proto.prefabDesc.veinMiner) return GameData.MiningSpeedScale * proto.prefabDesc.minerPeriod / 1000000.0;
             // for water pump
             if (proto.prefabDesc.minerPeriod != 0) return proto.prefabDesc.minerPeriod / (3600*60*4.0);
