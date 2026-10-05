@@ -14,7 +14,7 @@ namespace DSP_Helmod.Converter
     [XmlRoot("Sheet")]
     public class XmlSheet
     {
-        [XmlAttribute("Time", typeof(int))]
+        [XmlAttribute("Time")]
         public int Time;
 
         [XmlElement("Inputs", typeof(XmlInput))]

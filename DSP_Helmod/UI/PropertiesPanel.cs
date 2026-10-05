@@ -224,7 +224,7 @@ namespace DSP_Helmod.UI
             foreach (object element in elements)
             {
                 Dictionary<string, PropertyData> data = PrepareData(element);
-                if (!datas.ContainsKey(element))
+                if (datas.ContainsKey(element) == false)
                 {
                     datas.Add(element, data);
                     foreach (KeyValuePair<string, PropertyData> entry in data)
@@ -233,8 +233,10 @@ namespace DSP_Helmod.UI
                     }
                 }
             }
+            //Debug.LogError($"PrepareData datas.Count: {datas.Count}");
             attributeTypes.Sort();
             attributeTypes = attributeTypes.Distinct().ToList();
+            //Debug.LogError($"PrepareData attributeTypes.Count: {attributeTypes.Count}");
         }
 
         private Dictionary<string, PropertyData> PrepareData(object element)
@@ -254,10 +256,13 @@ namespace DSP_Helmod.UI
                 try
                 {
                     valueName = element.GetType().InvokeMember(propertyData.Name,
-                        BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty
+                        BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty | BindingFlags.Instance
                         , null, element, null);
                 }
-                catch { }
+                catch
+                {
+                    //Debug.LogError(ex);
+                }
                 switch (valueName)
                 {
                     case Array array:
@@ -285,8 +290,13 @@ namespace DSP_Helmod.UI
                         propertyData.Value = valueName;
                         break;
                 }
-                data.Add(propertyData.Name, propertyData);
+                //Debug.LogError($"PrepareData propertyData.Name: {propertyData.Name} = {propertyData.Value}");
+                if (data.ContainsKey(propertyData.Name) == false)
+                {
+                    data.Add(propertyData.Name, propertyData);
+                }
             }
+            //Debug.LogError($"PrepareData data.Count: {data.Count}");
             return data;
         }
 

@@ -1,6 +1,6 @@
 ﻿{
     "name": "DSP_Helmod",
-    "version_number": "1.4.5",
+    "version_number": "1.4.7",
     "website_url": "https://github.com/Helfima/DSP_Mods/tree/main/DSP_Helmod",
     "description": "Assistant to plan its base.",
     "dependencies": [ "xiaoye97-BepInEx-5.4.17" ]

@@ -14,19 +14,19 @@ namespace DSP_Helmod.Converter
     [XmlRoot("Node")]
     public class XmlNode
     {
-        [XmlAttribute("Id", typeof(int))]
+        [XmlAttribute("Id")]
         public int Id;
 
-        [XmlAttribute("Type", typeof(string))]
+        [XmlAttribute("Type")]
         public string Type;
 
-        [XmlAttribute("Name", typeof(string))]
+        [XmlAttribute("Name")]
         public string Name;
 
-        [XmlAttribute("Factory", typeof(int))]
+        [XmlAttribute("Factory")]
         public int Factory;
 
-        [XmlAttribute("IsNodes", typeof(bool))]
+        [XmlAttribute("IsNodes")]
         public bool IsNodes;
 
         [XmlElement("Inputs", typeof(XmlInput))]

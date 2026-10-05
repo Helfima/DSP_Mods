@@ -13,13 +13,13 @@ namespace DSP_Helmod.Converter
     [XmlRoot("Input")]
     public class XmlInput
     {
-        [XmlAttribute("Type", typeof(string))]
+        [XmlAttribute("Type")]
         public string Type;
 
-        [XmlAttribute("Name", typeof(string))]
+        [XmlAttribute("Name")]
         public string Name;
 
-        [XmlAttribute("Value", typeof(double))]
+        [XmlAttribute("Value")]
         public double Value;
 
         public static XmlInput Parse(MatrixValue matrixValue)

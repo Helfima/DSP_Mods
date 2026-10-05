@@ -5,10 +5,8 @@ using DSP_Helmod.UI.Selectors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 
 namespace DSP_Helmod.UI
 {
@@ -120,8 +118,7 @@ namespace DSP_Helmod.UI
             if (!loaded) Load();
 
             //HMEventQueue.DeQueue();
-
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) )
             {
                 CloseAll();
             }

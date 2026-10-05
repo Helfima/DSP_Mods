@@ -13,7 +13,7 @@ namespace DSP_Helmod.Converter
     [XmlRoot("Model")]
     public class XmlModel
     {
-        [XmlAttribute("Version", typeof(int))]
+        [XmlAttribute("Version")]
         public int Version;
 
         [XmlElement("Sheet", typeof(XmlSheet))]

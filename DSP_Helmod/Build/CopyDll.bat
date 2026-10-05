@@ -25,13 +25,13 @@ xcopy "%PROJECT_DIR%\manifest.json" "%TARGET_DIR%" /Y
 xcopy "%PROJECT_DIR%\README.md" "%TARGET_DIR%" /Y
 xcopy "%PROJECT_DIR%\changelog.txt" "%TARGET_DIR%" /Y
 
-IF "%MODE%" == "Debug" (
-	xcopy "%PATH_MDB%" "%TARGET_DIR%" /Y
-	xcopy "%PROJECT_DIR%\Build\Debug\UnityPlayer.dll" "%DSP_DIR%" /Y
-	xcopy "%PROJECT_DIR%\Build\Debug\DSPGAME_Data\boot.config" "%DSP_DIR%\DSPGAME_Data" /Y
-)
-IF "%MODE%" NEQ "Debug" (
-	del /Q "%TARGET_DIR%\%FILENAME_MDB%"
-	xcopy "%PROJECT_DIR%\Build\Release\UnityPlayer.dll" "%DSP_DIR%" /Y
-	xcopy "%PROJECT_DIR%\Build\Release\DSPGAME_Data\boot.config" "%DSP_DIR%\DSPGAME_Data" /Y
-)
+REM -- IF "%MODE%" == "Debug" (
+REM -- xcopy "%PATH_MDB%" "%TARGET_DIR%" /Y
+REM -- 	xcopy "%PROJECT_DIR%\Build\Debug\UnityPlayer.dll" "%DSP_DIR%" /Y
+REM -- 	xcopy "%PROJECT_DIR%\Build\Debug\DSPGAME_Data\boot.config" "%DSP_DIR%\DSPGAME_Data" /Y
+REM -- )
+REM -- IF "%MODE%" NEQ "Debug" (
+REM -- 	del /Q "%TARGET_DIR%\%FILENAME_MDB%"
+REM -- 	xcopy "%PROJECT_DIR%\Build\Release\UnityPlayer.dll" "%DSP_DIR%" /Y
+REM -- 	xcopy "%PROJECT_DIR%\Build\Release\DSPGAME_Data\boot.config" "%DSP_DIR%\DSPGAME_Data" /Y
+REM -- )
